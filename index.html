@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="id" class="h-full">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altoura Academia - Platform Belajar Bahasa Jepang </title>
+    <title>Altoura Academia - Platform Belajar Bahasa Jepang Interaktif</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -15,8 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    <meta name="google-site-verification" content="DO5pHPyPojJx2K6TVbIQ-AanEiRtwKJQ7SRKg_TaXwU" />
-    
+
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -37,6 +35,37 @@
             border-bottom: 3px solid #ea580c;
             color: #ea580c;
             font-weight: 700;
+        }
+        .kana-tab, .materi-subtab, .game-tab {
+            transition: color 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+            border-bottom: 3px solid transparent;
+        }
+        .kana-tab:hover, .materi-subtab:hover, .game-tab:hover {
+            color: #ea580c;
+        }
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .content-animate {
+            animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .pop-in {
+            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .step-circle {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .step-circle:hover {
+            transform: scale(1.12);
+        }
+        .step-circle.active {
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px -2px rgba(234, 88, 12, 0.4);
         }
         .sakura-pattern {
             background-color: #fef2f2;
@@ -182,7 +211,7 @@
                     </h3>
                     <button onclick="showSection('rencana')" class="text-xs font-bold text-orange-600 hover:underline">Lihat Target 30 Hari &rarr;</button>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                     <div class="space-y-2">
                         <div class="flex justify-between text-xs font-bold text-slate-500"><span>Hiragana</span><span id="progress-hiragana-text">0/46</span></div>
                         <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-hiragana-bar" class="h-full bg-orange-500 rounded-full transition-all" style="width:0%"></div></div>
@@ -194,6 +223,10 @@
                     <div class="space-y-2">
                         <div class="flex justify-between text-xs font-bold text-slate-500"><span>Dakuten/Yōon</span><span id="progress-dakuten-text">0/45</span></div>
                         <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-dakuten-bar" class="h-full bg-purple-500 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500"><span>Grammar</span><span id="progress-grammar-text">0/35</span></div>
+                        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-grammar-bar" class="h-full bg-rose-500 rounded-full transition-all" style="width:0%"></div></div>
                     </div>
                     <div class="space-y-2">
                         <div class="flex justify-between text-xs font-bold text-slate-500"><span>Kosakata</span><span id="progress-kosakata-text">0/0</span></div>
@@ -310,25 +343,20 @@
                 <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Tata Bahasa & Ungkapan</span>
                 <h2 class="text-3xl font-extrabold text-slate-800">Materi Inti Pembelajaran</h2>
                 <p class="text-slate-600 text-sm sm:text-base">Pahami pola kalimat dasar, partikel penting, serta ungkapan perkenalan diri dalam Bahasa Jepang.</p>
-                <p class="text-xs text-slate-400 max-w-xl mx-auto">Urutan Bab 1-5 disusun mengikuti alur topik dasar yang lazim dipakai buku <em>Minna no Nihongo 1</em> (kalimat is-desu &rarr; kata tunjuk &rarr; kepemilikan/tempat &rarr; angka/waktu &rarr; kata kerja ~masu). Penjelasan dan contoh kalimat di bawah ini ditulis ulang secara orisinal, bukan kutipan langsung dari buku tersebut.</p>
+                <p class="text-xs text-slate-400 max-w-xl mx-auto">35 bab tata bahasa disusun mengikuti alur topik umum level N5 (mirip urutan <em>Minna no Nihongo 1</em>), tapi penjelasan & contoh kalimat ditulis ulang secara orisinal — bukan kutipan dari buku manapun.</p>
             </div>
 
             <!-- Sub Tabs -->
             <div class="flex justify-center border-b border-slate-200 overflow-x-auto">
                 <button onclick="switchMateriSubTab('aisatsu')" id="subtab-aisatsu" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base tab-active whitespace-nowrap">Salam (Aisatsu)</button>
-                <button onclick="switchMateriSubTab('pola')" id="subtab-pola" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Bab 1: Kalimat Dasar</button>
-                <button onclick="switchMateriSubTab('bab2')" id="subtab-bab2" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Bab 2: Kata Tunjuk</button>
-                <button onclick="switchMateriSubTab('bab3')" id="subtab-bab3" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Bab 3: Kepemilikan & Tempat</button>
-                <button onclick="switchMateriSubTab('bab4')" id="subtab-bab4" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Bab 4: Angka & Waktu</button>
-                <button onclick="switchMateriSubTab('bab5')" id="subtab-bab5" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Bab 5: Kata Kerja ~masu</button>
+                <button onclick="switchMateriSubTab('grammar')" id="subtab-grammar" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Tata Bahasa N5 (35 Bab)</button>
                 <button onclick="switchMateriSubTab('dialog')" id="subtab-dialog" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Simulasi Percakapan</button>
             </div>
 
             <!-- SUBTAB: AISATSU -->
             <div id="materi-aisatsu" class="materi-content space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Item Salam 1 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
                         <div class="space-y-1">
                             <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Pagi (Formal)</span>
                             <div class="text-xl font-bold jp-text text-slate-800">おはようございます</div>
@@ -340,8 +368,7 @@
                         </button>
                     </div>
 
-                    <!-- Item Salam 2 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
                         <div class="space-y-1">
                             <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Siang / Umum</span>
                             <div class="text-xl font-bold jp-text text-slate-800">こんにちは</div>
@@ -353,8 +380,7 @@
                         </button>
                     </div>
 
-                    <!-- Item Salam 3 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
                         <div class="space-y-1">
                             <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">Malam</span>
                             <div class="text-xl font-bold jp-text text-slate-800">こんばんは</div>
@@ -366,8 +392,7 @@
                         </button>
                     </div>
 
-                    <!-- Item Salam 4 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
                         <div class="space-y-1">
                             <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Apresiasi</span>
                             <div class="text-xl font-bold jp-text text-slate-800">ありがとうございます</div>
@@ -379,8 +404,7 @@
                         </button>
                     </div>
 
-                    <!-- Item Salam 5 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
                         <div class="space-y-1">
                             <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Perpisahan</span>
                             <div class="text-xl font-bold jp-text text-slate-800">さようなら</div>
@@ -392,8 +416,7 @@
                         </button>
                     </div>
 
-                    <!-- Item Salam 6 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
                         <div class="space-y-1">
                             <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">Permintaan Maaf</span>
                             <div class="text-xl font-bold jp-text text-slate-800">すみません</div>
@@ -405,243 +428,53 @@
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- SUBTAB: POLA KALIMAT -->
-            <div id="materi-pola" class="materi-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Pola Positif -->
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">1. Kalimat Positif</span>
-                    <h3 class="text-2xl font-black text-slate-800">[Subjek] <span class="text-orange-600">は</span> [Predikat] <span class="text-orange-600">です</span></h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Partikel <strong class="text-orange-600">は (WA)</strong> menandai topik kalimat, sedangkan <strong class="text-orange-600">です (DESU)</strong> menghaluskan kalimat secara sopan.
-                    </p>
-                    <div class="p-4 bg-orange-50/60 rounded-2xl border border-orange-100 space-y-2">
-                        <div class="text-xs font-bold text-orange-700 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>わたし は がくせい です</span>
-                            <button onclick="speak('わたしはがくせいです')" aria-label="Dengarkan contoh kalimat" class="text-orange-600 hover:text-orange-700"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div class="text-xs italic text-slate-500">Watashi wa gakusei desu</div>
-                        <div class="text-sm font-medium text-slate-700">"Saya adalah seorang siswa."</div>
-                    </div>
-                </div>
-
-                <!-- Pola Negatif -->
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">2. Kalimat Negatif</span>
-                    <h3 class="text-2xl font-black text-slate-800">... <span class="text-red-600">ではありません</span></h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Mengubah akhir kalimat menjadi negatif formal. Gantikan <strong class="text-orange-600">です</strong> dengan <strong class="text-red-600">ではありません (Dewa Arimasen)</strong>.
-                    </p>
-                    <div class="p-4 bg-red-50/60 rounded-2xl border border-red-100 space-y-2">
-                        <div class="text-xs font-bold text-red-700 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>わたし は せんせい ではありません</span>
-                            <button onclick="speak('わたしはせんせいではありません')" aria-label="Dengarkan contoh kalimat" class="text-red-600 hover:text-red-700"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div class="text-xs italic text-slate-500">Watashi wa sensei dewa arimasen</div>
-                        <div class="text-sm font-medium text-slate-700">"Saya bukan seorang guru."</div>
-                    </div>
-                </div>
-
-                <!-- Pola Tanya -->
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4 md:col-span-2">
-                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">3. Kalimat Tanya</span>
-                    <h3 class="text-2xl font-black text-slate-800">... です <span class="text-blue-600">か</span> ?</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Cukup tambahkan partikel <strong class="text-blue-600">か (KA)</strong> di akhir kalimat untuk membuatnya menjadi pertanyaan, tanpa perlu mengubah susunan kata.
-                    </p>
-                    <div class="p-4 bg-blue-50/60 rounded-2xl border border-blue-100 space-y-2">
-                        <div class="text-xs font-bold text-blue-700 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>あなた は がくせい です か</span>
-                            <button onclick="speak('あなたはがくせいですか')" aria-label="Dengarkan contoh kalimat" class="text-blue-600 hover:text-blue-700"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div class="text-xs italic text-slate-500">Anata wa gakusei desu ka?</div>
-                        <div class="text-sm font-medium text-slate-700">"Apakah Anda seorang siswa?"</div>
-                    </div>
+                <div class="flex justify-center pt-2">
+                    <button onclick="switchMateriSubTab('grammar')" class="px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-extrabold transition shadow-md shadow-orange-200 flex items-center gap-2">
+                        Lanjut ke Tata Bahasa N5 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- SUBTAB: BAB 2 - KATA TUNJUK -->
-            <div id="materi-bab2" class="materi-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold">1. Kata Tunjuk Benda</span>
-                    <h3 class="text-2xl font-black text-slate-800 jp-text">これ / それ / あれ</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Dipakai untuk menunjuk benda tanpa menyebut kata bendanya langsung. <strong class="text-orange-600">これ (kore)</strong> = benda dekat pembicara, <strong class="text-orange-600">それ (sore)</strong> = benda dekat lawan bicara, <strong class="text-orange-600">あれ (are)</strong> = benda jauh dari keduanya.
-                    </p>
-                    <div class="p-4 bg-orange-50/60 rounded-2xl border border-orange-100 space-y-2">
-                        <div class="text-xs font-bold text-orange-700 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>これ は ほん です</span>
-                            <button onclick="speak('これはほんです')" aria-label="Dengarkan contoh kalimat" class="text-orange-600 hover:text-orange-700"><i class="fa-solid fa-volume-high"></i></button>
+            <!-- SUBTAB: GRAMMAR N5 (20 BAB, dirender dinamis via JS) -->
+            <div id="materi-grammar" class="materi-content hidden space-y-6">
+                <!-- Stepper -->
+                <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
+                    <div class="flex justify-between items-center mb-3 text-xs font-bold text-slate-500">
+                        <span id="grammar-step-label">Bab 1 dari 20</span>
+                        <span id="grammar-progress-label">0/35 selesai</span>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-100 -translate-y-1/2"></div>
+                        <div id="grammar-stepper" class="relative flex gap-2 overflow-x-auto pb-1 z-10">
+                            <!-- Tombol nomor bab dirender via JS -->
                         </div>
-                        <div class="text-xs italic text-slate-500">Kore wa hon desu</div>
-                        <div class="text-sm font-medium text-slate-700">"Ini adalah buku."</div>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">2. Kata Tunjuk + Kata Benda</span>
-                    <h3 class="text-2xl font-black text-slate-800 jp-text">この / その / あの + Benda</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Berbeda dengan これ/それ/あれ, bentuk <strong class="text-blue-600">この/その/あの</strong> tidak bisa berdiri sendiri — selalu diikuti kata benda setelahnya, seperti kata sifat penunjuk "ini/itu" dalam Bahasa Indonesia.
-                    </p>
-                    <div class="p-4 bg-blue-50/60 rounded-2xl border border-blue-100 space-y-2">
-                        <div class="text-xs font-bold text-blue-700 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>その かばん は わたし の です</span>
-                            <button onclick="speak('そのかばんはわたしのです')" aria-label="Dengarkan contoh kalimat" class="text-blue-600 hover:text-blue-700"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div class="text-xs italic text-slate-500">Sono kaban wa watashi no desu</div>
-                        <div class="text-sm font-medium text-slate-700">"Tas itu adalah milik saya."</div>
-                    </div>
+                <!-- Lesson Card (dirender dinamis + animasi) -->
+                <div id="grammar-lesson-card" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-5">
+                    <!-- Konten bab dirender via JS -->
+                </div>
+
+                <!-- Navigasi Prev/Next -->
+                <div class="flex justify-between items-center gap-4">
+                    <button onclick="prevGrammarLesson()" class="flex-1 py-3 bg-white border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> Bab Sebelumnya
+                    </button>
+                    <button onclick="nextGrammarLesson()" id="grammar-next-btn" class="flex-1 py-3 bg-orange-600 text-white rounded-xl font-bold hover:bg-orange-700 transition">
+                        Bab Berikutnya <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- SUBTAB: BAB 3 - KEPEMILIKAN & TEMPAT -->
-            <div id="materi-bab3" class="materi-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">1. Partikel の (Kepemilikan)</span>
-                    <h3 class="text-2xl font-black text-slate-800">[Pemilik] <span class="text-emerald-600">の</span> [Benda]</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Partikel <strong class="text-emerald-600">の (NO)</strong> menghubungkan dua kata benda untuk menunjukkan kepemilikan atau hubungan, mirip dengan "'s" dalam Bahasa Inggris atau "-nya" dalam Bahasa Indonesia.
-                    </p>
-                    <div class="p-4 bg-emerald-50/60 rounded-2xl border border-emerald-100 space-y-2">
-                        <div class="text-xs font-bold text-emerald-700 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>これ は わたし の ほん です</span>
-                            <button onclick="speak('これはわたしのほんです')" aria-label="Dengarkan contoh kalimat" class="text-emerald-600 hover:text-emerald-700"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div class="text-xs italic text-slate-500">Kore wa watashi no hon desu</div>
-                        <div class="text-sm font-medium text-slate-700">"Ini adalah buku saya."</div>
-                    </div>
+            <!-- SUBTAB: SIMULASI PERCAKAPAN (dirender dinamis via JS) -->
+            <div id="materi-dialog" class="materi-content hidden space-y-6">
+                <div class="flex justify-center flex-wrap gap-2" id="dialog-scenario-selector">
+                    <!-- Tombol skenario dirender via JS -->
                 </div>
-
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">2. Kata Tunjuk Tempat</span>
-                    <h3 class="text-2xl font-black text-slate-800 jp-text">ここ / そこ / あそこ</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Pola yang sama seperti これ/それ/あれ, tapi untuk menunjuk lokasi: <strong class="text-purple-600">ここ</strong> = di sini, <strong class="text-purple-600">そこ</strong> = di situ, <strong class="text-purple-600">あそこ</strong> = di sana.
-                    </p>
-                    <div class="p-4 bg-purple-50/60 rounded-2xl border border-purple-100 space-y-2">
-                        <div class="text-xs font-bold text-purple-700 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>がっこう は あそこ です</span>
-                            <button onclick="speak('がっこうはあそこです')" aria-label="Dengarkan contoh kalimat" class="text-purple-600 hover:text-purple-700"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div class="text-xs italic text-slate-500">Gakkou wa asoko desu</div>
-                        <div class="text-sm font-medium text-slate-700">"Sekolah ada di sana."</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SUBTAB: BAB 4 - ANGKA & WAKTU -->
-            <div id="materi-bab4" class="materi-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">1. Angka Dasar</span>
-                    <h3 class="text-2xl font-black text-slate-800">いち, に, さん...</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Angka 1-10 adalah dasar untuk menyebut umur, harga, dan jam. Kunjungi <strong class="text-amber-600">Kamus N5 kategori Angka</strong> untuk daftar lengkap beserta audio.
-                    </p>
-                    <div class="p-4 bg-amber-50/60 rounded-2xl border border-amber-100 space-y-2">
-                        <div class="text-xs font-bold text-amber-700 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>りんご を みっつ ください</span>
-                            <button onclick="speak('りんごをみっつください')" aria-label="Dengarkan contoh kalimat" class="text-amber-600 hover:text-amber-700"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div class="text-xs italic text-slate-500">Ringo wo mittsu kudasai</div>
-                        <div class="text-sm font-medium text-slate-700">"Tolong berikan tiga buah apel."</div>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold">2. Menanyakan Waktu</span>
-                    <h3 class="text-2xl font-black text-slate-800 jp-text">なんじ ですか？</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        <strong class="text-rose-600">なんじ (nanji)</strong> berarti "jam berapa". Untuk menjawab, sebutkan angka jam lalu tambahkan <strong class="text-rose-600">じ (ji)</strong>.
-                    </p>
-                    <div class="p-4 bg-rose-50/60 rounded-2xl border border-rose-100 space-y-2">
-                        <div class="text-xs font-bold text-rose-700 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>いま は しちじ です</span>
-                            <button onclick="speak('いまはしちじです')" aria-label="Dengarkan contoh kalimat" class="text-rose-600 hover:text-rose-700"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div class="text-xs italic text-slate-500">Ima wa shichiji desu</div>
-                        <div class="text-sm font-medium text-slate-700">"Sekarang jam tujuh."</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SUBTAB: BAB 5 - KATA KERJA ~MASU -->
-            <div id="materi-bab5" class="materi-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <span class="px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-xs font-bold">1. Bentuk ~ます (Positif)</span>
-                    <h3 class="text-2xl font-black text-slate-800 jp-text">[Kata Kerja] + ます</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Bentuk <strong class="text-teal-600">~masu</strong> adalah bentuk sopan kata kerja untuk kejadian sekarang/rutin atau rencana di masa depan. Partikel <strong class="text-teal-600">を (wo)</strong> menandai objek yang dikenai aksi.
-                    </p>
-                    <div class="p-4 bg-teal-50/60 rounded-2xl border border-teal-100 space-y-2">
-                        <div class="text-xs font-bold text-teal-700 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>まいあさ ごはん を たべます</span>
-                            <button onclick="speak('まいあさごはんをたべます')" aria-label="Dengarkan contoh kalimat" class="text-teal-600 hover:text-teal-700"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div class="text-xs italic text-slate-500">Maiasa gohan wo tabemasu</div>
-                        <div class="text-sm font-medium text-slate-700">"Setiap pagi saya makan nasi."</div>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                    <span class="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-bold">2. Bentuk ~ません (Negatif)</span>
-                    <h3 class="text-2xl font-black text-slate-800 jp-text">[Kata Kerja] + ません</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Ganti akhiran <strong class="text-teal-600">~ます</strong> dengan <strong class="text-slate-700">~ません</strong> untuk bentuk negatif. Partikel <strong class="text-slate-700">に (ni)</strong> dan <strong class="text-slate-700">で (de)</strong> sering dipakai untuk menandai tujuan dan lokasi aksi.
-                    </p>
-                    <div class="p-4 bg-slate-100 rounded-2xl border border-slate-200 space-y-2">
-                        <div class="text-xs font-bold text-slate-600 uppercase">Contoh Kalimat:</div>
-                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
-                            <span>きょう は がっこう に いきません</span>
-                            <button onclick="speak('きょうはがっこうにいきません')" aria-label="Dengarkan contoh kalimat" class="text-slate-700 hover:text-slate-800"><i class="fa-solid fa-volume-high"></i></button>
-                        </div>
-                        <div class="text-xs italic text-slate-500">Kyou wa gakkou ni ikimasen</div>
-                        <div class="text-sm font-medium text-slate-700">"Hari ini saya tidak pergi ke sekolah."</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SUBTAB: DIALOG -->
-            <div id="materi-dialog" class="materi-content hidden bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
-                <h3 class="text-xl font-bold text-slate-800">Perkenalan Diri (自己紹介 - Jikoshoukai)</h3>
-                
-                <div class="space-y-4">
-                    <!-- Dialogue Line 1 -->
-                    <div class="flex gap-4 items-start">
-                        <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-sm shrink-0">A</div>
-                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex-grow space-y-1">
-                            <div class="font-bold jp-text text-slate-800 flex justify-between items-center">
-                                <span>はじめまして。わたし は リザ です。</span>
-                                <button onclick="speak('はじめまして。わたしはリザです。')" aria-label="Dengarkan dialog" class="text-orange-600"><i class="fa-solid fa-volume-high"></i></button>
-                            </div>
-                            <div class="text-xs italic text-slate-500">Hajimemashite. Watashi wa Riza desu.</div>
-                            <div class="text-sm text-slate-700">Salam kenal. Saya adalah Riza.</div>
-                        </div>
-                    </div>
-
-                    <!-- Dialogue Line 2 -->
-                    <div class="flex gap-4 items-start">
-                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">B</div>
-                        <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100 flex-grow space-y-1">
-                            <div class="font-bold jp-text text-slate-800 flex justify-between items-center">
-                                <span>はじめまして。わたし は ケン です。どうぞ よろしく。</span>
-                                <button onclick="speak('はじめまして。わたしはケンです。どうぞよろしく。')" aria-label="Dengarkan dialog" class="text-blue-600"><i class="fa-solid fa-volume-high"></i></button>
-                            </div>
-                            <div class="text-xs italic text-slate-500">Hajimemashite. Watashi wa Ken desu. Douzo yoroshiku.</div>
-                            <div class="text-sm text-slate-700">Salam kenal. Saya Ken. Senang berkenalan dengan Anda.</div>
-                        </div>
-                    </div>
+                <div id="dialog-content-card" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                    <!-- Konten dialog dirender via JS -->
                 </div>
             </div>
 
@@ -652,6 +485,7 @@
                 </button>
             </div>
         </section>
+
 
         <!-- SECTION 4: KAMUS INTERAKTIF N5 -->
         <section id="section-kamus" class="content-section hidden space-y-8">
@@ -1164,6 +998,266 @@ const quizBank = [
 ];
 
 // =========================================================
+// DATA TATA BAHASA N5 (35 Bab, urutan topik ala Minna no Nihongo 1
+// tetapi penjelasan & contoh kalimat ditulis orisinal)
+// =========================================================
+const colorThemes = [
+    { bg: 'bg-orange-50/60', border: 'border-orange-100', text: 'text-orange-600', textDark: 'text-orange-700', badge: 'bg-orange-100 text-orange-700', dot: 'bg-orange-500' },
+    { bg: 'bg-blue-50/60', border: 'border-blue-100', text: 'text-blue-600', textDark: 'text-blue-700', badge: 'bg-blue-100 text-blue-700', dot: 'bg-blue-500' },
+    { bg: 'bg-emerald-50/60', border: 'border-emerald-100', text: 'text-emerald-600', textDark: 'text-emerald-700', badge: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-500' },
+    { bg: 'bg-purple-50/60', border: 'border-purple-100', text: 'text-purple-600', textDark: 'text-purple-700', badge: 'bg-purple-100 text-purple-700', dot: 'bg-purple-500' },
+    { bg: 'bg-rose-50/60', border: 'border-rose-100', text: 'text-rose-600', textDark: 'text-rose-700', badge: 'bg-rose-100 text-rose-700', dot: 'bg-rose-500' },
+    { bg: 'bg-teal-50/60', border: 'border-teal-100', text: 'text-teal-600', textDark: 'text-teal-700', badge: 'bg-teal-100 text-teal-700', dot: 'bg-teal-500' },
+    { bg: 'bg-amber-50/60', border: 'border-amber-100', text: 'text-amber-600', textDark: 'text-amber-700', badge: 'bg-amber-100 text-amber-700', dot: 'bg-amber-500' },
+    { bg: 'bg-indigo-50/60', border: 'border-indigo-100', text: 'text-indigo-600', textDark: 'text-indigo-700', badge: 'bg-indigo-100 text-indigo-700', dot: 'bg-indigo-500' }
+];
+
+const grammarLessons = [
+    { title: "Kalimat Identitas は・です", pattern: "[Subjek] は [Predikat] です", explanation: "Partikel <strong>は (wa)</strong> menandai topik kalimat, sementara <strong>です (desu)</strong> adalah bentuk sopan dari 'adalah'. Untuk negatif, ganti です dengan <strong>ではありません</strong>. Untuk bertanya, cukup tambahkan partikel <strong>か (ka)</strong> di akhir kalimat.",
+        examples: [
+            { jp: "わたしはがくせいです", romaji: "Watashi wa gakusei desu", id: "Saya adalah seorang siswa." },
+            { jp: "わたしはせんせいではありません", romaji: "Watashi wa sensei dewa arimasen", id: "Saya bukan seorang guru." },
+            { jp: "あなたはがくせいですか", romaji: "Anata wa gakusei desu ka", id: "Apakah Anda seorang siswa?" }
+        ]},
+    { title: "Kata Tunjuk Benda これ・それ・あれ", pattern: "これ／それ／あれ ・ この／その／あの + Benda", explanation: "<strong>これ (kore)</strong> menunjuk benda dekat pembicara, <strong>それ (sore)</strong> dekat lawan bicara, <strong>あれ (are)</strong> jauh dari keduanya — ketiganya berdiri sendiri. Bentuk <strong>この／その／あの</strong> mirip tapi wajib diikuti kata benda, seperti 'ini/itu' + kata benda dalam Bahasa Indonesia.",
+        examples: [
+            { jp: "これはほんです", romaji: "Kore wa hon desu", id: "Ini adalah buku." },
+            { jp: "そのかばんはわたしのです", romaji: "Sono kaban wa watashi no desu", id: "Tas itu adalah milik saya." }
+        ]},
+    { title: "Kepemilikan の & Kata Tanya だれの", pattern: "[Pemilik] の [Benda]", explanation: "Partikel <strong>の (no)</strong> menghubungkan dua kata benda untuk menunjukkan kepemilikan atau hubungan, mirip \"'s\" dalam Bahasa Inggris. Untuk bertanya milik siapa, gunakan <strong>だれの (dare no)</strong> di depan kata benda.",
+        examples: [
+            { jp: "これはわたしのほんです", romaji: "Kore wa watashi no hon desu", id: "Ini adalah buku saya." },
+            { jp: "これはだれのかばんですか", romaji: "Kore wa dare no kaban desu ka", id: "Ini tas siapa?" }
+        ]},
+    { title: "Kata Tunjuk Tempat ここ・そこ・あそこ", pattern: "ここ／そこ／あそこ ・ こちら (sopan)", explanation: "Pola yang sama seperti これ/それ/あれ tapi untuk lokasi: <strong>ここ</strong> = di sini, <strong>そこ</strong> = di situ, <strong>あそこ</strong> = di sana. Bentuk sopan <strong>こちら (kochira)</strong> sering dipakai saat mengenalkan arah atau orang secara formal.",
+        examples: [
+            { jp: "がっこうはあそこです", romaji: "Gakkou wa asoko desu", id: "Sekolah ada di sana." },
+            { jp: "ここはとしょかんですか", romaji: "Koko wa toshokan desu ka", id: "Apakah di sini perpustakaan?" }
+        ]},
+    { title: "Angka & Kata Bantu Bilangan", pattern: "[Jumlah] + [Counter: つ／まい／ほん／にん]", explanation: "Angka 1-10 jadi dasar untuk menyebut jumlah, tapi Bahasa Jepang butuh 'kata bantu bilangan' (counter) sesuai jenis bendanya: <strong>つ</strong> untuk benda umum, <strong>まい</strong> untuk benda pipih, <strong>ほん</strong> untuk benda panjang, <strong>にん</strong> untuk orang.",
+        examples: [
+            { jp: "りんごをみっつください", romaji: "Ringo wo mittsu kudasai", id: "Tolong berikan tiga buah apel." },
+            { jp: "きょうだいがふたりいます", romaji: "Kyoudai ga futari imasu", id: "Saya punya dua saudara kandung." }
+        ]},
+    { title: "Menanyakan Waktu & Hari", pattern: "なんじですか？ ・ なんようびですか？", explanation: "<strong>なんじ (nanji)</strong> berarti 'jam berapa', dijawab dengan angka + <strong>じ (ji)</strong>. <strong>なんようび (nan youbi)</strong> menanyakan hari apa, dijawab dengan nama hari + <strong>ようび</strong>.",
+        examples: [
+            { jp: "いまはしちじです", romaji: "Ima wa shichiji desu", id: "Sekarang jam tujuh." },
+            { jp: "きょうはげつようびです", romaji: "Kyou wa getsuyoubi desu", id: "Hari ini hari Senin." }
+        ]},
+    { title: "Kata Kerja Bentuk ~ます", pattern: "[Kata Kerja] + ます／ません", explanation: "Bentuk <strong>~masu</strong> adalah bentuk sopan kata kerja untuk kejadian sekarang/rutin atau rencana masa depan. Untuk negatif, ganti ~ます dengan <strong>~ません</strong>.",
+        examples: [
+            { jp: "まいあさごはんをたべます", romaji: "Maiasa gohan wo tabemasu", id: "Setiap pagi saya makan nasi." },
+            { jp: "きょうはがっこうにいきません", romaji: "Kyou wa gakkou ni ikimasen", id: "Hari ini saya tidak pergi ke sekolah." }
+        ]},
+    { title: "Partikel Kata Kerja を・に・で・へ・と", pattern: "[Objek]を ・ [Waktu/Tujuan]に ・ [Tempat/Alat]で ・ [Arah]へ ・ [Teman]と", explanation: "<strong>を</strong> menandai objek yang dikenai aksi, <strong>に</strong> untuk waktu atau tujuan, <strong>で</strong> untuk tempat terjadinya aksi atau alat, <strong>へ</strong> untuk arah tujuan, dan <strong>と</strong> untuk 'bersama siapa'.",
+        examples: [
+            { jp: "まいにちしんぶんをよみます", romaji: "Mainichi shinbun wo yomimasu", id: "Setiap hari saya membaca koran." },
+            { jp: "ともだちとえいがをみます", romaji: "Tomodachi to eiga wo mimasu", id: "Saya menonton film bersama teman." }
+        ]},
+    { title: "Keberadaan あります・います", pattern: "[Tempat] に [Benda] が あります／います", explanation: "<strong>あります</strong> dipakai untuk benda mati atau tumbuhan, <strong>います</strong> untuk makhluk hidup (orang/hewan). Posisi benda bisa dijelaskan dengan kata seperti うえ (atas), した (bawah), なか (dalam).",
+        examples: [
+            { jp: "つくえのうえにほんがあります", romaji: "Tsukue no ue ni hon ga arimasu", id: "Ada buku di atas meja." },
+            { jp: "へやにねこがいます", romaji: "Heya ni neko ga imasu", id: "Ada kucing di dalam kamar." }
+        ]},
+    { title: "Kata Sifat い / な Adjective", pattern: "[い-adj] + Benda ・ [な-adj] + な + Benda", explanation: "Kata sifat berakhiran い (i-adjective) langsung menempel ke kata benda atau です. Kata sifat lain (na-adjective) butuh <strong>な</strong> sebelum kata benda. Negatif い-adjective: ganti い dengan <strong>くない</strong>; na-adjective: tambahkan <strong>じゃない</strong>.",
+        examples: [
+            { jp: "このほんはおもしろいです", romaji: "Kono hon wa omoshiroi desu", id: "Buku ini menarik." },
+            { jp: "きれいなへやですね", romaji: "Kirei na heya desu ne", id: "Kamar yang bersih ya." }
+        ]},
+    { title: "Suka & Pandai すき・じょうず", pattern: "[Orang] は [Hal] が すきです／じょうずです", explanation: "Partikel <strong>が</strong> dipakai untuk menandai objek perasaan atau kemampuan setelah kata seperti すき (suka), きらい (tidak suka), じょうず (pandai), へた (tidak pandai).",
+        examples: [
+            { jp: "わたしはにほんごがすきです", romaji: "Watashi wa nihongo ga suki desu", id: "Saya suka Bahasa Jepang." },
+            { jp: "かれはりょうりがじょうずです", romaji: "Kare wa ryouri ga jouzu desu", id: "Dia pandai memasak." }
+        ]},
+    { title: "Perbandingan より・いちばん", pattern: "A は B より [sifat] ・ [Kategori]のなかで いちばん [sifat]", explanation: "Untuk membandingkan dua hal, gunakan <strong>より (yori)</strong> setelah hal yang dibandingkan. Untuk superlatif ('paling'), gunakan <strong>のなかでいちばん (no naka de ichiban)</strong>.",
+        examples: [
+            { jp: "ふじさんはあのやまよりたかいです", romaji: "Fujisan wa ano yama yori takai desu", id: "Gunung Fuji lebih tinggi dari gunung itu." },
+            { jp: "くだもののなかでりんごがいちばんすきです", romaji: "Kudamono no naka de ringo ga ichiban suki desu", id: "Dari semua buah, saya paling suka apel." }
+        ]},
+    { title: "Bentuk ~て: Minta Tolong & Izin", pattern: "[Kata Kerja-te] + ください／もいいですか／はいけません", explanation: "Bentuk <strong>~te</strong> dipakai untuk meminta tolong (<strong>~てください</strong>), meminta izin (<strong>~てもいいですか</strong>), dan menyatakan larangan (<strong>~てはいけません</strong>).",
+        examples: [
+            { jp: "まどをあけてください", romaji: "Mado wo akete kudasai", id: "Tolong buka jendelanya." },
+            { jp: "ここでしゃしんをとってもいいですか", romaji: "Koko de shashin wo totte mo ii desu ka", id: "Boleh foto di sini?" },
+            { jp: "たばこをすってはいけません", romaji: "Tabako wo sutte wa ikemasen", id: "Dilarang merokok." }
+        ]},
+    { title: "Sedang Berlangsung ~ています", pattern: "[Kata Kerja-te] + います", explanation: "Bentuk <strong>~te imasu</strong> punya dua fungsi utama: menunjukkan aksi yang sedang berlangsung (progresif), atau kebiasaan/pekerjaan tetap sehari-hari.",
+        examples: [
+            { jp: "いまごはんをたべています", romaji: "Ima gohan wo tabete imasu", id: "Sekarang saya sedang makan." },
+            { jp: "わたしはぎんこうではたらいています", romaji: "Watashi wa ginkou de hataraite imasu", id: "Saya bekerja di bank." }
+        ]},
+    { title: "Keinginan & Rencana ~たい・~つもり", pattern: "[Kata Kerja stem] + たいです ・ [Kata Kerja kamus] + つもりです", explanation: "<strong>~tai desu</strong> menyatakan keinginan diri sendiri untuk melakukan sesuatu. <strong>~tsumori desu</strong> menyatakan rencana atau niat yang sudah dipikirkan sebelumnya.",
+        examples: [
+            { jp: "にほんへいきたいです", romaji: "Nihon e ikitai desu", id: "Saya ingin pergi ke Jepang." },
+            { jp: "らいしゅうともだちにあうつもりです", romaji: "Raishuu tomodachi ni au tsumori desu", id: "Minggu depan saya berencana bertemu teman." }
+        ]},
+    { title: "Bisa Melakukan ~ことができます", pattern: "[Kata Kerja kamus] + ことができます", explanation: "Pola ini menyatakan kemampuan atau kemungkinan melakukan sesuatu, setara 'bisa' dalam Bahasa Indonesia. Kata kerja yang dipakai adalah bentuk kamus (dictionary form).",
+        examples: [
+            { jp: "わたしはおよぐことができます", romaji: "Watashi wa oyogu koto ga dekimasu", id: "Saya bisa berenang." },
+            { jp: "かんじをよむことができません", romaji: "Kanji wo yomu koto ga dekimasen", id: "Saya tidak bisa membaca kanji." }
+        ]},
+    { title: "Pengalaman ~たことがあります", pattern: "[Kata Kerja bentuk た] + ことがあります", explanation: "Pola ini menyatakan pengalaman pernah melakukan sesuatu di masa lalu, setara 'pernah' dalam Bahasa Indonesia.",
+        examples: [
+            { jp: "にほんへいったことがあります", romaji: "Nihon e itta koto ga arimasu", id: "Saya pernah pergi ke Jepang." },
+            { jp: "すしをたべたことがありません", romaji: "Sushi wo tabeta koto ga arimasen", id: "Saya belum pernah makan sushi." }
+        ]},
+    { title: "Mengajak ~ましょう・~ませんか", pattern: "[Kata Kerja stem] + ましょう ・ ませんか", explanation: "<strong>~mashou</strong> dipakai untuk mengajak dengan nada 'ayo kita...'. <strong>~masenka</strong> lebih sopan, bermakna 'maukah kamu...?' — cocok untuk mengajak dengan lebih santun.",
+        examples: [
+            { jp: "いっしょにえいがをみましょう", romaji: "Issho ni eiga wo mimashou", id: "Ayo kita nonton film bersama." },
+            { jp: "にちようびにどこかいきませんか", romaji: "Nichiyoubi ni doko ka ikimasenka", id: "Maukah pergi ke suatu tempat hari Minggu?" }
+        ]},
+    { title: "Urutan Waktu ~まえに・~てから", pattern: "[Kata Kerja kamus] + まえに ・ [Kata Kerja-te] + から", explanation: "<strong>~mae ni</strong> berarti 'sebelum melakukan...', dipakai dengan kata kerja bentuk kamus. <strong>~te kara</strong> berarti 'setelah melakukan...', dipakai dengan kata kerja bentuk te.",
+        examples: [
+            { jp: "ねるまえにはをみがきます", romaji: "Neru mae ni ha wo migakimasu", id: "Sebelum tidur, saya menggosok gigi." },
+            { jp: "しゅくだいをしてからあそびます", romaji: "Shukudai wo shite kara asobimasu", id: "Setelah mengerjakan PR, saya bermain." }
+        ]},
+    { title: "Alasan ~から・~ので", pattern: "[Alasan] から／ので、[Akibat]", explanation: "Baik <strong>~kara</strong> maupun <strong>~node</strong> dipakai untuk menyatakan alasan/sebab, mirip 'karena'. ~node terdengar sedikit lebih formal dan halus dibanding ~kara.",
+        examples: [
+            { jp: "さむいから、まどをしめます", romaji: "Samui kara, mado wo shimemasu", id: "Karena dingin, saya menutup jendela." },
+            { jp: "あしたしけんがあるので、べんきょうします", romaji: "Ashita shiken ga aru node, benkyou shimasu", id: "Karena besok ada ujian, saya belajar." }
+        ]},
+    { title: "Menyebutkan Sebagian や", pattern: "[A] や [B] (や〜など)", explanation: "Partikel <strong>や (ya)</strong> dipakai untuk menyebutkan beberapa contoh benda tanpa menyebutkan semuanya secara lengkap — berbeda dengan <strong>と (to)</strong> yang berarti daftarnya lengkap/selesai.",
+        examples: [
+            { jp: "つくえのうえにほんやペンがあります", romaji: "Tsukue no ue ni hon ya pen ga arimasu", id: "Di atas meja ada buku, pulpen, dan lain-lain." },
+            { jp: "かぎやさいふをもっていますか", romaji: "Kagi ya saifu wo motte imasu ka", id: "Apakah kamu bawa kunci, dompet, dan semacamnya?" }
+        ]},
+    { title: "Rentang Waktu から〜まで", pattern: "[Awal] から [Akhir] まで", explanation: "<strong>から (kara)</strong> menandai titik awal dan <strong>まで (made)</strong> menandai titik akhir suatu rentang waktu atau tempat, setara 'dari...sampai'.",
+        examples: [
+            { jp: "くじからごじまではたらきます", romaji: "Kuji kara goji made hatarakimasu", id: "Saya bekerja dari jam 9 sampai jam 5." },
+            { jp: "みせはあさじゅうじからです", romaji: "Mise wa asa juuji kara desu", id: "Tokonya buka mulai jam 10 pagi." }
+        ]},
+    { title: "Hanya しか + Negatif", pattern: "...しか...ません", explanation: "<strong>しか (shika)</strong> selalu diikuti bentuk negatif di akhir kalimat, dan berarti 'hanya' — memberi kesan jumlahnya sedikit atau terbatas.",
+        examples: [
+            { jp: "せんえんしかありません", romaji: "Sen-en shika arimasen", id: "Saya cuma punya seribu yen (tidak lebih)." },
+            { jp: "にほんごしかはなせません", romaji: "Nihongo shika hanasemasen", id: "Saya hanya bisa berbicara Bahasa Jepang." }
+        ]},
+    { title: "Perkiraan Jumlah ぐらい・くらい", pattern: "[Jumlah] ぐらい／くらい", explanation: "<strong>ぐらい (gurai)</strong> atau <strong>くらい (kurai)</strong> dipakai setelah angka atau jumlah untuk menyatakan perkiraan, setara 'kira-kira' atau 'sekitar'.",
+        examples: [
+            { jp: "えきまでじゅっぷんぐらいです", romaji: "Eki made juppun gurai desu", id: "Sekitar sepuluh menit sampai stasiun." },
+            { jp: "ごにんぐらいきました", romaji: "Gonin gurai kimashita", id: "Datang sekitar lima orang." }
+        ]},
+    { title: "Ketika... ~とき", pattern: "[Klausa] とき、[Kalimat Utama]", explanation: "<strong>とき (toki)</strong> berarti 'ketika/saat'. Jika klausa menggunakan kata kerja bentuk kamus, kejadiannya belum/sedang terjadi; jika bentuk た (lampau), kejadiannya sudah selesai lebih dulu.",
+        examples: [
+            { jp: "あめのとき、かさをさします", romaji: "Ame no toki, kasa wo sashimasu", id: "Saat hujan, saya memakai payung." },
+            { jp: "こどものとき、よくうみへいきました", romaji: "Kodomo no toki, yoku umi e ikimashita", id: "Waktu masih kecil, saya sering pergi ke pantai." }
+        ]},
+    { title: "Sambil Melakukan ~ながら", pattern: "[Kata Kerja stem] + ながら", explanation: "Pola <strong>~nagara</strong> menyatakan dua aktivitas yang dilakukan bersamaan oleh orang yang sama, setara 'sambil' dalam Bahasa Indonesia.",
+        examples: [
+            { jp: "おんがくをききながらべんきょうします", romaji: "Ongaku wo kikinagara benkyou shimasu", id: "Saya belajar sambil mendengarkan musik." },
+            { jp: "あるきながらはなしましょう", romaji: "Arukinagara hanashimashou", id: "Ayo kita bicara sambil jalan." }
+        ]},
+    { title: "Terlalu ~すぎます", pattern: "[Kata Sifat/Kerja stem] + すぎます", explanation: "<strong>~sugimasu</strong> ditempelkan ke kata sifat atau kata kerja (setelah menghilangkan akhiran い/です atau ~masu) untuk menyatakan sesuatu yang berlebihan, setara 'terlalu'.",
+        examples: [
+            { jp: "このかばんはたかすぎます", romaji: "Kono kaban wa takasugimasu", id: "Tas ini terlalu mahal." },
+            { jp: "きのうたべすぎました", romaji: "Kinou tabesugimashita", id: "Kemarin saya makan terlalu banyak." }
+        ]},
+    { title: "Mudah/Susah Dilakukan ~やすい・~にくい", pattern: "[Kata Kerja stem] + やすい／にくい", explanation: "Ditempelkan ke bentuk stem kata kerja (bentuk ~masu tanpa ~masu): <strong>~yasui</strong> berarti 'mudah dilakukan', <strong>~nikui</strong> berarti 'susah dilakukan'.",
+        examples: [
+            { jp: "このペンはかきやすいです", romaji: "Kono pen wa kakiyasui desu", id: "Pulpen ini mudah dipakai menulis." },
+            { jp: "このかんじはおぼえにくいです", romaji: "Kono kanji wa oboenikui desu", id: "Kanji ini susah dihafalkan." }
+        ]},
+    { title: "Perubahan Keadaan ~くなります・~になります", pattern: "[い-adj くなります] ・ [な-adj になります]", explanation: "Pola ini menyatakan perubahan keadaan, setara 'menjadi'. い-adjective: ganti い dengan <strong>くなります</strong>; な-adjective: tambahkan <strong>になります</strong>.",
+        examples: [
+            { jp: "てんきがあつくなりました", romaji: "Tenki ga atsuku narimashita", id: "Cuaca menjadi panas." },
+            { jp: "にほんごがじょうずになりました", romaji: "Nihongo ga jouzu ni narimashita", id: "Bahasa Jepangnya menjadi mahir." }
+        ]},
+    { title: "Perkiraan ~でしょう", pattern: "[Kalimat] + でしょう", explanation: "<strong>~deshou</strong> dipakai untuk menyatakan dugaan atau perkiraan dengan tingkat keyakinan cukup tinggi, setara 'mungkin' atau 'kemungkinan besar'.",
+        examples: [
+            { jp: "あしたはあめでしょう", romaji: "Ashita wa ame deshou", id: "Besok mungkin hujan." },
+            { jp: "かれはもうかえったでしょう", romaji: "Kare wa mou kaetta deshou", id: "Dia mungkin sudah pulang." }
+        ]},
+    { title: "Pendapat ~と思います", pattern: "[Kalimat bentuk biasa] + と思います", explanation: "<strong>~to omoimasu</strong> dipakai untuk menyampaikan pendapat atau pikiran pribadi, setara 'saya pikir' atau 'menurut saya'.",
+        examples: [
+            { jp: "あしたはあめだとおもいます", romaji: "Ashita wa ame da to omoimasu", id: "Menurut saya besok akan hujan." },
+            { jp: "このほんはおもしろいとおもいます", romaji: "Kono hon wa omoshiroi to omoimasu", id: "Saya pikir buku ini menarik." }
+        ]},
+    { title: "Memberi & Menerima あげます・もらいます・くれます", pattern: "[Pemberi]は[Penerima]に...あげます／くれます ・ [Penerima]は...もらいます", explanation: "<strong>あげます</strong> = memberi ke orang lain, <strong>もらいます</strong> = menerima dari orang lain, <strong>くれます</strong> = orang lain memberi ke saya/keluarga saya. Pemilihan kata bergantung arah pemberiannya.",
+        examples: [
+            { jp: "わたしはともだちにプレゼントをあげました", romaji: "Watashi wa tomodachi ni purezento wo agemashita", id: "Saya memberi hadiah ke teman saya." },
+            { jp: "ともだちはわたしにプレゼントをくれました", romaji: "Tomodachi wa watashi ni purezento wo kuremashita", id: "Teman saya memberi saya hadiah." }
+        ]},
+    { title: "Daftar Aktivitas ~たり~たりします", pattern: "[Kata Kerja-た]り[Kata Kerja-た]りします", explanation: "Pola ini menyebutkan beberapa contoh aktivitas yang dilakukan (tidak berurutan/tidak lengkap), setara 'melakukan hal-hal seperti...'.",
+        examples: [
+            { jp: "しゅうまつはほんをよんだりえいがをみたりします", romaji: "Shuumatsu wa hon wo yondari eiga wo mitari shimasu", id: "Akhir pekan saya melakukan hal-hal seperti membaca buku dan menonton film." },
+            { jp: "こうえんであるいたりはなしたりしました", romaji: "Kouen de aruitari hanashitari shimashita", id: "Di taman kami jalan-jalan, mengobrol, dan sebagainya." }
+        ]},
+    { title: "Tidak Ada Apa-apa 疑問詞 + も + Negatif", pattern: "なにも／だれも／どこへも + Negatif", explanation: "Kata tanya (なに, だれ, どこ) yang diikuti <strong>も (mo)</strong> dan bentuk negatif menyatakan 'tidak ada apa-apa/siapa-siapa/ke mana pun', bentuk penyangkalan total.",
+        examples: [
+            { jp: "きょうしつにだれもいません", romaji: "Kyoushitsu ni dare mo imasen", id: "Tidak ada siapa pun di dalam kelas." },
+            { jp: "けさはなにもたべませんでした", romaji: "Kesa wa nani mo tabemasen deshita", id: "Tadi pagi saya tidak makan apa-apa." }
+        ]},
+    { title: "Klausa Penerang Kata Benda", pattern: "[Kalimat Kata Kerja] + Kata Benda", explanation: "Kata kerja (dalam bentuk biasa) bisa langsung menerangkan kata benda di belakangnya untuk membentuk frasa yang lebih detail, mirip klausa relatif 'yang...' dalam Bahasa Indonesia.",
+        examples: [
+            { jp: "これはわたしがかいたてがみです", romaji: "Kore wa watashi ga kaita tegami desu", id: "Ini adalah surat yang saya tulis." },
+            { jp: "あそこでうたっているひとはだれですか", romaji: "Asoko de utatte iru hito wa dare desu ka", id: "Siapa orang yang sedang bernyanyi di sana itu?" }
+        ]}
+];
+
+// =========================================================
+// DATA SIMULASI PERCAKAPAN (6 skenario, dialog orisinal)
+// =========================================================
+const dialogScenarios = {
+    perkenalan: {
+        label: "Perkenalan Diri", icon: "fa-solid fa-user",
+        title: "Perkenalan Diri (自己紹介 - Jikoshoukai)",
+        lines: [
+            { speaker: "A", jp: "はじめまして。わたしはリザです。", romaji: "Hajimemashite. Watashi wa Riza desu.", id: "Salam kenal. Saya adalah Riza." },
+            { speaker: "B", jp: "はじめまして。わたしはケンです。どうぞよろしく。", romaji: "Hajimemashite. Watashi wa Ken desu. Douzo yoroshiku.", id: "Salam kenal. Saya Ken. Senang berkenalan dengan Anda." }
+        ]},
+    restoran: {
+        label: "Di Restoran", icon: "fa-solid fa-utensils",
+        title: "Memesan Makanan di Restoran",
+        lines: [
+            { speaker: "A", jp: "いらっしゃいませ。なんめいさまですか。", romaji: "Irasshaimase. Nanmeisama desu ka.", id: "Selamat datang. Untuk berapa orang?" },
+            { speaker: "B", jp: "ふたりです。", romaji: "Futari desu.", id: "Untuk dua orang." },
+            { speaker: "A", jp: "こちらへどうぞ。ごちゅうもんは？", romaji: "Kochira e douzo. Gochuumon wa?", id: "Silakan lewat sini. Mau pesan apa?" },
+            { speaker: "B", jp: "すみません、ラーメンをふたつください。", romaji: "Sumimasen, raamen wo futatsu kudasai.", id: "Permisi, tolong dua ramen." },
+            { speaker: "A", jp: "かしこまりました。おのみものは？", romaji: "Kashikomarimashita. Onomimono wa?", id: "Baik. Untuk minumannya?" },
+            { speaker: "B", jp: "おちゃをおねがいします。", romaji: "Ocha wo onegaishimasu.", id: "Tolong teh." }
+        ]},
+    toko: {
+        label: "Di Toko", icon: "fa-solid fa-shirt",
+        title: "Berbelanja di Toko Pakaian",
+        lines: [
+            { speaker: "A", jp: "いらっしゃいませ。なにかおさがしですか。", romaji: "Irasshaimase. Nanika osagashi desu ka.", id: "Selamat datang. Sedang mencari sesuatu?" },
+            { speaker: "B", jp: "このTシャツはいくらですか。", romaji: "Kono T-shatsu wa ikura desu ka.", id: "T-shirt ini harganya berapa?" },
+            { speaker: "A", jp: "にせんえんです。", romaji: "Nisen-en desu.", id: "Dua ribu yen." },
+            { speaker: "B", jp: "もうすこしやすいのはありますか。", romaji: "Mou sukoshi yasui no wa arimasu ka.", id: "Apakah ada yang sedikit lebih murah?" },
+            { speaker: "A", jp: "はい、こちらはせんごひゃくえんです。", romaji: "Hai, kochira wa sen-gohyaku-en desu.", id: "Ya, yang ini seribu lima ratus yen." },
+            { speaker: "B", jp: "じゃあ、これをください。", romaji: "Jaa, kore wo kudasai.", id: "Kalau begitu, saya beli yang ini." }
+        ]},
+    arah: {
+        label: "Menanyakan Arah", icon: "fa-solid fa-signs-post",
+        title: "Menanyakan Arah ke Stasiun",
+        lines: [
+            { speaker: "A", jp: "すみません、えきはどこですか。", romaji: "Sumimasen, eki wa doko desu ka.", id: "Permisi, stasiun di mana ya?" },
+            { speaker: "B", jp: "まっすぐいって、みぎにまがってください。", romaji: "Massugu itte, migi ni magatte kudasai.", id: "Jalan lurus, lalu belok kanan." },
+            { speaker: "A", jp: "あるいてなんぷんぐらいですか。", romaji: "Aruite nanpun gurai desu ka.", id: "Kira-kira berapa menit jalan kaki?" },
+            { speaker: "B", jp: "じゅっぷんぐらいです。", romaji: "Juppun gurai desu.", id: "Sekitar sepuluh menit." },
+            { speaker: "A", jp: "どうもありがとうございます。", romaji: "Doumo arigatou gozaimasu.", id: "Terima kasih banyak." }
+        ]},
+    sekolah: {
+        label: "Di Sekolah", icon: "fa-solid fa-graduation-cap",
+        title: "Meminta Izin ke Guru",
+        lines: [
+            { speaker: "A", jp: "せんせい、しつもんがあります。", romaji: "Sensei, shitsumon ga arimasu.", id: "Sensei, saya ada pertanyaan." },
+            { speaker: "B", jp: "はい、なんですか。", romaji: "Hai, nan desu ka.", id: "Ya, apa itu?" },
+            { speaker: "A", jp: "トイレにいってもいいですか。", romaji: "Toire ni itte mo ii desu ka.", id: "Boleh saya ke toilet?" },
+            { speaker: "B", jp: "ええ、どうぞ。", romaji: "Ee, douzo.", id: "Ya, silakan." },
+            { speaker: "A", jp: "しゅくだいはあしたまでにだしてもいいですか。", romaji: "Shukudai wa ashita made ni dashite mo ii desu ka.", id: "Bolehkah tugas dikumpulkan sampai besok?" },
+            { speaker: "B", jp: "はい、いいですよ。", romaji: "Hai, ii desu yo.", id: "Ya, boleh." }
+        ]},
+    hobi: {
+        label: "Hobi & Rencana", icon: "fa-solid fa-umbrella-beach",
+        title: "Membicarakan Hobi & Rencana Akhir Pekan",
+        lines: [
+            { speaker: "A", jp: "しゅうまつ、なにをしますか。", romaji: "Shuumatsu, nani wo shimasu ka.", id: "Akhir pekan mau ngapain?" },
+            { speaker: "B", jp: "ともだちとえいがをみるつもりです。あなたは？", romaji: "Tomodachi to eiga wo miru tsumori desu. Anata wa?", id: "Saya berencana nonton film dengan teman. Kamu?" },
+            { speaker: "A", jp: "わたしはうみへいきたいです。およぐのがすきですから。", romaji: "Watashi wa umi e ikitai desu. Oyogu no ga suki desu kara.", id: "Saya ingin pergi ke pantai, karena saya suka berenang." },
+            { speaker: "B", jp: "いいですね！たのしんできてください。", romaji: "Ii desu ne! Tanoshinde kite kudasai.", id: "Bagus ya! Selamat bersenang-senang." }
+        ]}
+};
+
+// =========================================================
 // GLOBAL STATE
 // =========================================================
 let currentKanaCategory = 'hiragana';
@@ -1186,7 +1280,7 @@ let userProgress = {
     xp: 0,
     streak: 1,
     lastVisit: null,
-    learned: { hiragana: [], katakana: [], dakuten: [], kosakata: [] },
+    learned: { hiragana: [], katakana: [], dakuten: [], kosakata: [], grammar: [] },
     planChecked: []
 };
 
@@ -1256,6 +1350,7 @@ function updateProgressBars() {
         { key: 'hiragana', total: hiraganaData.length, bar: 'progress-hiragana-bar', text: 'progress-hiragana-text' },
         { key: 'katakana', total: katakanaData.length, bar: 'progress-katakana-bar', text: 'progress-katakana-text' },
         { key: 'dakuten', total: dakutenData.length, bar: 'progress-dakuten-bar', text: 'progress-dakuten-text' },
+        { key: 'grammar', total: grammarLessons.length, bar: 'progress-grammar-bar', text: 'progress-grammar-text' },
         { key: 'kosakata', total: dictionaryData.length, bar: 'progress-kosakata-bar', text: 'progress-kosakata-text' }
     ];
     sets.forEach(s => {
@@ -1369,7 +1464,188 @@ function switchMateriSubTab(tab) {
     document.querySelectorAll('.materi-subtab').forEach(t => t.classList.remove('tab-active'));
     document.querySelectorAll('.materi-content').forEach(c => c.classList.add('hidden'));
     document.getElementById('subtab-' + tab).classList.add('tab-active');
-    document.getElementById('materi-' + tab).classList.remove('hidden');
+    const contentEl = document.getElementById('materi-' + tab);
+    contentEl.classList.remove('hidden');
+    contentEl.classList.remove('content-animate');
+    void contentEl.offsetWidth;
+    contentEl.classList.add('content-animate');
+
+    if (tab === 'grammar') {
+        if (!document.getElementById('grammar-stepper').dataset.initialized) {
+            renderGrammarStepper();
+            selectGrammarLesson(0);
+            document.getElementById('grammar-stepper').dataset.initialized = '1';
+        }
+    }
+    if (tab === 'dialog') {
+        if (!document.getElementById('dialog-scenario-selector').dataset.initialized) {
+            renderDialogSelector();
+            selectDialogScenario('perkenalan');
+            document.getElementById('dialog-scenario-selector').dataset.initialized = '1';
+        }
+    }
+}
+
+// =========================================================
+// TATA BAHASA N5 — STEPPER & LESSON RENDERER
+// =========================================================
+let currentGrammarLesson = 0;
+
+function renderGrammarStepper() {
+    const stepper = document.getElementById('grammar-stepper');
+    stepper.innerHTML = '';
+    grammarLessons.forEach((lesson, idx) => {
+        const isLearned = userProgress.learned.grammar.includes(idx);
+        const btn = document.createElement('button');
+        btn.setAttribute('aria-label', `Bab ${idx + 1}: ${lesson.title}`);
+        btn.className = `step-circle shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold border-2 ${isLearned ? 'bg-emerald-500 border-emerald-500 text-white' : 'bg-white border-slate-200 text-slate-500'}`;
+        btn.id = 'grammar-step-' + idx;
+        btn.innerHTML = isLearned ? '<i class="fa-solid fa-check"></i>' : (idx + 1);
+        btn.onclick = () => selectGrammarLesson(idx);
+        stepper.appendChild(btn);
+    });
+}
+
+function selectGrammarLesson(idx) {
+    currentGrammarLesson = idx;
+    document.querySelectorAll('.step-circle').forEach(b => b.classList.remove('active'));
+    const activeBtn = document.getElementById('grammar-step-' + idx);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    const total = grammarLessons.length;
+    document.getElementById('grammar-step-label').textContent = `Bab ${idx + 1} dari ${total}`;
+    document.getElementById('grammar-progress-label').textContent = `${userProgress.learned.grammar.length}/${total} selesai`;
+    document.getElementById('grammar-next-btn').innerHTML = idx < total - 1
+        ? 'Bab Berikutnya <i class="fa-solid fa-chevron-right ml-1"></i>'
+        : 'Selesai! Lanjut ke Kosakata <i class="fa-solid fa-arrow-right ml-1"></i>';
+
+    renderGrammarLesson(idx);
+}
+
+function renderGrammarLesson(idx) {
+    const lesson = grammarLessons[idx];
+    const theme = colorThemes[idx % colorThemes.length];
+    const isLearned = userProgress.learned.grammar.includes(idx);
+    const card = document.getElementById('grammar-lesson-card');
+
+    const examplesHtml = lesson.examples.map(ex => `
+        <div class="p-4 ${theme.bg} rounded-2xl border ${theme.border} space-y-2">
+            <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between gap-3">
+                <span>${ex.jp}</span>
+                <button onclick="speak('${ex.jp}')" aria-label="Dengarkan contoh kalimat" class="${theme.text} hover:opacity-70 shrink-0"><i class="fa-solid fa-volume-high"></i></button>
+            </div>
+            <div class="text-xs italic text-slate-500">${ex.romaji}</div>
+            <div class="text-sm font-medium text-slate-700">"${ex.id}"</div>
+        </div>
+    `).join('');
+
+    card.innerHTML = `
+        <div class="flex items-start justify-between gap-3">
+            <span class="px-3 py-1 ${theme.badge} rounded-full text-xs font-bold">Bab ${idx + 1}</span>
+            ${isLearned ? '<span class="text-xs font-bold text-emerald-600 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Sudah Dipelajari</span>' : ''}
+        </div>
+        <h3 class="text-2xl font-black text-slate-800 jp-text">${lesson.title}</h3>
+        <div class="text-sm font-bold ${theme.text} bg-slate-50 inline-block px-3 py-1.5 rounded-lg">${lesson.pattern}</div>
+        <p class="text-slate-600 text-sm leading-relaxed">${lesson.explanation}</p>
+        <div class="space-y-3">
+            <div class="text-xs font-bold ${theme.textDark} uppercase">Contoh Kalimat:</div>
+            ${examplesHtml}
+        </div>
+        <button onclick="markGrammarLearned(${idx})" class="w-full py-3 ${isLearned ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-orange-600 text-white hover:bg-orange-700'} rounded-xl font-bold text-sm transition">
+            ${isLearned ? '<i class="fa-solid fa-check mr-1"></i> Sudah Dipelajari' : 'Tandai Sudah Paham'}
+        </button>
+    `;
+    card.classList.remove('content-animate');
+    void card.offsetWidth;
+    card.classList.add('content-animate');
+}
+
+function markGrammarLearned(idx) {
+    if (!userProgress.learned.grammar.includes(idx)) {
+        userProgress.learned.grammar.push(idx);
+        saveProgress();
+        updateProgressBars();
+        addXP(15);
+        renderGrammarStepper();
+        document.getElementById('grammar-step-' + idx).classList.add('active');
+        renderGrammarLesson(idx);
+        document.getElementById('grammar-progress-label').textContent = `${userProgress.learned.grammar.length}/${grammarLessons.length} selesai`;
+    }
+}
+
+function nextGrammarLesson() {
+    if (currentGrammarLesson < grammarLessons.length - 1) {
+        selectGrammarLesson(currentGrammarLesson + 1);
+    } else {
+        showSection('kamus');
+    }
+}
+
+function prevGrammarLesson() {
+    if (currentGrammarLesson > 0) {
+        selectGrammarLesson(currentGrammarLesson - 1);
+    }
+}
+
+// =========================================================
+// SIMULASI PERCAKAPAN — RENDERER
+// =========================================================
+let currentDialogKey = 'perkenalan';
+
+function renderDialogSelector() {
+    const selector = document.getElementById('dialog-scenario-selector');
+    selector.innerHTML = '';
+    Object.keys(dialogScenarios).forEach(key => {
+        const scenario = dialogScenarios[key];
+        const btn = document.createElement('button');
+        btn.id = 'dialog-btn-' + key;
+        btn.className = 'px-4 py-2 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition flex items-center gap-1.5';
+        btn.innerHTML = `<i class="${scenario.icon}"></i> ${scenario.label}`;
+        btn.onclick = () => selectDialogScenario(key);
+        selector.appendChild(btn);
+    });
+}
+
+function selectDialogScenario(key) {
+    currentDialogKey = key;
+    Object.keys(dialogScenarios).forEach(k => {
+        const btn = document.getElementById('dialog-btn-' + k);
+        btn.className = (k === key)
+            ? 'px-4 py-2 rounded-full text-xs font-bold bg-orange-600 text-white transition flex items-center gap-1.5'
+            : 'px-4 py-2 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition flex items-center gap-1.5';
+    });
+
+    const scenario = dialogScenarios[key];
+    const card = document.getElementById('dialog-content-card');
+    const colorsAB = ['orange', 'blue'];
+
+    const linesHtml = scenario.lines.map(line => {
+        const isA = line.speaker === 'A';
+        const c = isA ? 'orange' : 'blue';
+        return `
+        <div class="flex gap-4 items-start pop-in">
+            <div class="w-10 h-10 rounded-full bg-${c}-100 text-${c}-600 flex items-center justify-center font-bold text-sm shrink-0">${line.speaker}</div>
+            <div class="bg-${isA ? 'slate-50' : 'blue-50/50'} p-4 rounded-2xl border border-${isA ? 'slate-100' : 'blue-100'} flex-grow space-y-1">
+                <div class="font-bold jp-text text-slate-800 flex justify-between items-center gap-3">
+                    <span>${line.jp}</span>
+                    <button onclick="speak('${line.jp}')" aria-label="Dengarkan dialog" class="text-${c}-600 shrink-0"><i class="fa-solid fa-volume-high"></i></button>
+                </div>
+                <div class="text-xs italic text-slate-500">${line.romaji}</div>
+                <div class="text-sm text-slate-700">${line.id}</div>
+            </div>
+        </div>`;
+    }).join('');
+
+    card.innerHTML = `
+        <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="${scenario.icon} text-orange-600"></i> ${scenario.title}</h3>
+        <div class="space-y-4">${linesHtml}</div>
+    `;
+    card.classList.remove('content-animate');
+    void card.offsetWidth;
+    card.classList.add('content-animate');
 }
 
 // =========================================================
