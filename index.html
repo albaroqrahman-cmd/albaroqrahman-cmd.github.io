@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altoura Academia - Platform Belajar Bahasa Jepang Interaktif</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fdfaf7;
+            color: #1e293b;
+        }
+        .jp-text {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        .card-hover {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -6px rgba(194, 65, 12, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .tab-active {
+            border-bottom: 3px solid #ea580c;
+            color: #ea580c;
+            font-weight: 700;
+        }
+        .sakura-pattern {
+            background-color: #fef2f2;
+            background-image: radial-gradient(#fca5a5 0.75px, transparent 0.75px), radial-gradient(#fca5a5 0.75px, #fef2f2 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .flashcard-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard-flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            backface-visibility: hidden;
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- NAVIGATION BAR -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-orange-100 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('beranda')">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-orange-200">
+                        日
+                    </div>
+                    <div>
+                        <span class="text-xl font-black text-slate-800 tracking-tight">Altoura<span class="text-orange-600">Academia</span></span>
+                        <span class="hidden sm:inline-block text-xs text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full font-bold ml-2">N5 Zero to Hero</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <div class="hidden lg:flex items-center space-x-1 text-sm font-semibold text-slate-600">
+                    <button onclick="showSection('beranda')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Beranda</button>
+                    <button onclick="showSection('kana')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Kana & Audio</button>
+                    <button onclick="showSection('materi')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Materi & Gramatika</button>
+                    <button onclick="showSection('kamus')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Kamus N5</button>
+                    <button onclick="showSection('game')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Flashcard & Game</button>
+                    <button onclick="showSection('latihan')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Kuis</button>
+                    <button onclick="showSection('rencana')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Target 30 Hari</button>
+                    <button onclick="showSection('rpp')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Panduan Mengajar</button>
+                </div>
+
+                <!-- User Stats Tracker -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-xs">
+                        <i class="fa-solid fa-fire text-amber-500"></i>
+                        <span id="stat-streak">1 Hari</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-xs">
+                        <i class="fa-solid fa-star text-orange-500"></i>
+                        <span id="stat-xp">0 XP</span>
+                    </div>
+                    <!-- Mobile Hamburger Button -->
+                    <button onclick="toggleMobileMenu()" aria-label="Buka menu navigasi" class="lg:hidden p-2 text-slate-600 hover:text-orange-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-100 bg-white px-4 pt-2 pb-4 space-y-1 shadow-lg">
+            <button onclick="showSection('beranda')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Beranda</button>
+            <button onclick="showSection('kana')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Aksara Kana & Audio</button>
+            <button onclick="showSection('materi')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Materi & Gramatika</button>
+            <button onclick="showSection('kamus')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Kamus N5</button>
+            <button onclick="showSection('game')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Flashcard & Game</button>
+            <button onclick="showSection('latihan')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Kuis</button>
+            <button onclick="showSection('rencana')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Target 30 Hari</button>
+            <button onclick="showSection('rpp')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Panduan Mengajar</button>
+        </div>
+    </nav>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-xl flex items-center gap-2 max-w-sm text-center">
+        <i class="fa-solid fa-circle-info text-amber-400"></i>
+        <span id="toast-message">Pesan</span>
+    </div>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- SECTION 1: BERANDA (HOME) -->
+        <section id="section-beranda" class="content-section space-y-10">
+            <!-- Hero Banner -->
+            <div class="relative bg-gradient-to-br from-orange-600 via-amber-600 to-red-600 rounded-3xl p-8 sm:p-12 text-white overflow-hidden shadow-xl">
+                <!-- Background decorative elements -->
+                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute right-20 top-10 text-9xl font-black text-white/5 jp-text pointer-events-none select-none">日本語</div>
+
+                <div class="relative z-10 max-w-2xl space-y-6">
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider text-orange-100 border border-white/20">
+                        <i class="fa-solid fa-sparkles"></i> Platform Belajar Interaktif
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
+                        Kuasai Bahasa Jepang <br><span class="text-amber-200">Dari Titik Nol hingga N5</span>
+                    </h1>
+                    <p class="text-orange-100 text-base sm:text-lg leading-relaxed">
+                        Pelajari Hiragana, Katakana, Audio Pelafalan Asli, Gramatika Dasar, Percakapan Sehari-hari, hingga Kamus Lengkap dalam satu aplikasi.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="showSection('kana')" class="px-7 py-3.5 bg-white text-orange-700 rounded-2xl font-extrabold hover:bg-orange-50 transition shadow-lg shadow-orange-900/20 flex items-center gap-2">
+                            <i class="fa-solid fa-play"></i> Mulai Belajar Kana
+                        </button>
+                        <button onclick="showSection('kamus')" class="px-7 py-3.5 bg-orange-700/60 backdrop-blur-md border border-white/30 text-white rounded-2xl font-bold hover:bg-orange-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> Buka Kamus N5
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Overview -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between mb-5">
+                    <h3 class="font-extrabold text-slate-800 text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-orange-600"></i> Progres Belajar Kamu
+                    </h3>
+                    <button onclick="showSection('rencana')" class="text-xs font-bold text-orange-600 hover:underline">Lihat Target 30 Hari &rarr;</button>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500"><span>Hiragana</span><span id="progress-hiragana-text">0/46</span></div>
+                        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-hiragana-bar" class="h-full bg-orange-500 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500"><span>Katakana</span><span id="progress-katakana-text">0/46</span></div>
+                        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-katakana-bar" class="h-full bg-blue-500 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500"><span>Dakuten/Yōon</span><span id="progress-dakuten-text">0/45</span></div>
+                        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-dakuten-bar" class="h-full bg-purple-500 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500"><span>Kosakata</span><span id="progress-kosakata-text">0/0</span></div>
+                        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-kosakata-bar" class="h-full bg-emerald-500 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Access Modules Grid -->
+            <div>
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-grid-2 text-orange-600"></i> Fitur Modul Utama
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Card 1 -->
+                    <div onclick="showSection('kana')" class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm card-hover cursor-pointer group">
+                        <div class="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                            <span class="jp-text font-bold">あ</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Aksara Kana & Audio</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Tabel Hiragana & Katakana interaktif dengan audio pelafalan dan kanvas menulis.</p>
+                        <span class="text-xs font-bold text-orange-600 flex items-center gap-1">Buka Aksara <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div onclick="showSection('materi')" class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm card-hover cursor-pointer group">
+                        <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Aisatsu & Gramatika</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Pola kalimat dasar WA-DESU, ungkapan salam sehari-hari, dan latihan dialog.</p>
+                        <span class="text-xs font-bold text-blue-600 flex items-center gap-1">Pelajari Tata Bahasa <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div onclick="showSection('kamus')" class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm card-hover cursor-pointer group">
+                        <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Kamus Interaktif N5</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Pencarian cepat kata benda, profesi, angka, dan kata kerja dilengkapi suara.</p>
+                        <span class="text-xs font-bold text-emerald-600 flex items-center gap-1">Cari Kosakata <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div onclick="showSection('game')" class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm card-hover cursor-pointer group">
+                        <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Flashcard & Game</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Latih ingatan dengan kartu memori interaktif dan mini-game Speed Match.</p>
+                        <span class="text-xs font-bold text-purple-600 flex items-center gap-1">Mulai Bermain <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Goals Progress Section -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 text-center md:text-left">
+                    <span class="text-xs font-bold text-orange-600 uppercase tracking-wider">Target Harian Anda</span>
+                    <h3 class="text-2xl font-bold text-slate-800">Selesaikan 1 Sesi Hari Ini</h3>
+                    <p class="text-slate-500 text-sm">Dapatkan +50 XP dengan menyelesaikan latihan kuis atau mempelajari 5 Hiragana baru.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="showSection('latihan')" class="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold transition shadow-md shadow-orange-200">
+                        Kerjakan Kuis Sekarang
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: KANA & AUDIO (HIRAGANA / KATAKANA / DAKUTEN) -->
+        <section id="section-kana" class="content-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Aksara Jepang</span>
+                <h2 class="text-3xl font-extrabold text-slate-800">Tabel Kana Interaktif</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Klik karakter untuk mendengarkan audio pelafalan asli <i class="fa-solid fa-volume-high text-orange-600 ml-1"></i> atau klik tombol <i class="fa-solid fa-pen-line text-blue-600"></i> untuk melatih tulisan di kanvas. Karakter yang sudah kamu pelajari akan ditandai centang hijau.</p>
+            </div>
+
+            <!-- Tabs Selection -->
+            <div class="flex justify-center border-b border-slate-200 overflow-x-auto">
+                <button onclick="switchKanaTab('hiragana')" id="tab-hiragana" class="kana-tab px-6 py-3 font-bold text-sm sm:text-base tab-active whitespace-nowrap">Hiragana (ひらがな)</button>
+                <button onclick="switchKanaTab('katakana')" id="tab-katakana" class="kana-tab px-6 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Katakana (カタカナ)</button>
+                <button onclick="switchKanaTab('dakuten')" id="tab-dakuten" class="kana-tab px-6 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Dakuten & Yōon</button>
+            </div>
+
+            <!-- Kana Grid Display Container -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <!-- Grid items generated dynamically via JavaScript -->
+                <div id="kana-grid-container" class="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-10 gap-3 sm:gap-4">
+                    <!-- Dynamic Javascript Content -->
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4 text-amber-800">
+                <i class="fa-solid fa-lightbulb text-2xl text-amber-500 mt-0.5"></i>
+                <div class="text-sm">
+                    <h4 class="font-bold mb-1">Tips Menghafal Aksara:</h4>
+                    <p class="text-amber-900/80">Latihlah 5 karakter per hari. Ulangi pelafalan secara nyaring saat mendengarkan audio, dan gunakan kanvas latihan untuk membiasakan memori otot tangan Anda.</p>
+                </div>
+            </div>
+
+            <!-- Step Navigation: lanjut ke tahap berikutnya -->
+            <div class="flex justify-center pt-2">
+                <button onclick="showSection('materi')" class="px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-extrabold transition shadow-md shadow-orange-200 flex items-center gap-2">
+                    Sudah Hafal Huruf? Lanjut ke Tata Bahasa <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 3: MATERI & GRAMATIKA -->
+        <section id="section-materi" class="content-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Tata Bahasa & Ungkapan</span>
+                <h2 class="text-3xl font-extrabold text-slate-800">Materi Inti Pembelajaran</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Pahami pola kalimat dasar, partikel penting, serta ungkapan perkenalan diri dalam Bahasa Jepang.</p>
+                <p class="text-xs text-slate-400 max-w-xl mx-auto">Urutan Bab 1-5 disusun mengikuti alur topik dasar yang lazim dipakai buku <em>Minna no Nihongo 1</em> (kalimat is-desu &rarr; kata tunjuk &rarr; kepemilikan/tempat &rarr; angka/waktu &rarr; kata kerja ~masu). Penjelasan dan contoh kalimat di bawah ini ditulis ulang secara orisinal, bukan kutipan langsung dari buku tersebut.</p>
+            </div>
+
+            <!-- Sub Tabs -->
+            <div class="flex justify-center border-b border-slate-200 overflow-x-auto">
+                <button onclick="switchMateriSubTab('aisatsu')" id="subtab-aisatsu" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base tab-active whitespace-nowrap">Salam (Aisatsu)</button>
+                <button onclick="switchMateriSubTab('pola')" id="subtab-pola" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Bab 1: Kalimat Dasar</button>
+                <button onclick="switchMateriSubTab('bab2')" id="subtab-bab2" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Bab 2: Kata Tunjuk</button>
+                <button onclick="switchMateriSubTab('bab3')" id="subtab-bab3" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Bab 3: Kepemilikan & Tempat</button>
+                <button onclick="switchMateriSubTab('bab4')" id="subtab-bab4" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Bab 4: Angka & Waktu</button>
+                <button onclick="switchMateriSubTab('bab5')" id="subtab-bab5" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Bab 5: Kata Kerja ~masu</button>
+                <button onclick="switchMateriSubTab('dialog')" id="subtab-dialog" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Simulasi Percakapan</button>
+            </div>
+
+            <!-- SUBTAB: AISATSU -->
+            <div id="materi-aisatsu" class="materi-content space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Item Salam 1 -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Pagi (Formal)</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">おはようございます</div>
+                            <div class="text-sm italic text-slate-500">Ohayou Gozaimasu</div>
+                            <div class="text-sm font-medium text-slate-700">Selamat Pagi</div>
+                        </div>
+                        <button onclick="speak('おはようございます')" aria-label="Dengarkan Ohayou Gozaimasu" class="w-12 h-12 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+
+                    <!-- Item Salam 2 -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Siang / Umum</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">こんにちは</div>
+                            <div class="text-sm italic text-slate-500">Konnichiwa</div>
+                            <div class="text-sm font-medium text-slate-700">Selamat Siang / Halo</div>
+                        </div>
+                        <button onclick="speak('こんにちは')" aria-label="Dengarkan Konnichiwa" class="w-12 h-12 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+
+                    <!-- Item Salam 3 -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">Malam</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">こんばんは</div>
+                            <div class="text-sm italic text-slate-500">Konbanwa</div>
+                            <div class="text-sm font-medium text-slate-700">Selamat Malam</div>
+                        </div>
+                        <button onclick="speak('こんばんは')" aria-label="Dengarkan Konbanwa" class="w-12 h-12 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+
+                    <!-- Item Salam 4 -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Apresiasi</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">ありがとうございます</div>
+                            <div class="text-sm italic text-slate-500">Arigatou Gozaimasu</div>
+                            <div class="text-sm font-medium text-slate-700">Terima Kasih Banyak</div>
+                        </div>
+                        <button onclick="speak('ありがとうございます')" aria-label="Dengarkan Arigatou Gozaimasu" class="w-12 h-12 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+
+                    <!-- Item Salam 5 -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Perpisahan</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">さようなら</div>
+                            <div class="text-sm italic text-slate-500">Sayounara</div>
+                            <div class="text-sm font-medium text-slate-700">Selamat Tinggal</div>
+                        </div>
+                        <button onclick="speak('さようなら')" aria-label="Dengarkan Sayounara" class="w-12 h-12 bg-red-50 hover:bg-red-100 text-red-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+
+                    <!-- Item Salam 6 -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">Permintaan Maaf</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">すみません</div>
+                            <div class="text-sm italic text-slate-500">Sumimasen</div>
+                            <div class="text-sm font-medium text-slate-700">Maaf / Permisi</div>
+                        </div>
+                        <button onclick="speak('すみません')" aria-label="Dengarkan Sumimasen" class="w-12 h-12 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBTAB: POLA KALIMAT -->
+            <div id="materi-pola" class="materi-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Pola Positif -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">1. Kalimat Positif</span>
+                    <h3 class="text-2xl font-black text-slate-800">[Subjek] <span class="text-orange-600">は</span> [Predikat] <span class="text-orange-600">です</span></h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Partikel <strong class="text-orange-600">は (WA)</strong> menandai topik kalimat, sedangkan <strong class="text-orange-600">です (DESU)</strong> menghaluskan kalimat secara sopan.
+                    </p>
+                    <div class="p-4 bg-orange-50/60 rounded-2xl border border-orange-100 space-y-2">
+                        <div class="text-xs font-bold text-orange-700 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>わたし は がくせい です</span>
+                            <button onclick="speak('わたしはがくせいです')" aria-label="Dengarkan contoh kalimat" class="text-orange-600 hover:text-orange-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Watashi wa gakusei desu</div>
+                        <div class="text-sm font-medium text-slate-700">"Saya adalah seorang siswa."</div>
+                    </div>
+                </div>
+
+                <!-- Pola Negatif -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">2. Kalimat Negatif</span>
+                    <h3 class="text-2xl font-black text-slate-800">... <span class="text-red-600">ではありません</span></h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Mengubah akhir kalimat menjadi negatif formal. Gantikan <strong class="text-orange-600">です</strong> dengan <strong class="text-red-600">ではありません (Dewa Arimasen)</strong>.
+                    </p>
+                    <div class="p-4 bg-red-50/60 rounded-2xl border border-red-100 space-y-2">
+                        <div class="text-xs font-bold text-red-700 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>わたし は せんせい ではありません</span>
+                            <button onclick="speak('わたしはせんせいではありません')" aria-label="Dengarkan contoh kalimat" class="text-red-600 hover:text-red-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Watashi wa sensei dewa arimasen</div>
+                        <div class="text-sm font-medium text-slate-700">"Saya bukan seorang guru."</div>
+                    </div>
+                </div>
+
+                <!-- Pola Tanya -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4 md:col-span-2">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">3. Kalimat Tanya</span>
+                    <h3 class="text-2xl font-black text-slate-800">... です <span class="text-blue-600">か</span> ?</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Cukup tambahkan partikel <strong class="text-blue-600">か (KA)</strong> di akhir kalimat untuk membuatnya menjadi pertanyaan, tanpa perlu mengubah susunan kata.
+                    </p>
+                    <div class="p-4 bg-blue-50/60 rounded-2xl border border-blue-100 space-y-2">
+                        <div class="text-xs font-bold text-blue-700 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>あなた は がくせい です か</span>
+                            <button onclick="speak('あなたはがくせいですか')" aria-label="Dengarkan contoh kalimat" class="text-blue-600 hover:text-blue-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Anata wa gakusei desu ka?</div>
+                        <div class="text-sm font-medium text-slate-700">"Apakah Anda seorang siswa?"</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBTAB: BAB 2 - KATA TUNJUK -->
+            <div id="materi-bab2" class="materi-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold">1. Kata Tunjuk Benda</span>
+                    <h3 class="text-2xl font-black text-slate-800 jp-text">これ / それ / あれ</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Dipakai untuk menunjuk benda tanpa menyebut kata bendanya langsung. <strong class="text-orange-600">これ (kore)</strong> = benda dekat pembicara, <strong class="text-orange-600">それ (sore)</strong> = benda dekat lawan bicara, <strong class="text-orange-600">あれ (are)</strong> = benda jauh dari keduanya.
+                    </p>
+                    <div class="p-4 bg-orange-50/60 rounded-2xl border border-orange-100 space-y-2">
+                        <div class="text-xs font-bold text-orange-700 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>これ は ほん です</span>
+                            <button onclick="speak('これはほんです')" aria-label="Dengarkan contoh kalimat" class="text-orange-600 hover:text-orange-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Kore wa hon desu</div>
+                        <div class="text-sm font-medium text-slate-700">"Ini adalah buku."</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">2. Kata Tunjuk + Kata Benda</span>
+                    <h3 class="text-2xl font-black text-slate-800 jp-text">この / その / あの + Benda</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Berbeda dengan これ/それ/あれ, bentuk <strong class="text-blue-600">この/その/あの</strong> tidak bisa berdiri sendiri — selalu diikuti kata benda setelahnya, seperti kata sifat penunjuk "ini/itu" dalam Bahasa Indonesia.
+                    </p>
+                    <div class="p-4 bg-blue-50/60 rounded-2xl border border-blue-100 space-y-2">
+                        <div class="text-xs font-bold text-blue-700 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>その かばん は わたし の です</span>
+                            <button onclick="speak('そのかばんはわたしのです')" aria-label="Dengarkan contoh kalimat" class="text-blue-600 hover:text-blue-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Sono kaban wa watashi no desu</div>
+                        <div class="text-sm font-medium text-slate-700">"Tas itu adalah milik saya."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBTAB: BAB 3 - KEPEMILIKAN & TEMPAT -->
+            <div id="materi-bab3" class="materi-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">1. Partikel の (Kepemilikan)</span>
+                    <h3 class="text-2xl font-black text-slate-800">[Pemilik] <span class="text-emerald-600">の</span> [Benda]</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Partikel <strong class="text-emerald-600">の (NO)</strong> menghubungkan dua kata benda untuk menunjukkan kepemilikan atau hubungan, mirip dengan "'s" dalam Bahasa Inggris atau "-nya" dalam Bahasa Indonesia.
+                    </p>
+                    <div class="p-4 bg-emerald-50/60 rounded-2xl border border-emerald-100 space-y-2">
+                        <div class="text-xs font-bold text-emerald-700 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>これ は わたし の ほん です</span>
+                            <button onclick="speak('これはわたしのほんです')" aria-label="Dengarkan contoh kalimat" class="text-emerald-600 hover:text-emerald-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Kore wa watashi no hon desu</div>
+                        <div class="text-sm font-medium text-slate-700">"Ini adalah buku saya."</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">2. Kata Tunjuk Tempat</span>
+                    <h3 class="text-2xl font-black text-slate-800 jp-text">ここ / そこ / あそこ</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Pola yang sama seperti これ/それ/あれ, tapi untuk menunjuk lokasi: <strong class="text-purple-600">ここ</strong> = di sini, <strong class="text-purple-600">そこ</strong> = di situ, <strong class="text-purple-600">あそこ</strong> = di sana.
+                    </p>
+                    <div class="p-4 bg-purple-50/60 rounded-2xl border border-purple-100 space-y-2">
+                        <div class="text-xs font-bold text-purple-700 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>がっこう は あそこ です</span>
+                            <button onclick="speak('がっこうはあそこです')" aria-label="Dengarkan contoh kalimat" class="text-purple-600 hover:text-purple-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Gakkou wa asoko desu</div>
+                        <div class="text-sm font-medium text-slate-700">"Sekolah ada di sana."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBTAB: BAB 4 - ANGKA & WAKTU -->
+            <div id="materi-bab4" class="materi-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">1. Angka Dasar</span>
+                    <h3 class="text-2xl font-black text-slate-800">いち, に, さん...</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Angka 1-10 adalah dasar untuk menyebut umur, harga, dan jam. Kunjungi <strong class="text-amber-600">Kamus N5 kategori Angka</strong> untuk daftar lengkap beserta audio.
+                    </p>
+                    <div class="p-4 bg-amber-50/60 rounded-2xl border border-amber-100 space-y-2">
+                        <div class="text-xs font-bold text-amber-700 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>りんご を みっつ ください</span>
+                            <button onclick="speak('りんごをみっつください')" aria-label="Dengarkan contoh kalimat" class="text-amber-600 hover:text-amber-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Ringo wo mittsu kudasai</div>
+                        <div class="text-sm font-medium text-slate-700">"Tolong berikan tiga buah apel."</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold">2. Menanyakan Waktu</span>
+                    <h3 class="text-2xl font-black text-slate-800 jp-text">なんじ ですか？</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        <strong class="text-rose-600">なんじ (nanji)</strong> berarti "jam berapa". Untuk menjawab, sebutkan angka jam lalu tambahkan <strong class="text-rose-600">じ (ji)</strong>.
+                    </p>
+                    <div class="p-4 bg-rose-50/60 rounded-2xl border border-rose-100 space-y-2">
+                        <div class="text-xs font-bold text-rose-700 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>いま は しちじ です</span>
+                            <button onclick="speak('いまはしちじです')" aria-label="Dengarkan contoh kalimat" class="text-rose-600 hover:text-rose-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Ima wa shichiji desu</div>
+                        <div class="text-sm font-medium text-slate-700">"Sekarang jam tujuh."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBTAB: BAB 5 - KATA KERJA ~MASU -->
+            <div id="materi-bab5" class="materi-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <span class="px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-xs font-bold">1. Bentuk ~ます (Positif)</span>
+                    <h3 class="text-2xl font-black text-slate-800 jp-text">[Kata Kerja] + ます</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Bentuk <strong class="text-teal-600">~masu</strong> adalah bentuk sopan kata kerja untuk kejadian sekarang/rutin atau rencana di masa depan. Partikel <strong class="text-teal-600">を (wo)</strong> menandai objek yang dikenai aksi.
+                    </p>
+                    <div class="p-4 bg-teal-50/60 rounded-2xl border border-teal-100 space-y-2">
+                        <div class="text-xs font-bold text-teal-700 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>まいあさ ごはん を たべます</span>
+                            <button onclick="speak('まいあさごはんをたべます')" aria-label="Dengarkan contoh kalimat" class="text-teal-600 hover:text-teal-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Maiasa gohan wo tabemasu</div>
+                        <div class="text-sm font-medium text-slate-700">"Setiap pagi saya makan nasi."</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <span class="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-bold">2. Bentuk ~ません (Negatif)</span>
+                    <h3 class="text-2xl font-black text-slate-800 jp-text">[Kata Kerja] + ません</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Ganti akhiran <strong class="text-teal-600">~ます</strong> dengan <strong class="text-slate-700">~ません</strong> untuk bentuk negatif. Partikel <strong class="text-slate-700">に (ni)</strong> dan <strong class="text-slate-700">で (de)</strong> sering dipakai untuk menandai tujuan dan lokasi aksi.
+                    </p>
+                    <div class="p-4 bg-slate-100 rounded-2xl border border-slate-200 space-y-2">
+                        <div class="text-xs font-bold text-slate-600 uppercase">Contoh Kalimat:</div>
+                        <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between">
+                            <span>きょう は がっこう に いきません</span>
+                            <button onclick="speak('きょうはがっこうにいきません')" aria-label="Dengarkan contoh kalimat" class="text-slate-700 hover:text-slate-800"><i class="fa-solid fa-volume-high"></i></button>
+                        </div>
+                        <div class="text-xs italic text-slate-500">Kyou wa gakkou ni ikimasen</div>
+                        <div class="text-sm font-medium text-slate-700">"Hari ini saya tidak pergi ke sekolah."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBTAB: DIALOG -->
+            <div id="materi-dialog" class="materi-content hidden bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                <h3 class="text-xl font-bold text-slate-800">Perkenalan Diri (自己紹介 - Jikoshoukai)</h3>
+                
+                <div class="space-y-4">
+                    <!-- Dialogue Line 1 -->
+                    <div class="flex gap-4 items-start">
+                        <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-sm shrink-0">A</div>
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex-grow space-y-1">
+                            <div class="font-bold jp-text text-slate-800 flex justify-between items-center">
+                                <span>はじめまして。わたし は リザ です。</span>
+                                <button onclick="speak('はじめまして。わたしはリザです。')" aria-label="Dengarkan dialog" class="text-orange-600"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
+                            <div class="text-xs italic text-slate-500">Hajimemashite. Watashi wa Riza desu.</div>
+                            <div class="text-sm text-slate-700">Salam kenal. Saya adalah Riza.</div>
+                        </div>
+                    </div>
+
+                    <!-- Dialogue Line 2 -->
+                    <div class="flex gap-4 items-start">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">B</div>
+                        <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100 flex-grow space-y-1">
+                            <div class="font-bold jp-text text-slate-800 flex justify-between items-center">
+                                <span>はじめまして。わたし は ケン です。どうぞ よろしく。</span>
+                                <button onclick="speak('はじめまして。わたしはケンです。どうぞよろしく。')" aria-label="Dengarkan dialog" class="text-blue-600"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
+                            <div class="text-xs italic text-slate-500">Hajimemashite. Watashi wa Ken desu. Douzo yoroshiku.</div>
+                            <div class="text-sm text-slate-700">Salam kenal. Saya Ken. Senang berkenalan dengan Anda.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step Navigation: lanjut ke tahap berikutnya -->
+            <div class="flex justify-center pt-2">
+                <button onclick="showSection('kamus')" class="px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-extrabold transition shadow-md shadow-orange-200 flex items-center gap-2">
+                    Sudah Paham Gramatika? Lanjut ke Kosakata <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 4: KAMUS INTERAKTIF N5 -->
+        <section id="section-kamus" class="content-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Kamus Lengkap</span>
+                <h2 class="text-3xl font-extrabold text-slate-800">Kamus Kosakata N5</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Cari kata dalam Bahasa Indonesia, Romaji, atau Kana secara langsung.</p>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="relative flex-grow">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+                    <input type="text" id="dict-search-input" onkeyup="filterDictionary()" placeholder="Cari kata (contoh: Guru, Sensei, わたし)..." aria-label="Cari kosakata" class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-orange-500 transition">
+                </div>
+                <select id="dict-category-select" onchange="filterDictionary()" aria-label="Filter kategori kosakata" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:border-orange-500">
+                    <option value="ALL">Semua Kategori</option>
+                    <option value="PRORESI">Profesi & Status</option>
+                    <option value="ORANG">Kata Ganti Orang</option>
+                    <option value="NEGARA">Negara & Bahasa</option>
+                    <option value="ANGKA">Angka & Waktu</option>
+                    <option value="MAKANAN">Makanan & Minuman</option>
+                    <option value="KELUARGA">Keluarga</option>
+                    <option value="HARI">Hari & Waktu</option>
+                    <option value="KERJA">Kata Kerja Dasar</option>
+                    <option value="BENDA">Benda Sehari-hari</option>
+                    <option value="TEMPAT">Tempat & Lokasi</option>
+                    <option value="SIFAT">Kata Sifat</option>
+                </select>
+            </div>
+
+            <p id="dict-count" class="text-xs font-semibold text-slate-400 -mb-2"></p>
+
+            <!-- Vocabulary Cards List -->
+            <div id="dict-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Content generated dynamically -->
+            </div>
+
+            <!-- Step Navigation: lanjut ke tahap berikutnya -->
+            <div class="flex justify-center pt-2">
+                <button onclick="showSection('game')" class="px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-extrabold transition shadow-md shadow-orange-200 flex items-center gap-2">
+                    Sudah Hafal Kosakata? Latihan di Game <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 5: FLASHCARD & GAME -->
+        <section id="section-game" class="content-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Permainan Latihan</span>
+                <h2 class="text-3xl font-extrabold text-slate-800">Flashcard & Speed Match</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Pilih mode permainan untuk menguji dan memperkuat daya ingat kosakata Anda.</p>
+            </div>
+
+            <!-- Game Tabs -->
+            <div class="flex justify-center border-b border-slate-200 overflow-x-auto">
+                <button onclick="switchGameMode('flashcard')" id="gametab-flashcard" class="game-tab px-6 py-3 font-bold text-sm sm:text-base tab-active whitespace-nowrap">Kartu Memori (Flashcard)</button>
+                <button onclick="switchGameMode('quiz')" id="gametab-quiz" class="game-tab px-6 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Kuis Pilihan Ganda</button>
+                <button onclick="switchGameMode('speed')" id="gametab-speed" class="game-tab px-6 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Speed Match Game</button>
+            </div>
+
+            <!-- MODE 1: FLASHCARD -->
+            <div id="game-flashcard-mode" class="max-w-md mx-auto space-y-6">
+
+                <!-- Flashcard Deck Selector -->
+                <div class="flex justify-center flex-wrap gap-2">
+                    <button onclick="switchFlashcardDeck('hiragana')" id="deck-hiragana" class="deck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-orange-600 text-white transition">Hiragana</button>
+                    <button onclick="switchFlashcardDeck('katakana')" id="deck-katakana" class="deck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition">Katakana</button>
+                    <button onclick="switchFlashcardDeck('kosakata')" id="deck-kosakata" class="deck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition">Kosakata</button>
+                </div>
+
+                <!-- Interactive Flip Card Container -->
+                <div onclick="flipFlashcard()" class="perspective-1000 h-64 w-full cursor-pointer">
+                    <div id="flashcard-element" class="flashcard-inner relative w-full h-full bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex flex-col items-center justify-center text-center">
+                        <!-- Front View -->
+                        <div class="flashcard-front absolute space-y-3">
+                            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Klik untuk balik kartu</span>
+                            <div id="fc-kana" class="text-5xl font-black jp-text text-slate-800">あ</div>
+                            <div id="fc-hint" class="text-xs text-slate-400">Tebak arti/bacanya</div>
+                        </div>
+                        <!-- Back View -->
+                        <div class="flashcard-back absolute space-y-3">
+                            <div id="fc-romaji" class="text-3xl font-black text-orange-600">A</div>
+                            <div id="fc-meaning" class="text-lg font-bold text-slate-700">Huruf 'A' Hiragana</div>
+                            <button onclick="event.stopPropagation(); speakCurrentFlashcard();" class="px-4 py-1.5 bg-orange-100 text-orange-700 rounded-xl text-xs font-bold">
+                                <i class="fa-solid fa-volume-high"></i> Dengarkan Audio
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Controls -->
+                <div class="flex justify-between items-center gap-4">
+                    <button onclick="prevFlashcard()" class="flex-1 py-3 bg-white border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> Sebelum
+                    </button>
+                    <span id="fc-counter" class="text-xs font-bold text-slate-500">1 / 10</span>
+                    <button onclick="nextFlashcard()" class="flex-1 py-3 bg-orange-600 text-white rounded-xl font-bold hover:bg-orange-700 transition">
+                        Lanjut <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODE 2: KUIS PILIHAN GANDA (Flashcard Quiz) -->
+            <div id="game-quiz-mode" class="hidden max-w-xl mx-auto space-y-6">
+                <!-- Deck Selector -->
+                <div class="flex justify-center flex-wrap gap-2">
+                    <button onclick="startFlashcardQuiz('hiragana')" id="quizdeck-hiragana" class="quizdeck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-orange-600 text-white transition">Hiragana</button>
+                    <button onclick="startFlashcardQuiz('katakana')" id="quizdeck-katakana" class="quizdeck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition">Katakana</button>
+                    <button onclick="startFlashcardQuiz('kosakata')" id="quizdeck-kosakata" class="quizdeck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition">Kosakata</button>
+                </div>
+
+                <!-- Question Card -->
+                <div id="fq-question-panel" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                    <div class="flex justify-between items-center text-xs font-bold text-slate-400">
+                        <span id="fq-counter">Soal 1 / 10</span>
+                        <span>Skor: <span id="fq-score" class="text-orange-600">0</span></span>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <p id="fq-instruction" class="text-xs font-bold text-orange-600 uppercase">Apa bacaan huruf ini?</p>
+                        <div id="fq-prompt" class="text-6xl font-black jp-text text-slate-800">あ</div>
+                    </div>
+                    <div id="fq-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- 4 pilihan jawaban dirender via JS -->
+                    </div>
+                </div>
+
+                <!-- Evaluation Result -->
+                <div id="fq-result" class="hidden p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
+                    <i class="fa-solid fa-trophy text-4xl text-amber-500"></i>
+                    <h4 class="text-xl font-bold text-emerald-900">Kuis Selesai!</h4>
+                    <p class="text-sm text-emerald-700">Skor kamu: <strong id="fq-final-score">0/10</strong> (<span id="fq-final-percent">0%</span>) — kamu dapat <strong id="fq-xp-gained">+0 XP</strong>!</p>
+                    <button onclick="startFlashcardQuiz(currentQuizDeck)" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm hover:bg-emerald-700 transition">
+                        Coba Lagi
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODE 3: SPEED MATCH GAME -->
+            <div id="game-speed-mode" class="hidden max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                    <div>
+                        <h4 class="font-bold text-slate-800">Cocokkan Pasangan Kata</h4>
+                        <p class="text-xs text-slate-500">Klik satu kata bahasa Jepang dan jodohkan dengan artinya.</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-slate-400">Poin Match:</span>
+                        <div id="match-score" class="text-xl font-black text-orange-600">0</div>
+                    </div>
+                </div>
+
+                <!-- Match Grid -->
+                <div id="match-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                    <!-- Cards rendered via JavaScript -->
+                </div>
+
+                <!-- Evaluation Result -->
+                <div id="match-result" class="hidden p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
+                    <i class="fa-solid fa-circle-check text-3xl text-emerald-500"></i>
+                    <h4 class="font-bold text-emerald-900">Semua Pasangan Cocok!</h4>
+                    <p class="text-xs text-emerald-700">Kesalahan: <strong id="match-mistakes">0</strong> kali — kamu dapat <strong id="match-xp-gained">+0 XP</strong></p>
+                </div>
+
+                <button onclick="initSpeedMatch()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-shuffle mr-1"></i> Acak Ulang Kata
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 6: KUIS & EVALUASI -->
+        <section id="section-latihan" class="content-section hidden space-y-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-100 shadow-sm max-w-2xl mx-auto space-y-8">
+                <div class="text-center space-y-2">
+                    <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">Evaluasi Pemahaman</span>
+                    <h3 class="text-2xl font-bold text-slate-800">Kuis Pilihan Ganda N5</h3>
+                    <p class="text-slate-500 text-sm">10 soal acak dari bank soal aksara, kosakata, dan tata bahasa.</p>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Dynamic Question Container -->
+                </div>
+
+                <!-- Result Message -->
+                <div id="quiz-result" class="hidden p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
+                    <i class="fa-solid fa-circle-check text-4xl text-emerald-500"></i>
+                    <h4 class="text-xl font-bold text-emerald-900">Selamat! Kuis Selesai</h4>
+                    <p class="text-sm text-emerald-700">Skor kamu: <strong id="quiz-score-text">0/10</strong> — kamu dapat <strong id="quiz-xp-gained">+50 XP</strong>!</p>
+                    <button onclick="resetQuiz()" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm hover:bg-emerald-700 transition">
+                        Ulangi Kuis
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8: TARGET 30 HARI -->
+        <section id="section-rencana" class="content-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Roadmap Belajar</span>
+                <h2 class="text-3xl font-extrabold text-slate-800">Target 30 Hari Menuju N5</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Centang setiap hari yang sudah kamu selesaikan. Progresmu tersimpan otomatis.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between gap-4 max-w-3xl mx-auto">
+                <div class="flex-grow">
+                    <div class="flex justify-between text-xs font-bold text-slate-500 mb-2"><span>Progres Keseluruhan</span><span id="plan-progress-text">0/30 Hari</span></div>
+                    <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div id="plan-progress-bar" class="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full transition-all" style="width:0%"></div></div>
+                </div>
+            </div>
+
+            <div id="plan-grid" class="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Dynamic content -->
+            </div>
+        </section>
+
+        <!-- SECTION 7: PANDUAN MENGAJAR (RPP 60 MENIT) -->
+        <section id="section-rpp" class="content-section hidden space-y-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-100 shadow-sm space-y-8">
+                <div class="text-center max-w-xl mx-auto space-y-2">
+                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">Untuk Pengajar & Fasilitator</span>
+                    <h2 class="text-3xl font-extrabold text-slate-800">Strategi Kelas 60 Menit</h2>
+                    <p class="text-slate-600 text-sm">Alokasi waktu efektif agar kelas aktif dan tidak membosankan menggunakan formula <strong>10 - 15 - 20 - 15</strong>.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div class="relative h-72 w-full flex items-center justify-center">
+                        <canvas id="rppChart"></canvas>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-4 p-4 rounded-2xl border-l-4 border-amber-400 bg-amber-50">
+                            <span class="font-bold text-lg text-amber-700 shrink-0">10'</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Warming Up & Icebreaker</h4>
+                                <p class="text-xs text-slate-600">Tanya jawab budaya Jepang (Ojigi & Etika Salam).</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-2xl border-l-4 border-blue-400 bg-blue-50">
+                            <span class="font-bold text-lg text-blue-700 shrink-0">15'</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Micro-Lecturing</h4>
+                                <p class="text-xs text-slate-600">Penyampaian materi inti aksara atau gramatika secara singkat.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-2xl border-l-4 border-emerald-400 bg-emerald-50">
+                            <span class="font-bold text-lg text-emerald-700 shrink-0">20'</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Pair-Work & Mini Game</h4>
+                                <p class="text-xs text-slate-600">Praktik dialog berpasangan & Hiragana Bingo game.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-2xl border-l-4 border-purple-400 bg-purple-50">
+                            <span class="font-bold text-lg text-purple-700 shrink-0">15'</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Evaluation & Flashcard Race</h4>
+                                <p class="text-xs text-slate-600">Peninjauan kembali dan kuis interaktif cepat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: KANVAS LATIHAN MENULIS -->
+    <div id="canvas-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeCanvasModal()" aria-label="Tutup kanvas latihan" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center space-y-1">
+                <span class="text-xs font-bold text-orange-600 uppercase">Latihan Menulis</span>
+                <h3 id="modal-kana-char" class="text-4xl font-black jp-text text-slate-800">あ</h3>
+                <p id="modal-kana-romaji" class="text-sm font-semibold text-slate-500">Romaji: A</p>
+            </div>
+
+            <!-- Drawing Canvas Element -->
+            <div class="relative bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 overflow-hidden flex items-center justify-center">
+                <canvas id="guide-canvas" width="280" height="280" class="absolute pointer-events-none"></canvas>
+                <canvas id="writing-canvas" width="280" height="280" class="cursor-crosshair touch-none relative"></canvas>
+            </div>
+            <label class="flex items-center gap-2 text-xs font-semibold text-slate-500 justify-center">
+                <input type="checkbox" id="guide-toggle" checked onchange="toggleGuide()" class="rounded border-slate-300 text-orange-600 focus:ring-orange-500">
+                Tampilkan panduan huruf
+            </label>
+
+            <div class="flex justify-between gap-3">
+                <button onclick="clearCanvas()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-eraser mr-1"></i> Bersihkan
+                </button>
+                <button onclick="markCurrentKanaLearned(); closeCanvasModal();" class="flex-1 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-sm transition">
+                    Selesai
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+            <div class="flex justify-center items-center gap-2 text-white font-bold">
+                <span class="text-orange-500">日本語</span> Altoura Academia
+            </div>
+            <p class="text-xs text-slate-500">Platform Belajar Bahasa Jepang Interaktif untuk Pemula hingga Level N5 JLPT.</p>
+            <p class="text-xs text-slate-600">© 2026 Altoura Academia. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+// =========================================================
+// DATA KANA — HIRAGANA (46 karakter, lengkap semua baris)
+// =========================================================
+const hiraganaData = [
+    { kana: 'あ', romaji: 'a' }, { kana: 'い', romaji: 'i' }, { kana: 'う', romaji: 'u' }, { kana: 'え', romaji: 'e' }, { kana: 'お', romaji: 'o' },
+    { kana: 'か', romaji: 'ka' }, { kana: 'き', romaji: 'ki' }, { kana: 'く', romaji: 'ku' }, { kana: 'け', romaji: 'ke' }, { kana: 'こ', romaji: 'ko' },
+    { kana: 'さ', romaji: 'sa' }, { kana: 'し', romaji: 'shi' }, { kana: 'す', romaji: 'su' }, { kana: 'せ', romaji: 'se' }, { kana: 'そ', romaji: 'so' },
+    { kana: 'た', romaji: 'ta' }, { kana: 'ち', romaji: 'chi' }, { kana: 'つ', romaji: 'tsu' }, { kana: 'て', romaji: 'te' }, { kana: 'と', romaji: 'to' },
+    { kana: 'な', romaji: 'na' }, { kana: 'に', romaji: 'ni' }, { kana: 'ぬ', romaji: 'nu' }, { kana: 'ね', romaji: 'ne' }, { kana: 'の', romaji: 'no' },
+    { kana: 'は', romaji: 'ha' }, { kana: 'ひ', romaji: 'hi' }, { kana: 'ふ', romaji: 'fu' }, { kana: 'へ', romaji: 'he' }, { kana: 'ほ', romaji: 'ho' },
+    { kana: 'ま', romaji: 'ma' }, { kana: 'み', romaji: 'mi' }, { kana: 'む', romaji: 'mu' }, { kana: 'め', romaji: 'me' }, { kana: 'も', romaji: 'mo' },
+    { kana: 'や', romaji: 'ya' }, { kana: 'ゆ', romaji: 'yu' }, { kana: 'よ', romaji: 'yo' },
+    { kana: 'ら', romaji: 'ra' }, { kana: 'り', romaji: 'ri' }, { kana: 'る', romaji: 'ru' }, { kana: 'れ', romaji: 're' }, { kana: 'ろ', romaji: 'ro' },
+    { kana: 'わ', romaji: 'wa' }, { kana: 'を', romaji: 'wo' }, { kana: 'ん', romaji: 'n' }
+];
+
+// =========================================================
+// DATA KANA — KATAKANA (46 karakter, lengkap semua baris)
+// =========================================================
+const katakanaData = [
+    { kana: 'ア', romaji: 'a' }, { kana: 'イ', romaji: 'i' }, { kana: 'ウ', romaji: 'u' }, { kana: 'エ', romaji: 'e' }, { kana: 'オ', romaji: 'o' },
+    { kana: 'カ', romaji: 'ka' }, { kana: 'キ', romaji: 'ki' }, { kana: 'ク', romaji: 'ku' }, { kana: 'ケ', romaji: 'ke' }, { kana: 'コ', romaji: 'ko' },
+    { kana: 'サ', romaji: 'sa' }, { kana: 'シ', romaji: 'shi' }, { kana: 'ス', romaji: 'su' }, { kana: 'セ', romaji: 'se' }, { kana: 'ソ', romaji: 'so' },
+    { kana: 'タ', romaji: 'ta' }, { kana: 'チ', romaji: 'chi' }, { kana: 'ツ', romaji: 'tsu' }, { kana: 'テ', romaji: 'te' }, { kana: 'ト', romaji: 'to' },
+    { kana: 'ナ', romaji: 'na' }, { kana: 'ニ', romaji: 'ni' }, { kana: 'ヌ', romaji: 'nu' }, { kana: 'ネ', romaji: 'ne' }, { kana: 'ノ', romaji: 'no' },
+    { kana: 'ハ', romaji: 'ha' }, { kana: 'ヒ', romaji: 'hi' }, { kana: 'フ', romaji: 'fu' }, { kana: 'ヘ', romaji: 'he' }, { kana: 'ホ', romaji: 'ho' },
+    { kana: 'マ', romaji: 'ma' }, { kana: 'ミ', romaji: 'mi' }, { kana: 'ム', romaji: 'mu' }, { kana: 'メ', romaji: 'me' }, { kana: 'モ', romaji: 'mo' },
+    { kana: 'ヤ', romaji: 'ya' }, { kana: 'ユ', romaji: 'yu' }, { kana: 'ヨ', romaji: 'yo' },
+    { kana: 'ラ', romaji: 'ra' }, { kana: 'リ', romaji: 'ri' }, { kana: 'ル', romaji: 'ru' }, { kana: 'レ', romaji: 're' }, { kana: 'ロ', romaji: 'ro' },
+    { kana: 'ワ', romaji: 'wa' }, { kana: 'ヲ', romaji: 'wo' }, { kana: 'ン', romaji: 'n' }
+];
+
+// =========================================================
+// DATA KANA — DAKUTEN, HANDAKUTEN & YŌON (46 kombinasi)
+// =========================================================
+const dakutenData = [
+    { kana: 'が', romaji: 'ga' }, { kana: 'ぎ', romaji: 'gi' }, { kana: 'ぐ', romaji: 'gu' }, { kana: 'げ', romaji: 'ge' }, { kana: 'ご', romaji: 'go' },
+    { kana: 'ざ', romaji: 'za' }, { kana: 'じ', romaji: 'ji' }, { kana: 'ず', romaji: 'zu' }, { kana: 'ぜ', romaji: 'ze' }, { kana: 'ぞ', romaji: 'zo' },
+    { kana: 'だ', romaji: 'da' }, { kana: 'ぢ', romaji: 'ji' }, { kana: 'づ', romaji: 'zu' }, { kana: 'で', romaji: 'de' }, { kana: 'ど', romaji: 'do' },
+    { kana: 'ば', romaji: 'ba' }, { kana: 'び', romaji: 'bi' }, { kana: 'ぶ', romaji: 'bu' }, { kana: 'べ', romaji: 'be' }, { kana: 'ぼ', romaji: 'bo' },
+    { kana: 'ぱ', romaji: 'pa' }, { kana: 'ぴ', romaji: 'pi' }, { kana: 'ぷ', romaji: 'pu' }, { kana: 'ぺ', romaji: 'pe' }, { kana: 'ぽ', romaji: 'po' },
+    { kana: 'きゃ', romaji: 'kya' }, { kana: 'きゅ', romaji: 'kyu' }, { kana: 'きょ', romaji: 'kyo' },
+    { kana: 'しゃ', romaji: 'sha' }, { kana: 'しゅ', romaji: 'shu' }, { kana: 'しょ', romaji: 'sho' },
+    { kana: 'ちゃ', romaji: 'cha' }, { kana: 'ちゅ', romaji: 'chu' }, { kana: 'ちょ', romaji: 'cho' },
+    { kana: 'にゃ', romaji: 'nya' }, { kana: 'にゅ', romaji: 'nyu' }, { kana: 'にょ', romaji: 'nyo' },
+    { kana: 'ひゃ', romaji: 'hya' }, { kana: 'ひゅ', romaji: 'hyu' }, { kana: 'ひょ', romaji: 'hyo' },
+    { kana: 'みゃ', romaji: 'mya' }, { kana: 'みゅ', romaji: 'myu' }, { kana: 'みょ', romaji: 'myo' },
+    { kana: 'りゃ', romaji: 'rya' }, { kana: 'りゅ', romaji: 'ryu' }, { kana: 'りょ', romaji: 'ryo' }
+];
+
+// =========================================================
+// DATA KAMUS N5 (66 kata, 11 kategori)
+// =========================================================
+const dictionaryData = [
+    // ORANG - kata ganti orang
+    { kana: 'わたし', romaji: 'Watashi', meaning: 'Saya / Aku', category: 'ORANG' },
+    { kana: 'あなた', romaji: 'Anata', meaning: 'Anda / Kamu', category: 'ORANG' },
+    { kana: 'かれ', romaji: 'Kare', meaning: 'Dia (laki-laki)', category: 'ORANG' },
+    { kana: 'かのじょ', romaji: 'Kanojo', meaning: 'Dia (perempuan)', category: 'ORANG' },
+    { kana: 'わたしたち', romaji: 'Watashitachi', meaning: 'Kami / Kita', category: 'ORANG' },
+    { kana: 'みなさん', romaji: 'Minasan', meaning: 'Semuanya (sopan)', category: 'ORANG' },
+    // PRORESI - profesi & status
+    { kana: 'せんせい', romaji: 'Sensei', meaning: 'Guru / Dosen', category: 'PRORESI' },
+    { kana: 'がくせい', romaji: 'Gakusei', meaning: 'Siswa / Mahasiswa', category: 'PRORESI' },
+    { kana: 'かいしゃいん', romaji: 'Kaishain', meaning: 'Karyawan Perusahaan', category: 'PRORESI' },
+    { kana: 'いしゃ', romaji: 'Isha', meaning: 'Dokter', category: 'PRORESI' },
+    { kana: 'かんごし', romaji: 'Kangoshi', meaning: 'Perawat', category: 'PRORESI' },
+    { kana: 'けいさつかん', romaji: 'Keisatsukan', meaning: 'Polisi', category: 'PRORESI' },
+    // NEGARA - negara & bahasa
+    { kana: 'にほん', romaji: 'Nihon', meaning: 'Jepang', category: 'NEGARA' },
+    { kana: 'インドネシア', romaji: 'Indoneshia', meaning: 'Indonesia', category: 'NEGARA' },
+    { kana: 'アメリカ', romaji: 'Amerika', meaning: 'Amerika', category: 'NEGARA' },
+    { kana: 'かんこく', romaji: 'Kankoku', meaning: 'Korea', category: 'NEGARA' },
+    { kana: 'ちゅうごく', romaji: 'Chuugoku', meaning: 'Tiongkok', category: 'NEGARA' },
+    { kana: 'にほんご', romaji: 'Nihongo', meaning: 'Bahasa Jepang', category: 'NEGARA' },
+    // ANGKA - angka 1-10
+    { kana: 'いち', romaji: 'Ichi', meaning: 'Satu (1)', category: 'ANGKA' },
+    { kana: 'に', romaji: 'Ni', meaning: 'Dua (2)', category: 'ANGKA' },
+    { kana: 'さん', romaji: 'San', meaning: 'Tiga (3)', category: 'ANGKA' },
+    { kana: 'よん', romaji: 'Yon', meaning: 'Empat (4)', category: 'ANGKA' },
+    { kana: 'ご', romaji: 'Go', meaning: 'Lima (5)', category: 'ANGKA' },
+    { kana: 'ろく', romaji: 'Roku', meaning: 'Enam (6)', category: 'ANGKA' },
+    { kana: 'なな', romaji: 'Nana', meaning: 'Tujuh (7)', category: 'ANGKA' },
+    { kana: 'はち', romaji: 'Hachi', meaning: 'Delapan (8)', category: 'ANGKA' },
+    { kana: 'きゅう', romaji: 'Kyuu', meaning: 'Sembilan (9)', category: 'ANGKA' },
+    { kana: 'じゅう', romaji: 'Juu', meaning: 'Sepuluh (10)', category: 'ANGKA' },
+    // MAKANAN
+    { kana: 'みず', romaji: 'Mizu', meaning: 'Air Minum', category: 'MAKANAN' },
+    { kana: 'ごはん', romaji: 'Gohan', meaning: 'Nasi / Makanan', category: 'MAKANAN' },
+    { kana: 'おちゃ', romaji: 'Ocha', meaning: 'Teh', category: 'MAKANAN' },
+    { kana: 'パン', romaji: 'Pan', meaning: 'Roti', category: 'MAKANAN' },
+    { kana: 'さかな', romaji: 'Sakana', meaning: 'Ikan', category: 'MAKANAN' },
+    { kana: 'にく', romaji: 'Niku', meaning: 'Daging', category: 'MAKANAN' },
+    { kana: 'やさい', romaji: 'Yasai', meaning: 'Sayur', category: 'MAKANAN' },
+    // KELUARGA
+    { kana: 'かぞく', romaji: 'Kazoku', meaning: 'Keluarga', category: 'KELUARGA' },
+    { kana: 'ちち', romaji: 'Chichi', meaning: 'Ayah (sendiri)', category: 'KELUARGA' },
+    { kana: 'はは', romaji: 'Haha', meaning: 'Ibu (sendiri)', category: 'KELUARGA' },
+    { kana: 'あに', romaji: 'Ani', meaning: 'Kakak Laki-laki', category: 'KELUARGA' },
+    { kana: 'あね', romaji: 'Ane', meaning: 'Kakak Perempuan', category: 'KELUARGA' },
+    { kana: 'いもうと', romaji: 'Imouto', meaning: 'Adik Perempuan', category: 'KELUARGA' },
+    { kana: 'おとうと', romaji: 'Otouto', meaning: 'Adik Laki-laki', category: 'KELUARGA' },
+    // HARI & WAKTU
+    { kana: 'にちようび', romaji: 'Nichiyoubi', meaning: 'Hari Minggu', category: 'HARI' },
+    { kana: 'げつようび', romaji: 'Getsuyoubi', meaning: 'Hari Senin', category: 'HARI' },
+    { kana: 'きょう', romaji: 'Kyou', meaning: 'Hari Ini', category: 'HARI' },
+    { kana: 'あした', romaji: 'Ashita', meaning: 'Besok', category: 'HARI' },
+    { kana: 'きのう', romaji: 'Kinou', meaning: 'Kemarin', category: 'HARI' },
+    { kana: 'いま', romaji: 'Ima', meaning: 'Sekarang', category: 'HARI' },
+    // KATA KERJA DASAR
+    { kana: 'たべます', romaji: 'Tabemasu', meaning: 'Makan', category: 'KERJA' },
+    { kana: 'のみます', romaji: 'Nomimasu', meaning: 'Minum', category: 'KERJA' },
+    { kana: 'いきます', romaji: 'Ikimasu', meaning: 'Pergi', category: 'KERJA' },
+    { kana: 'みます', romaji: 'Mimasu', meaning: 'Melihat', category: 'KERJA' },
+    { kana: 'ききます', romaji: 'Kikimasu', meaning: 'Mendengar', category: 'KERJA' },
+    { kana: 'よみます', romaji: 'Yomimasu', meaning: 'Membaca', category: 'KERJA' },
+    { kana: 'かきます', romaji: 'Kakimasu', meaning: 'Menulis', category: 'KERJA' },
+    // BENDA SEHARI-HARI
+    { kana: 'ほん', romaji: 'Hon', meaning: 'Buku', category: 'BENDA' },
+    { kana: 'つくえ', romaji: 'Tsukue', meaning: 'Meja', category: 'BENDA' },
+    { kana: 'いす', romaji: 'Isu', meaning: 'Kursi', category: 'BENDA' },
+    { kana: 'かばん', romaji: 'Kaban', meaning: 'Tas', category: 'BENDA' },
+    { kana: 'でんわ', romaji: 'Denwa', meaning: 'Telepon', category: 'BENDA' },
+    { kana: 'とけい', romaji: 'Tokei', meaning: 'Jam', category: 'BENDA' },
+    // TEMPAT & LOKASI
+    { kana: 'がっこう', romaji: 'Gakkou', meaning: 'Sekolah', category: 'TEMPAT' },
+    { kana: 'いえ', romaji: 'Ie', meaning: 'Rumah', category: 'TEMPAT' },
+    { kana: 'かいしゃ', romaji: 'Kaisha', meaning: 'Perusahaan / Kantor', category: 'TEMPAT' },
+    { kana: 'えき', romaji: 'Eki', meaning: 'Stasiun', category: 'TEMPAT' },
+    { kana: 'びょういん', romaji: 'Byouin', meaning: 'Rumah Sakit', category: 'TEMPAT' },
+    { kana: 'みせ', romaji: 'Mise', meaning: 'Toko', category: 'TEMPAT' },
+    // KATA SIFAT
+    { kana: 'おおきい', romaji: 'Ookii', meaning: 'Besar', category: 'SIFAT' },
+    { kana: 'ちいさい', romaji: 'Chiisai', meaning: 'Kecil', category: 'SIFAT' },
+    { kana: 'あたらしい', romaji: 'Atarashii', meaning: 'Baru', category: 'SIFAT' },
+    { kana: 'ふるい', romaji: 'Furui', meaning: 'Lama / Tua', category: 'SIFAT' },
+    { kana: 'たかい', romaji: 'Takai', meaning: 'Mahal / Tinggi', category: 'SIFAT' }
+];
+
+const categoryLabels = {
+    ORANG: 'Kata Ganti Orang', PRORESI: 'Profesi & Status', NEGARA: 'Negara & Bahasa',
+    ANGKA: 'Angka & Waktu', MAKANAN: 'Makanan & Minuman', KELUARGA: 'Keluarga',
+    HARI: 'Hari & Waktu', KERJA: 'Kata Kerja Dasar', BENDA: 'Benda Sehari-hari',
+    TEMPAT: 'Tempat & Lokasi', SIFAT: 'Kata Sifat'
+};
+
+// =========================================================
+// BANK SOAL KUIS (15 soal, 10 diambil acak tiap sesi)
+// =========================================================
+const quizBank = [
+    { q: "Terjemahkan ke Bahasa Jepang: 'Saya adalah siswa'", options: [
+        { text: "わたし は がくせい です", correct: true },
+        { text: "わたし は せんせい です", correct: false },
+        { text: "あなた は がくせい です か", correct: false }
+    ]},
+    { q: "Apa arti dari salam 'Konnichiwa (こんにちは)'?", options: [
+        { text: "Selamat Pagi", correct: false },
+        { text: "Selamat Siang / Halo", correct: true },
+        { text: "Selamat Malam", correct: false }
+    ]},
+    { q: "Manakah bentuk negatif dari 'Sensei desu' (Adalah guru)?", options: [
+        { text: "Sensei dewa arimasen", correct: true },
+        { text: "Sensei desu ka", correct: false },
+        { text: "Sensei wa watashi desu", correct: false }
+    ]},
+    { q: "Huruf Hiragana 'め' dibaca...", options: [
+        { text: "mo", correct: false }, { text: "me", correct: true }, { text: "mu", correct: false }
+    ]},
+    { q: "Huruf Katakana 'ト' dibaca...", options: [
+        { text: "to", correct: true }, { text: "te", correct: false }, { text: "ta", correct: false }
+    ]},
+    { q: "Apa arti dari 'ありがとうございます'?", options: [
+        { text: "Maaf", correct: false }, { text: "Terima Kasih Banyak", correct: true }, { text: "Selamat Tinggal", correct: false }
+    ]},
+    { q: "Partikel apa yang digunakan untuk membuat kalimat tanya?", options: [
+        { text: "は (wa)", correct: false }, { text: "です (desu)", correct: false }, { text: "か (ka)", correct: true }
+    ]},
+    { q: "'がくせい' artinya adalah...", options: [
+        { text: "Guru", correct: false }, { text: "Siswa / Mahasiswa", correct: true }, { text: "Dokter", correct: false }
+    ]},
+    { q: "Angka 'ご' dalam Bahasa Jepang berarti...", options: [
+        { text: "3", correct: false }, { text: "5", correct: true }, { text: "7", correct: false }
+    ]},
+    { q: "Huruf apa yang muncul jika kita menambahkan dakuten (゛) pada 'か'?", options: [
+        { text: "が (ga)", correct: true }, { text: "ぱ (pa)", correct: false }, { text: "ざ (za)", correct: false }
+    ]},
+    { q: "'たべます' artinya adalah...", options: [
+        { text: "Minum", correct: false }, { text: "Makan", correct: true }, { text: "Pergi", correct: false }
+    ]},
+    { q: "Manakah yang berarti 'Sekolah'?", options: [
+        { text: "がっこう", correct: true }, { text: "びょういん", correct: false }, { text: "かいしゃ", correct: false }
+    ]},
+    { q: "'きょう' artinya adalah...", options: [
+        { text: "Kemarin", correct: false }, { text: "Besok", correct: false }, { text: "Hari Ini", correct: true }
+    ]},
+    { q: "Kombinasi Yōon 'しゃ' dibaca...", options: [
+        { text: "sha", correct: true }, { text: "shu", correct: false }, { text: "sho", correct: false }
+    ]},
+    { q: "Manakah kata sifat yang berarti 'Besar'?", options: [
+        { text: "ちいさい", correct: false }, { text: "おおきい", correct: true }, { text: "たかい", correct: false }
+    ]}
+];
+
+// =========================================================
+// GLOBAL STATE
+// =========================================================
+let currentKanaCategory = 'hiragana';
+let currentFlashcardIndex = 0;
+let currentFlashcardDeck = 'hiragana';
+let isFlashcardFlipped = false;
+let matchSelectedCard = null;
+let matchScore = 0;
+let matchMistakes = 0;
+let matchPairsTotal = 0;
+let matchPairsFound = 0;
+let activeQuizQuestions = [];
+let activeKanaForCanvas = null;
+let showGuide = true;
+
+let currentQuizDeck = 'hiragana';
+let fqState = { questions: [], index: 0, score: 0, answered: false };
+
+let userProgress = {
+    xp: 0,
+    streak: 1,
+    lastVisit: null,
+    learned: { hiragana: [], katakana: [], dakuten: [], kosakata: [] },
+    planChecked: []
+};
+
+// =========================================================
+// PENYIMPANAN PROGRES (persisten antar sesi via window.storage)
+// =========================================================
+async function loadProgress() {
+    try {
+        const result = await window.storage.get('user-progress', false);
+        if (result && result.value) {
+            const saved = JSON.parse(result.value);
+            userProgress = Object.assign(userProgress, saved);
+        }
+    } catch (e) {
+        // Belum ada data tersimpan, gunakan default
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    if (userProgress.lastVisit) {
+        const last = new Date(userProgress.lastVisit);
+        const diffDays = Math.round((new Date(today) - new Date(last.toISOString().slice(0,10))) / 86400000);
+        if (diffDays === 1) {
+            userProgress.streak += 1;
+        } else if (diffDays > 1) {
+            userProgress.streak = 1;
+        }
+        // diffDays === 0 -> hari yang sama, streak tidak berubah
+    } else {
+        userProgress.streak = 1;
+    }
+    userProgress.lastVisit = today;
+
+    await saveProgress();
+    refreshStatsUI();
+}
+
+async function saveProgress() {
+    try {
+        await window.storage.set('user-progress', JSON.stringify(userProgress), false);
+    } catch (e) {
+        console.error('Gagal menyimpan progres:', e);
+    }
+}
+
+function refreshStatsUI() {
+    document.getElementById('stat-xp').textContent = `${userProgress.xp} XP`;
+    document.getElementById('stat-streak').textContent = `${userProgress.streak} Hari`;
+    updateProgressBars();
+}
+
+function addXP(amount) {
+    userProgress.xp += amount;
+    saveProgress();
+    refreshStatsUI();
+}
+
+function markLearned(type, key) {
+    if (!userProgress.learned[type].includes(key)) {
+        userProgress.learned[type].push(key);
+        saveProgress();
+        updateProgressBars();
+    }
+}
+
+function updateProgressBars() {
+    const sets = [
+        { key: 'hiragana', total: hiraganaData.length, bar: 'progress-hiragana-bar', text: 'progress-hiragana-text' },
+        { key: 'katakana', total: katakanaData.length, bar: 'progress-katakana-bar', text: 'progress-katakana-text' },
+        { key: 'dakuten', total: dakutenData.length, bar: 'progress-dakuten-bar', text: 'progress-dakuten-text' },
+        { key: 'kosakata', total: dictionaryData.length, bar: 'progress-kosakata-bar', text: 'progress-kosakata-text' }
+    ];
+    sets.forEach(s => {
+        const learnedCount = userProgress.learned[s.key].length;
+        const pct = Math.min(100, Math.round((learnedCount / s.total) * 100));
+        const barEl = document.getElementById(s.bar);
+        const textEl = document.getElementById(s.text);
+        if (barEl) barEl.style.width = pct + '%';
+        if (textEl) textEl.textContent = `${learnedCount}/${s.total}`;
+    });
+}
+
+// =========================================================
+// TOAST NOTIFICATION
+// =========================================================
+let toastTimeout = null;
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-message').textContent = message;
+    toast.classList.remove('hidden');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.add('hidden'), 3500);
+}
+
+// =========================================================
+// TEXT-TO-SPEECH
+// =========================================================
+function speak(text) {
+    if (!('speechSynthesis' in window)) {
+        showToast('Browser ini tidak mendukung audio suara. Coba gunakan Chrome atau Safari terbaru.');
+        return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ja-JP';
+    utterance.rate = 0.85;
+
+    const voices = window.speechSynthesis.getVoices();
+    const jpVoice = voices.find(v => v.lang === 'ja-JP' || v.lang === 'ja_JP' || v.lang.startsWith('ja'));
+    if (!jpVoice && voices.length > 0) {
+        showToast('Suara Bahasa Jepang tidak tersedia di perangkat ini. Pelafalan mungkin tidak akurat.');
+    }
+    if (jpVoice) utterance.voice = jpVoice;
+
+    utterance.onerror = () => showToast('Audio gagal diputar. Coba lagi atau periksa pengaturan suara perangkatmu.');
+    window.speechSynthesis.speak(utterance);
+}
+
+// =========================================================
+// NAVIGASI SECTION
+// =========================================================
+function showSection(sectionId) {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+    document.getElementById('section-' + sectionId).classList.remove('hidden');
+    document.getElementById('mobile-menu').classList.add('hidden');
+
+    if (sectionId === 'kana') renderKanaGrid(currentKanaCategory);
+    if (sectionId === 'kamus') renderDictionary(dictionaryData);
+    if (sectionId === 'game') { initFlashcard(); }
+    if (sectionId === 'latihan') renderQuiz();
+    if (sectionId === 'rpp') initRPPChart();
+    if (sectionId === 'rencana') renderPlan();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+}
+
+// =========================================================
+// KANA GRID
+// =========================================================
+function switchKanaTab(tab) {
+    currentKanaCategory = tab;
+    document.querySelectorAll('.kana-tab').forEach(t => t.classList.remove('tab-active', 'text-slate-500'));
+    document.getElementById('tab-' + tab).classList.add('tab-active');
+    renderKanaGrid(tab);
+}
+
+function renderKanaGrid(type) {
+    const container = document.getElementById('kana-grid-container');
+    container.innerHTML = '';
+
+    let data = hiraganaData;
+    if (type === 'katakana') data = katakanaData;
+    if (type === 'dakuten') data = dakutenData;
+
+    data.forEach(item => {
+        const isLearned = userProgress.learned[type].includes(item.romaji);
+        const card = document.createElement('div');
+        card.className = "relative bg-slate-50 hover:bg-orange-50 border border-slate-200 hover:border-orange-300 rounded-2xl p-3 sm:p-4 text-center cursor-pointer transition group flex flex-col items-center justify-between shadow-2xs";
+        card.onclick = () => { speak(item.kana); markLearned(type, item.romaji); };
+
+        card.innerHTML = `
+            ${isLearned ? '<i class="fa-solid fa-circle-check absolute top-1.5 right-1.5 text-emerald-500 text-xs"></i>' : ''}
+            <span class="text-2xl sm:text-3xl font-bold jp-text text-slate-800 group-hover:scale-110 transition">${item.kana}</span>
+            <span class="text-xs font-semibold text-slate-400 group-hover:text-orange-600 mt-1 uppercase">${item.romaji}</span>
+            <button aria-label="Latih menulis ${item.romaji}" onclick="event.stopPropagation(); openCanvasModal('${item.kana}', '${item.romaji}', '${type}')" class="mt-2 text-slate-300 hover:text-blue-600 text-xs p-1" title="Latih Menulis">
+                <i class="fa-solid fa-pen-line"></i>
+            </button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// =========================================================
+// MATERI SUB TABS
+// =========================================================
+function switchMateriSubTab(tab) {
+    document.querySelectorAll('.materi-subtab').forEach(t => t.classList.remove('tab-active'));
+    document.querySelectorAll('.materi-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('subtab-' + tab).classList.add('tab-active');
+    document.getElementById('materi-' + tab).classList.remove('hidden');
+}
+
+// =========================================================
+// KAMUS
+// =========================================================
+function renderDictionary(items) {
+    const container = document.getElementById('dict-list-container');
+    container.innerHTML = '';
+    document.getElementById('dict-count').textContent = `Menampilkan ${items.length} dari ${dictionaryData.length} kata`;
+
+    if (items.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-center py-8 text-slate-400 text-sm">Tidak ada kosakata yang cocok.</div>`;
+        return;
+    }
+
+    items.forEach(item => {
+        const isLearned = userProgress.learned.kosakata.includes(item.romaji);
+        const card = document.createElement('div');
+        card.className = "relative bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover";
+        card.innerHTML = `
+            ${isLearned ? '<i class="fa-solid fa-circle-check absolute top-3 right-3 text-emerald-500 text-sm"></i>' : ''}
+            <div class="space-y-1">
+                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">${categoryLabels[item.category] || item.category}</span>
+                <div class="text-2xl font-bold jp-text text-slate-800">${item.kana}</div>
+                <div class="text-xs font-semibold text-orange-600">${item.romaji}</div>
+                <div class="text-sm text-slate-600 font-medium">${item.meaning}</div>
+            </div>
+            <button aria-label="Dengarkan ${item.romaji}" onclick="speak('${item.kana}'); markLearned('kosakata', '${item.romaji}')" class="w-10 h-10 bg-slate-50 hover:bg-orange-50 text-slate-400 hover:text-orange-600 rounded-full flex items-center justify-center text-base transition">
+                <i class="fa-solid fa-volume-high"></i>
+            </button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function filterDictionary() {
+    const query = document.getElementById('dict-search-input').value.toLowerCase();
+    const cat = document.getElementById('dict-category-select').value;
+
+    const filtered = dictionaryData.filter(item => {
+        const matchQuery = item.kana.includes(query) || item.romaji.toLowerCase().includes(query) || item.meaning.toLowerCase().includes(query);
+        const matchCat = cat === 'ALL' || item.category === cat;
+        return matchQuery && matchCat;
+    });
+
+    renderDictionary(filtered);
+}
+
+// =========================================================
+// GAME: FLASHCARD (dengan pilihan deck)
+// =========================================================
+function switchGameMode(mode) {
+    document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('tab-active'));
+    document.getElementById('gametab-' + mode).classList.add('tab-active');
+
+    document.getElementById('game-flashcard-mode').classList.add('hidden');
+    document.getElementById('game-quiz-mode').classList.add('hidden');
+    document.getElementById('game-speed-mode').classList.add('hidden');
+
+    if (mode === 'flashcard') {
+        document.getElementById('game-flashcard-mode').classList.remove('hidden');
+    } else if (mode === 'quiz') {
+        document.getElementById('game-quiz-mode').classList.remove('hidden');
+        startFlashcardQuiz(currentQuizDeck);
+    } else {
+        document.getElementById('game-speed-mode').classList.remove('hidden');
+        initSpeedMatch();
+    }
+}
+
+function getFlashcardDeckData() {
+    if (currentFlashcardDeck === 'katakana') return katakanaData;
+    if (currentFlashcardDeck === 'kosakata') return dictionaryData;
+    return hiraganaData;
+}
+
+function switchFlashcardDeck(deck) {
+    currentFlashcardDeck = deck;
+    currentFlashcardIndex = 0;
+    ['hiragana', 'katakana', 'kosakata'].forEach(d => {
+        const btn = document.getElementById('deck-' + d);
+        if (d === deck) {
+            btn.className = 'deck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-orange-600 text-white transition';
+        } else {
+            btn.className = 'deck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition';
+        }
+    });
+    updateFlashcardUI();
+}
+
+function initFlashcard() {
+    currentFlashcardIndex = 0;
+    updateFlashcardUI();
+}
+
+function updateFlashcardUI() {
+    const deck = getFlashcardDeckData();
+    const item = deck[currentFlashcardIndex];
+
+    document.getElementById('fc-kana').textContent = item.kana;
+    if (currentFlashcardDeck === 'kosakata') {
+        document.getElementById('fc-romaji').textContent = item.romaji;
+        document.getElementById('fc-meaning').textContent = item.meaning;
+    } else {
+        document.getElementById('fc-romaji').textContent = item.romaji.toUpperCase();
+        document.getElementById('fc-meaning').textContent = `Huruf '${item.romaji.toUpperCase()}' ${currentFlashcardDeck === 'katakana' ? 'Katakana' : 'Hiragana'}`;
+    }
+    document.getElementById('fc-counter').textContent = `${currentFlashcardIndex + 1} / ${deck.length}`;
+
+    isFlashcardFlipped = false;
+    document.getElementById('flashcard-element').classList.remove('flashcard-flipped');
+}
+
+function flipFlashcard() {
+    isFlashcardFlipped = !isFlashcardFlipped;
+    document.getElementById('flashcard-element').classList.toggle('flashcard-flipped', isFlashcardFlipped);
+    if (isFlashcardFlipped) {
+        const deck = getFlashcardDeckData();
+        const item = deck[currentFlashcardIndex];
+        const type = currentFlashcardDeck === 'kosakata' ? 'kosakata' : currentFlashcardDeck;
+        markLearned(type, item.romaji);
+    }
+}
+
+function speakCurrentFlashcard() {
+    const deck = getFlashcardDeckData();
+    speak(deck[currentFlashcardIndex].kana);
+}
+
+function nextFlashcard() {
+    const deck = getFlashcardDeckData();
+    if (currentFlashcardIndex < deck.length - 1) {
+        currentFlashcardIndex++;
+        updateFlashcardUI();
+    }
+}
+
+function prevFlashcard() {
+    if (currentFlashcardIndex > 0) {
+        currentFlashcardIndex--;
+        updateFlashcardUI();
+    }
+}
+
+// =========================================================
+// GAME: KUIS PILIHAN GANDA (Flashcard Quiz)
+// =========================================================
+function getQuizDeckData(deck) {
+    if (deck === 'katakana') return katakanaData;
+    if (deck === 'kosakata') return dictionaryData;
+    return hiraganaData;
+}
+
+function startFlashcardQuiz(deck) {
+    currentQuizDeck = deck;
+    ['hiragana', 'katakana', 'kosakata'].forEach(d => {
+        const btn = document.getElementById('quizdeck-' + d);
+        btn.className = (d === deck)
+            ? 'quizdeck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-orange-600 text-white transition'
+            : 'quizdeck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition';
+    });
+
+    const data = getQuizDeckData(deck);
+    const totalQuestions = Math.min(10, data.length);
+    const chosen = shuffleArray(data).slice(0, totalQuestions);
+
+    fqState.questions = chosen.map(item => {
+        const wrongPool = data.filter(d => d.romaji !== item.romaji);
+        const wrongs = shuffleArray(wrongPool).slice(0, 3);
+        const answerKey = deck === 'kosakata' ? 'meaning' : 'romaji';
+        const options = shuffleArray([item, ...wrongs].map(o => o[answerKey]));
+        return { prompt: item.kana, correctAnswer: item[answerKey], options };
+    });
+    fqState.index = 0;
+    fqState.score = 0;
+    fqState.answered = false;
+
+    document.getElementById('fq-result').classList.add('hidden');
+    document.getElementById('fq-question-panel').classList.remove('hidden');
+    document.getElementById('fq-instruction').textContent = deck === 'kosakata' ? 'Apa arti kata ini?' : 'Apa bacaan huruf ini?';
+    renderFlashcardQuizQuestion();
+}
+
+function renderFlashcardQuizQuestion() {
+    const q = fqState.questions[fqState.index];
+    fqState.answered = false;
+    document.getElementById('fq-counter').textContent = `Soal ${fqState.index + 1} / ${fqState.questions.length}`;
+    document.getElementById('fq-score').textContent = fqState.score;
+    document.getElementById('fq-prompt').textContent = q.prompt;
+
+    const optionsContainer = document.getElementById('fq-options');
+    optionsContainer.innerHTML = '';
+    q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "p-3.5 rounded-xl border border-slate-200 hover:bg-orange-50 text-sm font-bold text-slate-700 transition";
+        btn.textContent = currentQuizDeck === 'kosakata' ? opt : opt.toUpperCase();
+        btn.onclick = () => handleFlashcardQuizAnswer(btn, opt, q);
+        optionsContainer.appendChild(btn);
+    });
+}
+
+function handleFlashcardQuizAnswer(btn, chosenAnswer, question) {
+    if (fqState.answered) return;
+    fqState.answered = true;
+
+    const allBtns = document.querySelectorAll('#fq-options button');
+    allBtns.forEach(b => b.disabled = true);
+
+    const isCorrect = chosenAnswer === question.correctAnswer;
+    if (isCorrect) {
+        btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+        fqState.score++;
+    } else {
+        btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+        allBtns.forEach(b => {
+            const label = currentQuizDeck === 'kosakata' ? question.correctAnswer : question.correctAnswer.toUpperCase();
+            if (b.textContent === label) b.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+        });
+    }
+    document.getElementById('fq-score').textContent = fqState.score;
+
+    setTimeout(() => {
+        if (fqState.index < fqState.questions.length - 1) {
+            fqState.index++;
+            renderFlashcardQuizQuestion();
+        } else {
+            finishFlashcardQuiz();
+        }
+    }, 900);
+}
+
+function finishFlashcardQuiz() {
+    const total = fqState.questions.length;
+    const pct = Math.round((fqState.score / total) * 100);
+    const xpGained = fqState.score * 5;
+
+    document.getElementById('fq-question-panel').classList.add('hidden');
+    document.getElementById('fq-result').classList.remove('hidden');
+    document.getElementById('fq-final-score').textContent = `${fqState.score}/${total}`;
+    document.getElementById('fq-final-percent').textContent = `${pct}%`;
+    document.getElementById('fq-xp-gained').textContent = `+${xpGained} XP`;
+    addXP(xpGained);
+}
+
+// =========================================================
+// GAME: SPEED MATCH (acak dari seluruh kamus)
+// =========================================================
+function shuffleArray(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function initSpeedMatch() {
+    const grid = document.getElementById('match-grid');
+    grid.innerHTML = '';
+    matchSelectedCard = null;
+    matchScore = 0;
+    matchMistakes = 0;
+    matchPairsFound = 0;
+    document.getElementById('match-score').textContent = matchScore;
+    document.getElementById('match-result').classList.add('hidden');
+    grid.classList.remove('hidden');
+
+    const pairCount = 6;
+    const sample = shuffleArray(dictionaryData).slice(0, pairCount);
+    matchPairsTotal = sample.length;
+    let cards = [];
+    sample.forEach(item => {
+        cards.push({ id: item.romaji, text: item.kana, type: 'jp' });
+        cards.push({ id: item.romaji, text: item.meaning, type: 'id' });
+    });
+
+    cards = shuffleArray(cards);
+
+    cards.forEach((c) => {
+        const btn = document.createElement('button');
+        btn.className = "p-4 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold text-slate-800 hover:bg-orange-50 transition h-24 flex items-center justify-center text-sm jp-text";
+        btn.textContent = c.text;
+        btn.onclick = () => handleMatchClick(btn, c);
+        grid.appendChild(btn);
+    });
+}
+
+function handleMatchClick(btn, card) {
+    if (btn.disabled) return;
+
+    if (!matchSelectedCard) {
+        matchSelectedCard = { btn, card };
+        btn.classList.add('border-orange-500', 'bg-orange-100');
+    } else {
+        if (matchSelectedCard.btn === btn) return;
+
+        if (matchSelectedCard.card.id === card.id && matchSelectedCard.card.type !== card.type) {
+            btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+            matchSelectedCard.btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+            btn.disabled = true;
+            matchSelectedCard.btn.disabled = true;
+            matchScore += 10;
+            matchPairsFound++;
+            document.getElementById('match-score').textContent = matchScore;
+            addXP(10);
+            markLearned('kosakata', card.id);
+
+            if (matchPairsFound >= matchPairsTotal) {
+                setTimeout(() => {
+                    const bonusXP = Math.max(0, (matchPairsTotal * 2) - matchMistakes * 2);
+                    document.getElementById('match-mistakes').textContent = matchMistakes;
+                    document.getElementById('match-xp-gained').textContent = `+${bonusXP} XP`;
+                    document.getElementById('match-result').classList.remove('hidden');
+                    if (bonusXP > 0) addXP(bonusXP);
+                }, 400);
+            }
+        } else {
+            matchMistakes++;
+            btn.classList.add('bg-red-100', 'border-red-500');
+            matchSelectedCard.btn.classList.add('bg-red-100', 'border-red-500');
+            setTimeout(() => {
+                btn.classList.remove('bg-red-100', 'border-red-500');
+                matchSelectedCard.btn.classList.remove('bg-red-100', 'border-red-500', 'border-orange-500', 'bg-orange-100');
+            }, 500);
+        }
+        matchSelectedCard = null;
+    }
+}
+
+// =========================================================
+// KUIS (acak 10 soal dari bank 15 soal)
+// =========================================================
+function renderQuiz() {
+    activeQuizQuestions = shuffleArray(quizBank).slice(0, 10);
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+    document.getElementById('quiz-result').classList.add('hidden');
+
+    activeQuizQuestions.forEach((q, qIndex) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = "space-y-3 pb-4 border-b border-slate-100";
+        qDiv.innerHTML = `
+            <p class="font-bold text-slate-800 text-sm sm:text-base">${qIndex + 1}. ${q.q}</p>
+            <div class="grid grid-cols-1 gap-2.5">
+                ${q.options.map(opt => `
+                    <button onclick="checkQuizAnswer(this, ${opt.correct})" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-orange-50 text-sm font-medium text-slate-700 transition">
+                        ${opt.text}
+                    </button>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(qDiv);
+    });
+}
+
+let quizCorrectCount = 0;
+function checkQuizAnswer(btn, isCorrect) {
+    const parent = btn.parentElement;
+    parent.querySelectorAll('button').forEach(b => {
+        b.disabled = true;
+        b.classList.remove('hover:bg-orange-50');
+    });
+
+    if (isCorrect) {
+        btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+        quizCorrectCount++;
+    } else {
+        btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+    }
+
+    const totalBtns = document.querySelectorAll('#quiz-container .space-y-3').length;
+    const answeredBtns = document.querySelectorAll('#quiz-container button[disabled]').length / 3;
+
+    if (answeredBtns >= totalBtns) {
+        document.getElementById('quiz-score-text').textContent = `${quizCorrectCount}/${activeQuizQuestions.length}`;
+        const xpGained = quizCorrectCount * 5;
+        document.getElementById('quiz-xp-gained').textContent = `+${xpGained} XP`;
+        document.getElementById('quiz-result').classList.remove('hidden');
+        addXP(xpGained);
+    }
+}
+
+function resetQuiz() {
+    quizCorrectCount = 0;
+    renderQuiz();
+}
+
+// =========================================================
+// TARGET 30 HARI
+// =========================================================
+const planData = [
+    "Kenalan Hiragana baris あ-こ (a, ka)", "Hiragana baris さ-た (sa, ta)", "Hiragana baris な-は (na, ha)",
+    "Hiragana baris ま-ら (ma, ya, ra)", "Hiragana baris わ + review semua", "Latihan menulis 10 Hiragana di kanvas",
+    "Kuis review Hiragana", "Kenalan Katakana baris ア-コ (a, ka)", "Katakana baris サ-タ (sa, ta)",
+    "Katakana baris ナ-ハ (na, ha)", "Katakana baris マ-ラ (ma, ya, ra)", "Katakana baris ワ + review semua",
+    "Latihan menulis 10 Katakana di kanvas", "Belajar Dakuten (が, ざ, だ, ば, ぱ)", "Belajar Yōon (きゃ, しゃ, ちゃ, dst)",
+    "Kuis review Katakana & Dakuten", "Pelajari Aisatsu (salam sehari-hari)", "Pelajari pola kalimat WA-DESU",
+    "Pelajari kalimat negatif & tanya", "Praktik dialog perkenalan diri", "Hafalkan 10 kosakata Profesi & Orang",
+    "Hafalkan 10 kosakata Angka & Waktu", "Hafalkan 10 kosakata Makanan & Keluarga", "Hafalkan 10 kosakata Tempat & Benda",
+    "Hafalkan 10 kosakata Kata Kerja & Sifat", "Main Speed Match 3x untuk review kosakata", "Main Flashcard semua deck",
+    "Kerjakan Kuis N5 penuh", "Review menyeluruh materi 1-27", "Kuis akhir & evaluasi kesiapan N5"
+];
+
+function renderPlan() {
+    const grid = document.getElementById('plan-grid');
+    grid.innerHTML = '';
+
+    planData.forEach((title, idx) => {
+        const day = idx + 1;
+        const isChecked = userProgress.planChecked.includes(day);
+        const card = document.createElement('div');
+        card.className = `flex items-center gap-4 p-4 rounded-2xl border shadow-sm transition ${isChecked ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-slate-100'}`;
+        card.innerHTML = `
+            <button aria-label="Tandai hari ${day} selesai" onclick="togglePlanDay(${day})" class="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition ${isChecked ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}">
+                ${isChecked ? '<i class="fa-solid fa-check"></i>' : day}
+            </button>
+            <div>
+                <div class="text-xs font-bold text-orange-600 uppercase">Hari ${day}</div>
+                <div class="text-sm font-semibold ${isChecked ? 'text-emerald-800 line-through' : 'text-slate-700'}">${title}</div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    updatePlanProgress();
+}
+
+function togglePlanDay(day) {
+    const idx = userProgress.planChecked.indexOf(day);
+    if (idx === -1) {
+        userProgress.planChecked.push(day);
+        addXP(20);
+    } else {
+        userProgress.planChecked.splice(idx, 1);
+        saveProgress();
+    }
+    renderPlan();
+}
+
+function updatePlanProgress() {
+    const total = planData.length;
+    const done = userProgress.planChecked.length;
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('plan-progress-text').textContent = `${done}/${total} Hari`;
+    document.getElementById('plan-progress-bar').style.width = pct + '%';
+}
+
+// =========================================================
+// CHART RPP
+// =========================================================
+let chartInstance = null;
+function initRPPChart() {
+    const ctx = document.getElementById('rppChart');
+    if (!ctx) return;
+    if (chartInstance) chartInstance.destroy();
+
+    chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Warming Up (10m)', 'Micro-Lecture (15m)', 'Pair-Work (20m)', 'Evaluation (15m)'],
+            datasets: [{
+                data: [10, 15, 20, 15],
+                backgroundColor: ['#fbbf24', '#60a5fa', '#34d399', '#c084fc'],
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            cutout: '72%'
+        }
+    });
+}
+
+// =========================================================
+// KANVAS LATIHAN MENULIS (dengan panduan huruf transparan)
+// =========================================================
+let canvas, ctxCanvas, isDrawing = false;
+let guideCanvas, ctxGuide;
+
+function openCanvasModal(kana, romaji, type) {
+    activeKanaForCanvas = { kana, romaji, type: type || 'hiragana' };
+    document.getElementById('modal-kana-char').textContent = kana;
+    document.getElementById('modal-kana-romaji').textContent = `Romaji: ${romaji.toUpperCase()}`;
+    document.getElementById('canvas-modal').classList.remove('hidden');
+
+    canvas = document.getElementById('writing-canvas');
+    ctxCanvas = canvas.getContext('2d');
+    guideCanvas = document.getElementById('guide-canvas');
+    ctxGuide = guideCanvas.getContext('2d');
+
+    clearCanvas();
+    drawGuide(kana);
+
+    canvas.onmousedown = startDrawing;
+    canvas.onmousemove = draw;
+    canvas.onmouseup = stopDrawing;
+    canvas.onmouseleave = stopDrawing;
+
+    canvas.ontouchstart = (e) => { e.preventDefault(); startDrawing(e.touches[0]); };
+    canvas.ontouchmove = (e) => { e.preventDefault(); draw(e.touches[0]); };
+    canvas.ontouchend = stopDrawing;
+}
+
+function drawGuide(kana) {
+    ctxGuide.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+    if (!showGuide) return;
+    ctxGuide.font = "180px 'Noto Sans JP', sans-serif";
+    ctxGuide.fillStyle = 'rgba(148, 163, 184, 0.25)';
+    ctxGuide.textAlign = 'center';
+    ctxGuide.textBaseline = 'middle';
+    ctxGuide.fillText(kana, guideCanvas.width / 2, guideCanvas.height / 2 + 10);
+}
+
+function toggleGuide() {
+    showGuide = document.getElementById('guide-toggle').checked;
+    if (activeKanaForCanvas) drawGuide(activeKanaForCanvas.kana);
+}
+
+function markCurrentKanaLearned() {
+    if (activeKanaForCanvas) {
+        markLearned(activeKanaForCanvas.type, activeKanaForCanvas.romaji);
+        if (document.getElementById('section-kana').classList.contains('hidden') === false) {
+            renderKanaGrid(currentKanaCategory);
+        }
+    }
+}
+
+function closeCanvasModal() {
+    document.getElementById('canvas-modal').classList.add('hidden');
+}
+
+function clearCanvas() {
+    if (!ctxCanvas) return;
+    ctxCanvas.clearRect(0, 0, canvas.width, canvas.height);
+    ctxCanvas.lineWidth = 6;
+    ctxCanvas.lineCap = 'round';
+    ctxCanvas.strokeStyle = '#ea580c';
+}
+
+function startDrawing(e) {
+    isDrawing = true;
+    const rect = canvas.getBoundingClientRect();
+    ctxCanvas.beginPath();
+    ctxCanvas.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    ctxCanvas.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctxCanvas.stroke();
+}
+
+function stopDrawing() {
+    isDrawing = false;
+}
+
+// =========================================================
+// INISIALISASI
+// =========================================================
+window.onload = async () => {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => {};
+    }
+    await loadProgress();
+    showSection('beranda');
+};
+
+    </script>
+</body>
+</html>
