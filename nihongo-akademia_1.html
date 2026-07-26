@@ -1,0 +1,2621 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altoura Academia - Platform Belajar Bahasa Jepang Interaktif</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+/* =========================================================
+   ALTOURA ACADEMIA — STYLESHEET
+   Platform Belajar Bahasa Jepang Interaktif
+   ---------------------------------------------------------
+   File ini melengkapi utility class Tailwind (dimuat via CDN
+   di index.html) dengan token desain, animasi, dan detail
+   visual yang tidak bisa dicapai lewat utility class saja.
+   Letakkan file ini di folder yang sama dengan HTML-nya.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. DESIGN TOKENS
+   --------------------------------------------------------- */
+:root {
+    --brand-primary: #ea580c;      /* orange-600 */
+    --brand-primary-dark: #c2410c; /* orange-700 */
+    --brand-amber: #f59e0b;        /* amber-500 */
+    --brand-red: #dc2626;          /* red-600 */
+    --brand-cream: #fdfaf7;
+    --ink: #1e293b;
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------------------------------------------------------
+   2. BASE & TYOGRAPHY
+   --------------------------------------------------------- */
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--ink);
+    background-color: var(--brand-cream);
+    /* Tekstur titik halus, samar — memberi kedalaman tanpa
+       ramai, tetap terasa hangat & bertema washi paper. */
+    background-image: radial-gradient(circle at 1px 1px, rgba(234, 88, 12, 0.06) 1px, transparent 0);
+    background-size: 26px 26px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.jp-text {
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+h1, h2, h3 {
+    letter-spacing: -0.01em;
+}
+
+/* Warna seleksi teks selaras dengan brand */
+::selection {
+    background: #fed7aa;
+    color: #7c2d12;
+}
+
+/* Custom Scrollbar bernuansa hangat */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+    background: #fdba74;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-primary);
+}
+
+/* Focus ring yang konsisten & jelas untuk aksesibilitas keyboard */
+:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* ---------------------------------------------------------
+   3. INTERAKSI TOMBOL
+   --------------------------------------------------------- */
+button:not(:disabled) {
+    transition: transform 0.15s ease;
+}
+button:not(:disabled):active {
+    transform: scale(0.97);
+}
+
+/* Efek "shine sweep" halus khusus tombol aksi utama
+   (bg-orange-600 / bg-emerald-600) — disengaja hanya di sini
+   supaya tidak ramai di semua tombol kecil lainnya. */
+[class*="bg-orange-600"],
+[class*="bg-emerald-600"] {
+    position: relative;
+    overflow: hidden;
+}
+[class*="bg-orange-600"]::after,
+[class*="bg-emerald-600"]::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.65s ease;
+    pointer-events: none;
+}
+[class*="bg-orange-600"]:hover::after,
+[class*="bg-emerald-600"]:hover::after {
+    left: 125%;
+}
+
+/* ---------------------------------------------------------
+   4. KARTU & HOVER
+   --------------------------------------------------------- */
+.card-hover {
+    transition: transform 0.25s var(--ease-smooth), box-shadow 0.25s var(--ease-smooth);
+}
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -6px rgba(194, 65, 12, 0.14), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.sakura-pattern {
+    background-color: #fef2f2;
+    background-image: radial-gradient(#fca5a5 0.75px, transparent 0.75px), radial-gradient(#fca5a5 0.75px, #fef2f2 0.75px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+}
+
+/* ---------------------------------------------------------
+   5. TAB NAVIGASI (Kana, Materi, Game)
+   --------------------------------------------------------- */
+.tab-active {
+    border-bottom: 3px solid var(--brand-primary);
+    color: var(--brand-primary);
+    font-weight: 700;
+}
+.kana-tab, .materi-subtab, .game-tab {
+    transition: color 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+    border-bottom: 3px solid transparent;
+}
+.kana-tab:hover, .materi-subtab:hover, .game-tab:hover {
+    color: var(--brand-primary);
+}
+
+/* ---------------------------------------------------------
+   6. ANIMASI KONTEN (transisi antar section/tab)
+   --------------------------------------------------------- */
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.content-animate {
+    animation: fadeSlideIn 0.4s var(--ease-smooth);
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+}
+.pop-in {
+    animation: popIn 0.3s var(--ease-spring);
+}
+
+/* Reveal berjenjang ala "goresan kuas" untuk grid kana,
+   kamus, dan speed match — setiap kartu muncul berurutan
+   alih-alih serentak, terasa lebih hidup & bertema kaligrafi. */
+@keyframes gridPopIn {
+    from { opacity: 0; transform: translateY(6px) scale(0.94); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+#kana-grid-container > div,
+#dict-list-container > div,
+#match-grid > button {
+    animation: gridPopIn 0.4s var(--ease-spring) both;
+}
+
+/* ---------------------------------------------------------
+   7. STEPPER BAB GRAMMAR
+   --------------------------------------------------------- */
+.step-circle {
+    transition: all 0.25s var(--ease-smooth);
+}
+.step-circle:hover {
+    transform: scale(1.12);
+}
+.step-circle.active {
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px -2px rgba(234, 88, 12, 0.4);
+}
+#grammar-stepper {
+    scroll-behavior: smooth;
+}
+
+/* ---------------------------------------------------------
+   8. FLASHCARD 3D
+   --------------------------------------------------------- */
+.perspective-1000 {
+    perspective: 1000px;
+}
+.flashcard-inner {
+    transition: transform 0.6s var(--ease-smooth);
+    transform-style: preserve-3d;
+}
+.flashcard-inner:hover {
+    box-shadow: 0 20px 35px -10px rgba(234, 88, 12, 0.25);
+}
+.flashcard-flipped {
+    transform: rotateY(180deg);
+}
+.flashcard-front, .flashcard-back {
+    backface-visibility: hidden;
+}
+.flashcard-back {
+    transform: rotateY(180deg);
+}
+
+/* ---------------------------------------------------------
+   9. PROGRESS BAR
+   --------------------------------------------------------- */
+[id^="progress-"][id$="-bar"] {
+    transition: width 0.6s var(--ease-smooth);
+    background-image: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 100%);
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+}
+#plan-progress-bar {
+    transition: width 0.6s var(--ease-smooth);
+}
+
+/* ---------------------------------------------------------
+   10. TOAST & MODAL — animasi masuk otomatis setiap kali
+   elemen berpindah dari hidden -> tampil (karena keduanya
+   pakai kombinasi kelas "hidden flex", animasi ini akan
+   otomatis terputar ulang setiap kali JS melepas "hidden").
+   --------------------------------------------------------- */
+#toast {
+    animation: fadeSlideIn 0.35s var(--ease-spring);
+}
+#canvas-modal > div {
+    animation: popIn 0.3s var(--ease-spring);
+}
+
+/* ---------------------------------------------------------
+   11. AMBIENT MOTION — HERO
+   --------------------------------------------------------- */
+@keyframes floatSlow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+}
+.hero-blur-float {
+    animation: floatSlow 6s ease-in-out infinite;
+}
+@keyframes kanjiPulse {
+    0%, 100% { opacity: 0.05; transform: scale(1); }
+    50% { opacity: 0.08; transform: scale(1.03); }
+}
+.hero-kanji-float {
+    animation: kanjiPulse 8s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------
+   12. BADGE STREAK / XP — pulse singkat saat nilainya berubah
+   (dipicu lewat penambahan class "badge-pulse" dari script.js)
+   --------------------------------------------------------- */
+@keyframes badgePop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.18); }
+    100% { transform: scale(1); }
+}
+.badge-pulse {
+    animation: badgePop 0.4s var(--ease-spring);
+}
+
+/* ---------------------------------------------------------
+   13. STAGGER DELAY — grid kana / kamus / speed match
+   (dibuat terprogram, delay bertambah 0.018s per item)
+   --------------------------------------------------------- */
+#kana-grid-container > div:nth-child(1),
+#dict-list-container > div:nth-child(1),
+#match-grid > button:nth-child(1) { animation-delay: 0.0s; }
+#kana-grid-container > div:nth-child(2),
+#dict-list-container > div:nth-child(2),
+#match-grid > button:nth-child(2) { animation-delay: 0.018s; }
+#kana-grid-container > div:nth-child(3),
+#dict-list-container > div:nth-child(3),
+#match-grid > button:nth-child(3) { animation-delay: 0.036s; }
+#kana-grid-container > div:nth-child(4),
+#dict-list-container > div:nth-child(4),
+#match-grid > button:nth-child(4) { animation-delay: 0.054s; }
+#kana-grid-container > div:nth-child(5),
+#dict-list-container > div:nth-child(5),
+#match-grid > button:nth-child(5) { animation-delay: 0.072s; }
+#kana-grid-container > div:nth-child(6),
+#dict-list-container > div:nth-child(6),
+#match-grid > button:nth-child(6) { animation-delay: 0.09s; }
+#kana-grid-container > div:nth-child(7),
+#dict-list-container > div:nth-child(7),
+#match-grid > button:nth-child(7) { animation-delay: 0.108s; }
+#kana-grid-container > div:nth-child(8),
+#dict-list-container > div:nth-child(8),
+#match-grid > button:nth-child(8) { animation-delay: 0.126s; }
+#kana-grid-container > div:nth-child(9),
+#dict-list-container > div:nth-child(9),
+#match-grid > button:nth-child(9) { animation-delay: 0.144s; }
+#kana-grid-container > div:nth-child(10),
+#dict-list-container > div:nth-child(10),
+#match-grid > button:nth-child(10) { animation-delay: 0.162s; }
+#kana-grid-container > div:nth-child(11),
+#dict-list-container > div:nth-child(11),
+#match-grid > button:nth-child(11) { animation-delay: 0.18s; }
+#kana-grid-container > div:nth-child(12),
+#dict-list-container > div:nth-child(12),
+#match-grid > button:nth-child(12) { animation-delay: 0.198s; }
+#kana-grid-container > div:nth-child(13),
+#dict-list-container > div:nth-child(13),
+#match-grid > button:nth-child(13) { animation-delay: 0.216s; }
+#kana-grid-container > div:nth-child(14),
+#dict-list-container > div:nth-child(14),
+#match-grid > button:nth-child(14) { animation-delay: 0.234s; }
+#kana-grid-container > div:nth-child(15),
+#dict-list-container > div:nth-child(15),
+#match-grid > button:nth-child(15) { animation-delay: 0.252s; }
+#kana-grid-container > div:nth-child(16),
+#dict-list-container > div:nth-child(16),
+#match-grid > button:nth-child(16) { animation-delay: 0.27s; }
+#kana-grid-container > div:nth-child(17),
+#dict-list-container > div:nth-child(17),
+#match-grid > button:nth-child(17) { animation-delay: 0.288s; }
+#kana-grid-container > div:nth-child(18),
+#dict-list-container > div:nth-child(18),
+#match-grid > button:nth-child(18) { animation-delay: 0.306s; }
+#kana-grid-container > div:nth-child(19),
+#dict-list-container > div:nth-child(19),
+#match-grid > button:nth-child(19) { animation-delay: 0.324s; }
+#kana-grid-container > div:nth-child(20),
+#dict-list-container > div:nth-child(20),
+#match-grid > button:nth-child(20) { animation-delay: 0.342s; }
+#kana-grid-container > div:nth-child(21),
+#dict-list-container > div:nth-child(21),
+#match-grid > button:nth-child(21) { animation-delay: 0.36s; }
+#kana-grid-container > div:nth-child(22),
+#dict-list-container > div:nth-child(22),
+#match-grid > button:nth-child(22) { animation-delay: 0.378s; }
+#kana-grid-container > div:nth-child(23),
+#dict-list-container > div:nth-child(23),
+#match-grid > button:nth-child(23) { animation-delay: 0.396s; }
+#kana-grid-container > div:nth-child(24),
+#dict-list-container > div:nth-child(24),
+#match-grid > button:nth-child(24) { animation-delay: 0.414s; }
+#kana-grid-container > div:nth-child(25),
+#dict-list-container > div:nth-child(25),
+#match-grid > button:nth-child(25) { animation-delay: 0.432s; }
+#kana-grid-container > div:nth-child(26),
+#dict-list-container > div:nth-child(26),
+#match-grid > button:nth-child(26) { animation-delay: 0.45s; }
+#kana-grid-container > div:nth-child(27),
+#dict-list-container > div:nth-child(27),
+#match-grid > button:nth-child(27) { animation-delay: 0.468s; }
+#kana-grid-container > div:nth-child(28),
+#dict-list-container > div:nth-child(28),
+#match-grid > button:nth-child(28) { animation-delay: 0.486s; }
+#kana-grid-container > div:nth-child(29),
+#dict-list-container > div:nth-child(29),
+#match-grid > button:nth-child(29) { animation-delay: 0.504s; }
+#kana-grid-container > div:nth-child(30),
+#dict-list-container > div:nth-child(30),
+#match-grid > button:nth-child(30) { animation-delay: 0.522s; }
+#kana-grid-container > div:nth-child(31),
+#dict-list-container > div:nth-child(31),
+#match-grid > button:nth-child(31) { animation-delay: 0.54s; }
+#kana-grid-container > div:nth-child(32),
+#dict-list-container > div:nth-child(32),
+#match-grid > button:nth-child(32) { animation-delay: 0.558s; }
+#kana-grid-container > div:nth-child(33),
+#dict-list-container > div:nth-child(33),
+#match-grid > button:nth-child(33) { animation-delay: 0.576s; }
+#kana-grid-container > div:nth-child(34),
+#dict-list-container > div:nth-child(34),
+#match-grid > button:nth-child(34) { animation-delay: 0.594s; }
+#kana-grid-container > div:nth-child(35),
+#dict-list-container > div:nth-child(35),
+#match-grid > button:nth-child(35) { animation-delay: 0.612s; }
+#kana-grid-container > div:nth-child(36),
+#dict-list-container > div:nth-child(36),
+#match-grid > button:nth-child(36) { animation-delay: 0.63s; }
+#kana-grid-container > div:nth-child(37),
+#dict-list-container > div:nth-child(37),
+#match-grid > button:nth-child(37) { animation-delay: 0.648s; }
+#kana-grid-container > div:nth-child(38),
+#dict-list-container > div:nth-child(38),
+#match-grid > button:nth-child(38) { animation-delay: 0.666s; }
+#kana-grid-container > div:nth-child(39),
+#dict-list-container > div:nth-child(39),
+#match-grid > button:nth-child(39) { animation-delay: 0.684s; }
+#kana-grid-container > div:nth-child(40),
+#dict-list-container > div:nth-child(40),
+#match-grid > button:nth-child(40) { animation-delay: 0.702s; }
+#kana-grid-container > div:nth-child(41),
+#dict-list-container > div:nth-child(41),
+#match-grid > button:nth-child(41) { animation-delay: 0.72s; }
+#kana-grid-container > div:nth-child(42),
+#dict-list-container > div:nth-child(42),
+#match-grid > button:nth-child(42) { animation-delay: 0.738s; }
+#kana-grid-container > div:nth-child(43),
+#dict-list-container > div:nth-child(43),
+#match-grid > button:nth-child(43) { animation-delay: 0.756s; }
+#kana-grid-container > div:nth-child(44),
+#dict-list-container > div:nth-child(44),
+#match-grid > button:nth-child(44) { animation-delay: 0.774s; }
+#kana-grid-container > div:nth-child(45),
+#dict-list-container > div:nth-child(45),
+#match-grid > button:nth-child(45) { animation-delay: 0.792s; }
+#kana-grid-container > div:nth-child(46),
+#dict-list-container > div:nth-child(46),
+#match-grid > button:nth-child(46) { animation-delay: 0.81s; }
+/* ---------------------------------------------------------
+   14. HORMATI PREFERENSI "REDUCED MOTION"
+   Pengguna yang mengaktifkan pengaturan sistem ini akan
+   melihat tampilan yang sama tanpa animasi berlebihan.
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- NAVIGATION BAR -->
+    <nav class="bg-white/90 backdrop-blur-md border-b border-orange-100 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('beranda')">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-orange-200">
+                        日
+                    </div>
+                    <div>
+                        <span class="text-xl font-black text-slate-800 tracking-tight">Altoura<span class="text-orange-600">Academia</span></span>
+                        <span class="hidden sm:inline-block text-xs text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full font-bold ml-2">N5 Zero to Hero</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <div class="hidden lg:flex items-center space-x-1 text-sm font-semibold text-slate-600">
+                    <button onclick="showSection('beranda')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Beranda</button>
+                    <button onclick="showSection('kana')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Kana & Audio</button>
+                    <button onclick="showSection('materi')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Materi & Gramatika</button>
+                    <button onclick="showSection('kamus')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Kamus N5</button>
+                    <button onclick="showSection('game')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Flashcard & Game</button>
+                    <button onclick="showSection('latihan')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Kuis</button>
+                    <button onclick="showSection('rencana')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Target 30 Hari</button>
+                    <button onclick="showSection('rpp')" class="nav-btn px-3 py-2 rounded-lg hover:bg-orange-50 hover:text-orange-600 transition">Panduan Mengajar</button>
+                </div>
+
+                <!-- User Stats Tracker -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-xs">
+                        <i class="fa-solid fa-fire text-amber-500"></i>
+                        <span id="stat-streak">1 Hari</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-orange-50 border border-orange-200 text-orange-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-xs">
+                        <i class="fa-solid fa-star text-orange-500"></i>
+                        <span id="stat-xp">0 XP</span>
+                    </div>
+                    <!-- Mobile Hamburger Button -->
+                    <button onclick="toggleMobileMenu()" aria-label="Buka menu navigasi" class="lg:hidden p-2 text-slate-600 hover:text-orange-600 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-100 bg-white px-4 pt-2 pb-4 space-y-1 shadow-lg">
+            <button onclick="showSection('beranda')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Beranda</button>
+            <button onclick="showSection('kana')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Aksara Kana & Audio</button>
+            <button onclick="showSection('materi')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Materi & Gramatika</button>
+            <button onclick="showSection('kamus')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Kamus N5</button>
+            <button onclick="showSection('game')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Flashcard & Game</button>
+            <button onclick="showSection('latihan')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Kuis</button>
+            <button onclick="showSection('rencana')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Target 30 Hari</button>
+            <button onclick="showSection('rpp')" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-700 hover:bg-orange-50 hover:text-orange-600">Panduan Mengajar</button>
+        </div>
+    </nav>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-xl flex items-center gap-2 max-w-sm text-center">
+        <i class="fa-solid fa-circle-info text-amber-400"></i>
+        <span id="toast-message">Pesan</span>
+    </div>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- SECTION 1: BERANDA (HOME) -->
+        <section id="section-beranda" class="content-section space-y-10">
+            <!-- Hero Banner -->
+            <div class="relative bg-gradient-to-br from-orange-600 via-amber-600 to-red-600 rounded-3xl p-8 sm:p-12 text-white overflow-hidden shadow-xl">
+                <!-- Background decorative elements -->
+                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-white/10 rounded-full blur-2xl pointer-events-none hero-blur-float"></div>
+                <div class="absolute right-20 top-10 text-9xl font-black text-white/5 jp-text pointer-events-none select-none hero-kanji-float">日本語</div>
+
+                <div class="relative z-10 max-w-2xl space-y-6">
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider text-orange-100 border border-white/20">
+                        <i class="fa-solid fa-sparkles"></i> Platform Belajar Interaktif
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
+                        Kuasai Bahasa Jepang <br><span class="text-amber-200">Dari Titik Nol hingga N5</span>
+                    </h1>
+                    <p class="text-orange-100 text-base sm:text-lg leading-relaxed">
+                        Pelajari Hiragana, Katakana, Audio Pelafalan Asli, Gramatika Dasar, Percakapan Sehari-hari, hingga Kamus Lengkap dalam satu aplikasi.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="showSection('kana')" class="px-7 py-3.5 bg-white text-orange-700 rounded-2xl font-extrabold hover:bg-orange-50 transition shadow-lg shadow-orange-900/20 flex items-center gap-2">
+                            <i class="fa-solid fa-play"></i> Mulai Belajar Kana
+                        </button>
+                        <button onclick="showSection('kamus')" class="px-7 py-3.5 bg-orange-700/60 backdrop-blur-md border border-white/30 text-white rounded-2xl font-bold hover:bg-orange-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> Buka Kamus N5
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Overview -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between mb-5">
+                    <h3 class="font-extrabold text-slate-800 text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-orange-600"></i> Progres Belajar Kamu
+                    </h3>
+                    <button onclick="showSection('rencana')" class="text-xs font-bold text-orange-600 hover:underline">Lihat Target 30 Hari &rarr;</button>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500"><span>Hiragana</span><span id="progress-hiragana-text">0/46</span></div>
+                        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-hiragana-bar" class="h-full bg-orange-500 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500"><span>Katakana</span><span id="progress-katakana-text">0/46</span></div>
+                        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-katakana-bar" class="h-full bg-blue-500 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500"><span>Dakuten/Yōon</span><span id="progress-dakuten-text">0/45</span></div>
+                        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-dakuten-bar" class="h-full bg-purple-500 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500"><span>Grammar</span><span id="progress-grammar-text">0/35</span></div>
+                        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-grammar-bar" class="h-full bg-rose-500 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500"><span>Kosakata</span><span id="progress-kosakata-text">0/0</span></div>
+                        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden"><div id="progress-kosakata-bar" class="h-full bg-emerald-500 rounded-full transition-all" style="width:0%"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Access Modules Grid -->
+            <div>
+                <h2 class="text-2xl font-extrabold text-slate-800 mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-grid-2 text-orange-600"></i> Fitur Modul Utama
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Card 1 -->
+                    <div onclick="showSection('kana')" class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm card-hover cursor-pointer group">
+                        <div class="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                            <span class="jp-text font-bold">あ</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Aksara Kana & Audio</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Tabel Hiragana & Katakana interaktif dengan audio pelafalan dan kanvas menulis.</p>
+                        <span class="text-xs font-bold text-orange-600 flex items-center gap-1">Buka Aksara <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div onclick="showSection('materi')" class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm card-hover cursor-pointer group">
+                        <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Aisatsu & Gramatika</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Pola kalimat dasar WA-DESU, ungkapan salam sehari-hari, dan latihan dialog.</p>
+                        <span class="text-xs font-bold text-blue-600 flex items-center gap-1">Pelajari Tata Bahasa <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div onclick="showSection('kamus')" class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm card-hover cursor-pointer group">
+                        <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Kamus Interaktif N5</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Pencarian cepat kata benda, profesi, angka, dan kata kerja dilengkapi suara.</p>
+                        <span class="text-xs font-bold text-emerald-600 flex items-center gap-1">Cari Kosakata <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div onclick="showSection('game')" class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm card-hover cursor-pointer group">
+                        <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Flashcard & Game</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Latih ingatan dengan kartu memori interaktif dan mini-game Speed Match.</p>
+                        <span class="text-xs font-bold text-purple-600 flex items-center gap-1">Mulai Bermain <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Goals Progress Section -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 text-center md:text-left">
+                    <span class="text-xs font-bold text-orange-600 uppercase tracking-wider">Target Harian Anda</span>
+                    <h3 class="text-2xl font-bold text-slate-800">Selesaikan 1 Sesi Hari Ini</h3>
+                    <p class="text-slate-500 text-sm">Dapatkan +50 XP dengan menyelesaikan latihan kuis atau mempelajari 5 Hiragana baru.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="showSection('latihan')" class="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold transition shadow-md shadow-orange-200">
+                        Kerjakan Kuis Sekarang
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: KANA & AUDIO (HIRAGANA / KATAKANA / DAKUTEN) -->
+        <section id="section-kana" class="content-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Aksara Jepang</span>
+                <h2 class="text-3xl font-extrabold text-slate-800">Tabel Kana Interaktif</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Klik karakter untuk mendengarkan audio pelafalan asli <i class="fa-solid fa-volume-high text-orange-600 ml-1"></i> atau klik tombol <i class="fa-solid fa-pen-line text-blue-600"></i> untuk melatih tulisan di kanvas. Karakter yang sudah kamu pelajari akan ditandai centang hijau.</p>
+            </div>
+
+            <!-- Tabs Selection -->
+            <div class="flex justify-center border-b border-slate-200 overflow-x-auto">
+                <button onclick="switchKanaTab('hiragana')" id="tab-hiragana" class="kana-tab px-6 py-3 font-bold text-sm sm:text-base tab-active whitespace-nowrap">Hiragana (ひらがな)</button>
+                <button onclick="switchKanaTab('katakana')" id="tab-katakana" class="kana-tab px-6 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Katakana (カタカナ)</button>
+                <button onclick="switchKanaTab('dakuten')" id="tab-dakuten" class="kana-tab px-6 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Dakuten & Yōon</button>
+            </div>
+
+            <!-- Kana Grid Display Container -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <!-- Grid items generated dynamically via JavaScript -->
+                <div id="kana-grid-container" class="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-10 gap-3 sm:gap-4">
+                    <!-- Dynamic Javascript Content -->
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4 text-amber-800">
+                <i class="fa-solid fa-lightbulb text-2xl text-amber-500 mt-0.5"></i>
+                <div class="text-sm">
+                    <h4 class="font-bold mb-1">Tips Menghafal Aksara:</h4>
+                    <p class="text-amber-900/80">Latihlah 5 karakter per hari. Ulangi pelafalan secara nyaring saat mendengarkan audio, dan gunakan kanvas latihan untuk membiasakan memori otot tangan Anda.</p>
+                </div>
+            </div>
+
+            <!-- Step Navigation: lanjut ke tahap berikutnya -->
+            <div class="flex justify-center pt-2">
+                <button onclick="showSection('materi')" class="px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-extrabold transition shadow-md shadow-orange-200 flex items-center gap-2">
+                    Sudah Hafal Huruf? Lanjut ke Tata Bahasa <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 3: MATERI & GRAMATIKA -->
+        <section id="section-materi" class="content-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Tata Bahasa & Ungkapan</span>
+                <h2 class="text-3xl font-extrabold text-slate-800">Materi Inti Pembelajaran</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Pahami pola kalimat dasar, partikel penting, serta ungkapan perkenalan diri dalam Bahasa Jepang.</p>
+                <p class="text-xs text-slate-400 max-w-xl mx-auto">35 bab tata bahasa disusun mengikuti alur topik umum level N5 (mirip urutan <em>Minna no Nihongo 1</em>), tapi penjelasan & contoh kalimat ditulis ulang secara orisinal — bukan kutipan dari buku manapun.</p>
+            </div>
+
+            <!-- Sub Tabs -->
+            <div class="flex justify-center border-b border-slate-200 overflow-x-auto">
+                <button onclick="switchMateriSubTab('aisatsu')" id="subtab-aisatsu" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base tab-active whitespace-nowrap">Salam (Aisatsu)</button>
+                <button onclick="switchMateriSubTab('grammar')" id="subtab-grammar" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Tata Bahasa N5 (35 Bab)</button>
+                <button onclick="switchMateriSubTab('dialog')" id="subtab-dialog" class="materi-subtab px-5 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Simulasi Percakapan</button>
+            </div>
+
+            <!-- SUBTAB: AISATSU -->
+            <div id="materi-aisatsu" class="materi-content space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Pagi (Formal)</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">おはようございます</div>
+                            <div class="text-sm italic text-slate-500">Ohayou Gozaimasu</div>
+                            <div class="text-sm font-medium text-slate-700">Selamat Pagi</div>
+                        </div>
+                        <button onclick="speak('おはようございます')" aria-label="Dengarkan Ohayou Gozaimasu" class="w-12 h-12 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Siang / Umum</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">こんにちは</div>
+                            <div class="text-sm italic text-slate-500">Konnichiwa</div>
+                            <div class="text-sm font-medium text-slate-700">Selamat Siang / Halo</div>
+                        </div>
+                        <button onclick="speak('こんにちは')" aria-label="Dengarkan Konnichiwa" class="w-12 h-12 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">Malam</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">こんばんは</div>
+                            <div class="text-sm italic text-slate-500">Konbanwa</div>
+                            <div class="text-sm font-medium text-slate-700">Selamat Malam</div>
+                        </div>
+                        <button onclick="speak('こんばんは')" aria-label="Dengarkan Konbanwa" class="w-12 h-12 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Apresiasi</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">ありがとうございます</div>
+                            <div class="text-sm italic text-slate-500">Arigatou Gozaimasu</div>
+                            <div class="text-sm font-medium text-slate-700">Terima Kasih Banyak</div>
+                        </div>
+                        <button onclick="speak('ありがとうございます')" aria-label="Dengarkan Arigatou Gozaimasu" class="w-12 h-12 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Perpisahan</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">さようなら</div>
+                            <div class="text-sm italic text-slate-500">Sayounara</div>
+                            <div class="text-sm font-medium text-slate-700">Selamat Tinggal</div>
+                        </div>
+                        <button onclick="speak('さようなら')" aria-label="Dengarkan Sayounara" class="w-12 h-12 bg-red-50 hover:bg-red-100 text-red-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">Permintaan Maaf</span>
+                            <div class="text-xl font-bold jp-text text-slate-800">すみません</div>
+                            <div class="text-sm italic text-slate-500">Sumimasen</div>
+                            <div class="text-sm font-medium text-slate-700">Maaf / Permisi</div>
+                        </div>
+                        <button onclick="speak('すみません')" aria-label="Dengarkan Sumimasen" class="w-12 h-12 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-lg transition">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-center pt-2">
+                    <button onclick="switchMateriSubTab('grammar')" class="px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-extrabold transition shadow-md shadow-orange-200 flex items-center gap-2">
+                        Lanjut ke Tata Bahasa N5 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUBTAB: GRAMMAR N5 (20 BAB, dirender dinamis via JS) -->
+            <div id="materi-grammar" class="materi-content hidden space-y-6">
+                <!-- Stepper -->
+                <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
+                    <div class="flex justify-between items-center mb-3 text-xs font-bold text-slate-500">
+                        <span id="grammar-step-label">Bab 1 dari 20</span>
+                        <span id="grammar-progress-label">0/35 selesai</span>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-100 -translate-y-1/2"></div>
+                        <div id="grammar-stepper" class="relative flex gap-2 overflow-x-auto pb-1 z-10">
+                            <!-- Tombol nomor bab dirender via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson Card (dirender dinamis + animasi) -->
+                <div id="grammar-lesson-card" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-5">
+                    <!-- Konten bab dirender via JS -->
+                </div>
+
+                <!-- Navigasi Prev/Next -->
+                <div class="flex justify-between items-center gap-4">
+                    <button onclick="prevGrammarLesson()" class="flex-1 py-3 bg-white border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> Bab Sebelumnya
+                    </button>
+                    <button onclick="nextGrammarLesson()" id="grammar-next-btn" class="flex-1 py-3 bg-orange-600 text-white rounded-xl font-bold hover:bg-orange-700 transition">
+                        Bab Berikutnya <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUBTAB: SIMULASI PERCAKAPAN (dirender dinamis via JS) -->
+            <div id="materi-dialog" class="materi-content hidden space-y-6">
+                <div class="flex justify-center flex-wrap gap-2" id="dialog-scenario-selector">
+                    <!-- Tombol skenario dirender via JS -->
+                </div>
+                <div id="dialog-content-card" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                    <!-- Konten dialog dirender via JS -->
+                </div>
+            </div>
+
+            <!-- Step Navigation: lanjut ke tahap berikutnya -->
+            <div class="flex justify-center pt-2">
+                <button onclick="showSection('kamus')" class="px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-extrabold transition shadow-md shadow-orange-200 flex items-center gap-2">
+                    Sudah Paham Gramatika? Lanjut ke Kosakata <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- SECTION 4: KAMUS INTERAKTIF N5 -->
+        <section id="section-kamus" class="content-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Kamus Lengkap</span>
+                <h2 class="text-3xl font-extrabold text-slate-800">Kamus Kosakata N5</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Cari kata dalam Bahasa Indonesia, Romaji, atau Kana secara langsung.</p>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="relative flex-grow">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+                    <input type="text" id="dict-search-input" onkeyup="filterDictionary()" placeholder="Cari kata (contoh: Guru, Sensei, わたし)..." aria-label="Cari kosakata" class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-orange-500 transition">
+                </div>
+                <select id="dict-category-select" onchange="filterDictionary()" aria-label="Filter kategori kosakata" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:border-orange-500">
+                    <option value="ALL">Semua Kategori</option>
+                    <option value="PRORESI">Profesi & Status</option>
+                    <option value="ORANG">Kata Ganti Orang</option>
+                    <option value="NEGARA">Negara & Bahasa</option>
+                    <option value="ANGKA">Angka & Waktu</option>
+                    <option value="MAKANAN">Makanan & Minuman</option>
+                    <option value="KELUARGA">Keluarga</option>
+                    <option value="HARI">Hari & Waktu</option>
+                    <option value="KERJA">Kata Kerja Dasar</option>
+                    <option value="BENDA">Benda Sehari-hari</option>
+                    <option value="TEMPAT">Tempat & Lokasi</option>
+                    <option value="SIFAT">Kata Sifat</option>
+                </select>
+            </div>
+
+            <p id="dict-count" class="text-xs font-semibold text-slate-400 -mb-2"></p>
+
+            <!-- Vocabulary Cards List -->
+            <div id="dict-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Content generated dynamically -->
+            </div>
+
+            <!-- Step Navigation: lanjut ke tahap berikutnya -->
+            <div class="flex justify-center pt-2">
+                <button onclick="showSection('game')" class="px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-extrabold transition shadow-md shadow-orange-200 flex items-center gap-2">
+                    Sudah Hafal Kosakata? Latihan di Game <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 5: FLASHCARD & GAME -->
+        <section id="section-game" class="content-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Permainan Latihan</span>
+                <h2 class="text-3xl font-extrabold text-slate-800">Flashcard & Speed Match</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Pilih mode permainan untuk menguji dan memperkuat daya ingat kosakata Anda.</p>
+            </div>
+
+            <!-- Game Tabs -->
+            <div class="flex justify-center border-b border-slate-200 overflow-x-auto">
+                <button onclick="switchGameMode('flashcard')" id="gametab-flashcard" class="game-tab px-6 py-3 font-bold text-sm sm:text-base tab-active whitespace-nowrap">Kartu Memori (Flashcard)</button>
+                <button onclick="switchGameMode('quiz')" id="gametab-quiz" class="game-tab px-6 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Kuis Pilihan Ganda</button>
+                <button onclick="switchGameMode('speed')" id="gametab-speed" class="game-tab px-6 py-3 font-bold text-sm sm:text-base text-slate-500 whitespace-nowrap">Speed Match Game</button>
+            </div>
+
+            <!-- MODE 1: FLASHCARD -->
+            <div id="game-flashcard-mode" class="max-w-md mx-auto space-y-6">
+
+                <!-- Flashcard Deck Selector -->
+                <div class="flex justify-center flex-wrap gap-2">
+                    <button onclick="switchFlashcardDeck('hiragana')" id="deck-hiragana" class="deck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-orange-600 text-white transition">Hiragana</button>
+                    <button onclick="switchFlashcardDeck('katakana')" id="deck-katakana" class="deck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition">Katakana</button>
+                    <button onclick="switchFlashcardDeck('kosakata')" id="deck-kosakata" class="deck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition">Kosakata</button>
+                </div>
+
+                <!-- Interactive Flip Card Container -->
+                <div onclick="flipFlashcard()" class="perspective-1000 h-64 w-full cursor-pointer">
+                    <div id="flashcard-element" class="flashcard-inner relative w-full h-full bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex flex-col items-center justify-center text-center">
+                        <!-- Front View -->
+                        <div class="flashcard-front absolute space-y-3">
+                            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Klik untuk balik kartu</span>
+                            <div id="fc-kana" class="text-5xl font-black jp-text text-slate-800">あ</div>
+                            <div id="fc-hint" class="text-xs text-slate-400">Tebak arti/bacanya</div>
+                        </div>
+                        <!-- Back View -->
+                        <div class="flashcard-back absolute space-y-3">
+                            <div id="fc-romaji" class="text-3xl font-black text-orange-600">A</div>
+                            <div id="fc-meaning" class="text-lg font-bold text-slate-700">Huruf 'A' Hiragana</div>
+                            <button onclick="event.stopPropagation(); speakCurrentFlashcard();" class="px-4 py-1.5 bg-orange-100 text-orange-700 rounded-xl text-xs font-bold">
+                                <i class="fa-solid fa-volume-high"></i> Dengarkan Audio
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Controls -->
+                <div class="flex justify-between items-center gap-4">
+                    <button onclick="prevFlashcard()" class="flex-1 py-3 bg-white border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> Sebelum
+                    </button>
+                    <span id="fc-counter" class="text-xs font-bold text-slate-500">1 / 10</span>
+                    <button onclick="nextFlashcard()" class="flex-1 py-3 bg-orange-600 text-white rounded-xl font-bold hover:bg-orange-700 transition">
+                        Lanjut <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODE 2: KUIS PILIHAN GANDA (Flashcard Quiz) -->
+            <div id="game-quiz-mode" class="hidden max-w-xl mx-auto space-y-6">
+                <!-- Deck Selector -->
+                <div class="flex justify-center flex-wrap gap-2">
+                    <button onclick="startFlashcardQuiz('hiragana')" id="quizdeck-hiragana" class="quizdeck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-orange-600 text-white transition">Hiragana</button>
+                    <button onclick="startFlashcardQuiz('katakana')" id="quizdeck-katakana" class="quizdeck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition">Katakana</button>
+                    <button onclick="startFlashcardQuiz('kosakata')" id="quizdeck-kosakata" class="quizdeck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition">Kosakata</button>
+                </div>
+
+                <!-- Question Card -->
+                <div id="fq-question-panel" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                    <div class="flex justify-between items-center text-xs font-bold text-slate-400">
+                        <span id="fq-counter">Soal 1 / 10</span>
+                        <span>Skor: <span id="fq-score" class="text-orange-600">0</span></span>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <p id="fq-instruction" class="text-xs font-bold text-orange-600 uppercase">Apa bacaan huruf ini?</p>
+                        <div id="fq-prompt" class="text-6xl font-black jp-text text-slate-800">あ</div>
+                    </div>
+                    <div id="fq-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- 4 pilihan jawaban dirender via JS -->
+                    </div>
+                </div>
+
+                <!-- Evaluation Result -->
+                <div id="fq-result" class="hidden p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
+                    <i class="fa-solid fa-trophy text-4xl text-amber-500"></i>
+                    <h4 class="text-xl font-bold text-emerald-900">Kuis Selesai!</h4>
+                    <p class="text-sm text-emerald-700">Skor kamu: <strong id="fq-final-score">0/10</strong> (<span id="fq-final-percent">0%</span>) — kamu dapat <strong id="fq-xp-gained">+0 XP</strong>!</p>
+                    <button onclick="startFlashcardQuiz(currentQuizDeck)" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm hover:bg-emerald-700 transition">
+                        Coba Lagi
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODE 3: SPEED MATCH GAME -->
+            <div id="game-speed-mode" class="hidden max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                    <div>
+                        <h4 class="font-bold text-slate-800">Cocokkan Pasangan Kata</h4>
+                        <p class="text-xs text-slate-500">Klik satu kata bahasa Jepang dan jodohkan dengan artinya.</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-slate-400">Poin Match:</span>
+                        <div id="match-score" class="text-xl font-black text-orange-600">0</div>
+                    </div>
+                </div>
+
+                <!-- Match Grid -->
+                <div id="match-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                    <!-- Cards rendered via JavaScript -->
+                </div>
+
+                <!-- Evaluation Result -->
+                <div id="match-result" class="hidden p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
+                    <i class="fa-solid fa-circle-check text-3xl text-emerald-500"></i>
+                    <h4 class="font-bold text-emerald-900">Semua Pasangan Cocok!</h4>
+                    <p class="text-xs text-emerald-700">Kesalahan: <strong id="match-mistakes">0</strong> kali — kamu dapat <strong id="match-xp-gained">+0 XP</strong></p>
+                </div>
+
+                <button onclick="initSpeedMatch()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-shuffle mr-1"></i> Acak Ulang Kata
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 6: KUIS & EVALUASI -->
+        <section id="section-latihan" class="content-section hidden space-y-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-100 shadow-sm max-w-2xl mx-auto space-y-8">
+                <div class="text-center space-y-2">
+                    <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">Evaluasi Pemahaman</span>
+                    <h3 class="text-2xl font-bold text-slate-800">Kuis Pilihan Ganda N5</h3>
+                    <p class="text-slate-500 text-sm">10 soal acak dari bank soal aksara, kosakata, dan tata bahasa.</p>
+                </div>
+
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Dynamic Question Container -->
+                </div>
+
+                <!-- Result Message -->
+                <div id="quiz-result" class="hidden p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
+                    <i class="fa-solid fa-circle-check text-4xl text-emerald-500"></i>
+                    <h4 class="text-xl font-bold text-emerald-900">Selamat! Kuis Selesai</h4>
+                    <p class="text-sm text-emerald-700">Skor kamu: <strong id="quiz-score-text">0/10</strong> — kamu dapat <strong id="quiz-xp-gained">+50 XP</strong>!</p>
+                    <button onclick="resetQuiz()" class="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-sm hover:bg-emerald-700 transition">
+                        Ulangi Kuis
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8: TARGET 30 HARI -->
+        <section id="section-rencana" class="content-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-extrabold uppercase tracking-wider">Roadmap Belajar</span>
+                <h2 class="text-3xl font-extrabold text-slate-800">Target 30 Hari Menuju N5</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Centang setiap hari yang sudah kamu selesaikan. Progresmu tersimpan otomatis.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex items-center justify-between gap-4 max-w-3xl mx-auto">
+                <div class="flex-grow">
+                    <div class="flex justify-between text-xs font-bold text-slate-500 mb-2"><span>Progres Keseluruhan</span><span id="plan-progress-text">0/30 Hari</span></div>
+                    <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div id="plan-progress-bar" class="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full transition-all" style="width:0%"></div></div>
+                </div>
+            </div>
+
+            <div id="plan-grid" class="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Dynamic content -->
+            </div>
+        </section>
+
+        <!-- SECTION 7: PANDUAN MENGAJAR (RPP 60 MENIT) -->
+        <section id="section-rpp" class="content-section hidden space-y-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-100 shadow-sm space-y-8">
+                <div class="text-center max-w-xl mx-auto space-y-2">
+                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">Untuk Pengajar & Fasilitator</span>
+                    <h2 class="text-3xl font-extrabold text-slate-800">Strategi Kelas 60 Menit</h2>
+                    <p class="text-slate-600 text-sm">Alokasi waktu efektif agar kelas aktif dan tidak membosankan menggunakan formula <strong>10 - 15 - 20 - 15</strong>.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div class="relative h-72 w-full flex items-center justify-center">
+                        <canvas id="rppChart"></canvas>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-4 p-4 rounded-2xl border-l-4 border-amber-400 bg-amber-50">
+                            <span class="font-bold text-lg text-amber-700 shrink-0">10'</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Warming Up & Icebreaker</h4>
+                                <p class="text-xs text-slate-600">Tanya jawab budaya Jepang (Ojigi & Etika Salam).</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-2xl border-l-4 border-blue-400 bg-blue-50">
+                            <span class="font-bold text-lg text-blue-700 shrink-0">15'</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Micro-Lecturing</h4>
+                                <p class="text-xs text-slate-600">Penyampaian materi inti aksara atau gramatika secara singkat.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-2xl border-l-4 border-emerald-400 bg-emerald-50">
+                            <span class="font-bold text-lg text-emerald-700 shrink-0">20'</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Pair-Work & Mini Game</h4>
+                                <p class="text-xs text-slate-600">Praktik dialog berpasangan & Hiragana Bingo game.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-2xl border-l-4 border-purple-400 bg-purple-50">
+                            <span class="font-bold text-lg text-purple-700 shrink-0">15'</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Evaluation & Flashcard Race</h4>
+                                <p class="text-xs text-slate-600">Peninjauan kembali dan kuis interaktif cepat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: KANVAS LATIHAN MENULIS -->
+    <div id="canvas-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeCanvasModal()" aria-label="Tutup kanvas latihan" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center space-y-1">
+                <span class="text-xs font-bold text-orange-600 uppercase">Latihan Menulis</span>
+                <h3 id="modal-kana-char" class="text-4xl font-black jp-text text-slate-800">あ</h3>
+                <p id="modal-kana-romaji" class="text-sm font-semibold text-slate-500">Romaji: A</p>
+            </div>
+
+            <!-- Drawing Canvas Element -->
+            <div class="relative bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 overflow-hidden flex items-center justify-center">
+                <canvas id="guide-canvas" width="280" height="280" class="absolute pointer-events-none"></canvas>
+                <canvas id="writing-canvas" width="280" height="280" class="cursor-crosshair touch-none relative"></canvas>
+            </div>
+            <label class="flex items-center gap-2 text-xs font-semibold text-slate-500 justify-center">
+                <input type="checkbox" id="guide-toggle" checked onchange="toggleGuide()" class="rounded border-slate-300 text-orange-600 focus:ring-orange-500">
+                Tampilkan panduan huruf
+            </label>
+
+            <div class="flex justify-between gap-3">
+                <button onclick="clearCanvas()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition">
+                    <i class="fa-solid fa-eraser mr-1"></i> Bersihkan
+                </button>
+                <button onclick="markCurrentKanaLearned(); closeCanvasModal();" class="flex-1 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-sm transition">
+                    Selesai
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+            <div class="flex justify-center items-center gap-2 text-white font-bold">
+                <span class="text-orange-500">日本語</span> Altoura Academia
+            </div>
+            <p class="text-xs text-slate-500">Platform Belajar Bahasa Jepang Interaktif untuk Pemula hingga Level N5 JLPT.</p>
+            <p class="text-xs text-slate-600">© 2026 Altoura Academia. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+// =========================================================
+// DATA KANA — HIRAGANA (46 karakter, lengkap semua baris)
+// =========================================================
+const hiraganaData = [
+    { kana: 'あ', romaji: 'a' }, { kana: 'い', romaji: 'i' }, { kana: 'う', romaji: 'u' }, { kana: 'え', romaji: 'e' }, { kana: 'お', romaji: 'o' },
+    { kana: 'か', romaji: 'ka' }, { kana: 'き', romaji: 'ki' }, { kana: 'く', romaji: 'ku' }, { kana: 'け', romaji: 'ke' }, { kana: 'こ', romaji: 'ko' },
+    { kana: 'さ', romaji: 'sa' }, { kana: 'し', romaji: 'shi' }, { kana: 'す', romaji: 'su' }, { kana: 'せ', romaji: 'se' }, { kana: 'そ', romaji: 'so' },
+    { kana: 'た', romaji: 'ta' }, { kana: 'ち', romaji: 'chi' }, { kana: 'つ', romaji: 'tsu' }, { kana: 'て', romaji: 'te' }, { kana: 'と', romaji: 'to' },
+    { kana: 'な', romaji: 'na' }, { kana: 'に', romaji: 'ni' }, { kana: 'ぬ', romaji: 'nu' }, { kana: 'ね', romaji: 'ne' }, { kana: 'の', romaji: 'no' },
+    { kana: 'は', romaji: 'ha' }, { kana: 'ひ', romaji: 'hi' }, { kana: 'ふ', romaji: 'fu' }, { kana: 'へ', romaji: 'he' }, { kana: 'ほ', romaji: 'ho' },
+    { kana: 'ま', romaji: 'ma' }, { kana: 'み', romaji: 'mi' }, { kana: 'む', romaji: 'mu' }, { kana: 'め', romaji: 'me' }, { kana: 'も', romaji: 'mo' },
+    { kana: 'や', romaji: 'ya' }, { kana: 'ゆ', romaji: 'yu' }, { kana: 'よ', romaji: 'yo' },
+    { kana: 'ら', romaji: 'ra' }, { kana: 'り', romaji: 'ri' }, { kana: 'る', romaji: 'ru' }, { kana: 'れ', romaji: 're' }, { kana: 'ろ', romaji: 'ro' },
+    { kana: 'わ', romaji: 'wa' }, { kana: 'を', romaji: 'wo' }, { kana: 'ん', romaji: 'n' }
+];
+
+// =========================================================
+// DATA KANA — KATAKANA (46 karakter, lengkap semua baris)
+// =========================================================
+const katakanaData = [
+    { kana: 'ア', romaji: 'a' }, { kana: 'イ', romaji: 'i' }, { kana: 'ウ', romaji: 'u' }, { kana: 'エ', romaji: 'e' }, { kana: 'オ', romaji: 'o' },
+    { kana: 'カ', romaji: 'ka' }, { kana: 'キ', romaji: 'ki' }, { kana: 'ク', romaji: 'ku' }, { kana: 'ケ', romaji: 'ke' }, { kana: 'コ', romaji: 'ko' },
+    { kana: 'サ', romaji: 'sa' }, { kana: 'シ', romaji: 'shi' }, { kana: 'ス', romaji: 'su' }, { kana: 'セ', romaji: 'se' }, { kana: 'ソ', romaji: 'so' },
+    { kana: 'タ', romaji: 'ta' }, { kana: 'チ', romaji: 'chi' }, { kana: 'ツ', romaji: 'tsu' }, { kana: 'テ', romaji: 'te' }, { kana: 'ト', romaji: 'to' },
+    { kana: 'ナ', romaji: 'na' }, { kana: 'ニ', romaji: 'ni' }, { kana: 'ヌ', romaji: 'nu' }, { kana: 'ネ', romaji: 'ne' }, { kana: 'ノ', romaji: 'no' },
+    { kana: 'ハ', romaji: 'ha' }, { kana: 'ヒ', romaji: 'hi' }, { kana: 'フ', romaji: 'fu' }, { kana: 'ヘ', romaji: 'he' }, { kana: 'ホ', romaji: 'ho' },
+    { kana: 'マ', romaji: 'ma' }, { kana: 'ミ', romaji: 'mi' }, { kana: 'ム', romaji: 'mu' }, { kana: 'メ', romaji: 'me' }, { kana: 'モ', romaji: 'mo' },
+    { kana: 'ヤ', romaji: 'ya' }, { kana: 'ユ', romaji: 'yu' }, { kana: 'ヨ', romaji: 'yo' },
+    { kana: 'ラ', romaji: 'ra' }, { kana: 'リ', romaji: 'ri' }, { kana: 'ル', romaji: 'ru' }, { kana: 'レ', romaji: 're' }, { kana: 'ロ', romaji: 'ro' },
+    { kana: 'ワ', romaji: 'wa' }, { kana: 'ヲ', romaji: 'wo' }, { kana: 'ン', romaji: 'n' }
+];
+
+// =========================================================
+// DATA KANA — DAKUTEN, HANDAKUTEN & YŌON (46 kombinasi)
+// =========================================================
+const dakutenData = [
+    { kana: 'が', romaji: 'ga' }, { kana: 'ぎ', romaji: 'gi' }, { kana: 'ぐ', romaji: 'gu' }, { kana: 'げ', romaji: 'ge' }, { kana: 'ご', romaji: 'go' },
+    { kana: 'ざ', romaji: 'za' }, { kana: 'じ', romaji: 'ji' }, { kana: 'ず', romaji: 'zu' }, { kana: 'ぜ', romaji: 'ze' }, { kana: 'ぞ', romaji: 'zo' },
+    { kana: 'だ', romaji: 'da' }, { kana: 'ぢ', romaji: 'ji' }, { kana: 'づ', romaji: 'zu' }, { kana: 'で', romaji: 'de' }, { kana: 'ど', romaji: 'do' },
+    { kana: 'ば', romaji: 'ba' }, { kana: 'び', romaji: 'bi' }, { kana: 'ぶ', romaji: 'bu' }, { kana: 'べ', romaji: 'be' }, { kana: 'ぼ', romaji: 'bo' },
+    { kana: 'ぱ', romaji: 'pa' }, { kana: 'ぴ', romaji: 'pi' }, { kana: 'ぷ', romaji: 'pu' }, { kana: 'ぺ', romaji: 'pe' }, { kana: 'ぽ', romaji: 'po' },
+    { kana: 'きゃ', romaji: 'kya' }, { kana: 'きゅ', romaji: 'kyu' }, { kana: 'きょ', romaji: 'kyo' },
+    { kana: 'しゃ', romaji: 'sha' }, { kana: 'しゅ', romaji: 'shu' }, { kana: 'しょ', romaji: 'sho' },
+    { kana: 'ちゃ', romaji: 'cha' }, { kana: 'ちゅ', romaji: 'chu' }, { kana: 'ちょ', romaji: 'cho' },
+    { kana: 'にゃ', romaji: 'nya' }, { kana: 'にゅ', romaji: 'nyu' }, { kana: 'にょ', romaji: 'nyo' },
+    { kana: 'ひゃ', romaji: 'hya' }, { kana: 'ひゅ', romaji: 'hyu' }, { kana: 'ひょ', romaji: 'hyo' },
+    { kana: 'みゃ', romaji: 'mya' }, { kana: 'みゅ', romaji: 'myu' }, { kana: 'みょ', romaji: 'myo' },
+    { kana: 'りゃ', romaji: 'rya' }, { kana: 'りゅ', romaji: 'ryu' }, { kana: 'りょ', romaji: 'ryo' }
+];
+
+// =========================================================
+// DATA KAMUS N5 (66 kata, 11 kategori)
+// =========================================================
+const dictionaryData = [
+    // ORANG - kata ganti orang
+    { kana: 'わたし', romaji: 'Watashi', meaning: 'Saya / Aku', category: 'ORANG' },
+    { kana: 'あなた', romaji: 'Anata', meaning: 'Anda / Kamu', category: 'ORANG' },
+    { kana: 'かれ', romaji: 'Kare', meaning: 'Dia (laki-laki)', category: 'ORANG' },
+    { kana: 'かのじょ', romaji: 'Kanojo', meaning: 'Dia (perempuan)', category: 'ORANG' },
+    { kana: 'わたしたち', romaji: 'Watashitachi', meaning: 'Kami / Kita', category: 'ORANG' },
+    { kana: 'みなさん', romaji: 'Minasan', meaning: 'Semuanya (sopan)', category: 'ORANG' },
+    // PRORESI - profesi & status
+    { kana: 'せんせい', romaji: 'Sensei', meaning: 'Guru / Dosen', category: 'PRORESI' },
+    { kana: 'がくせい', romaji: 'Gakusei', meaning: 'Siswa / Mahasiswa', category: 'PRORESI' },
+    { kana: 'かいしゃいん', romaji: 'Kaishain', meaning: 'Karyawan Perusahaan', category: 'PRORESI' },
+    { kana: 'いしゃ', romaji: 'Isha', meaning: 'Dokter', category: 'PRORESI' },
+    { kana: 'かんごし', romaji: 'Kangoshi', meaning: 'Perawat', category: 'PRORESI' },
+    { kana: 'けいさつかん', romaji: 'Keisatsukan', meaning: 'Polisi', category: 'PRORESI' },
+    // NEGARA - negara & bahasa
+    { kana: 'にほん', romaji: 'Nihon', meaning: 'Jepang', category: 'NEGARA' },
+    { kana: 'インドネシア', romaji: 'Indoneshia', meaning: 'Indonesia', category: 'NEGARA' },
+    { kana: 'アメリカ', romaji: 'Amerika', meaning: 'Amerika', category: 'NEGARA' },
+    { kana: 'かんこく', romaji: 'Kankoku', meaning: 'Korea', category: 'NEGARA' },
+    { kana: 'ちゅうごく', romaji: 'Chuugoku', meaning: 'Tiongkok', category: 'NEGARA' },
+    { kana: 'にほんご', romaji: 'Nihongo', meaning: 'Bahasa Jepang', category: 'NEGARA' },
+    // ANGKA - angka 1-10
+    { kana: 'いち', romaji: 'Ichi', meaning: 'Satu (1)', category: 'ANGKA' },
+    { kana: 'に', romaji: 'Ni', meaning: 'Dua (2)', category: 'ANGKA' },
+    { kana: 'さん', romaji: 'San', meaning: 'Tiga (3)', category: 'ANGKA' },
+    { kana: 'よん', romaji: 'Yon', meaning: 'Empat (4)', category: 'ANGKA' },
+    { kana: 'ご', romaji: 'Go', meaning: 'Lima (5)', category: 'ANGKA' },
+    { kana: 'ろく', romaji: 'Roku', meaning: 'Enam (6)', category: 'ANGKA' },
+    { kana: 'なな', romaji: 'Nana', meaning: 'Tujuh (7)', category: 'ANGKA' },
+    { kana: 'はち', romaji: 'Hachi', meaning: 'Delapan (8)', category: 'ANGKA' },
+    { kana: 'きゅう', romaji: 'Kyuu', meaning: 'Sembilan (9)', category: 'ANGKA' },
+    { kana: 'じゅう', romaji: 'Juu', meaning: 'Sepuluh (10)', category: 'ANGKA' },
+    // MAKANAN
+    { kana: 'みず', romaji: 'Mizu', meaning: 'Air Minum', category: 'MAKANAN' },
+    { kana: 'ごはん', romaji: 'Gohan', meaning: 'Nasi / Makanan', category: 'MAKANAN' },
+    { kana: 'おちゃ', romaji: 'Ocha', meaning: 'Teh', category: 'MAKANAN' },
+    { kana: 'パン', romaji: 'Pan', meaning: 'Roti', category: 'MAKANAN' },
+    { kana: 'さかな', romaji: 'Sakana', meaning: 'Ikan', category: 'MAKANAN' },
+    { kana: 'にく', romaji: 'Niku', meaning: 'Daging', category: 'MAKANAN' },
+    { kana: 'やさい', romaji: 'Yasai', meaning: 'Sayur', category: 'MAKANAN' },
+    // KELUARGA
+    { kana: 'かぞく', romaji: 'Kazoku', meaning: 'Keluarga', category: 'KELUARGA' },
+    { kana: 'ちち', romaji: 'Chichi', meaning: 'Ayah (sendiri)', category: 'KELUARGA' },
+    { kana: 'はは', romaji: 'Haha', meaning: 'Ibu (sendiri)', category: 'KELUARGA' },
+    { kana: 'あに', romaji: 'Ani', meaning: 'Kakak Laki-laki', category: 'KELUARGA' },
+    { kana: 'あね', romaji: 'Ane', meaning: 'Kakak Perempuan', category: 'KELUARGA' },
+    { kana: 'いもうと', romaji: 'Imouto', meaning: 'Adik Perempuan', category: 'KELUARGA' },
+    { kana: 'おとうと', romaji: 'Otouto', meaning: 'Adik Laki-laki', category: 'KELUARGA' },
+    // HARI & WAKTU
+    { kana: 'にちようび', romaji: 'Nichiyoubi', meaning: 'Hari Minggu', category: 'HARI' },
+    { kana: 'げつようび', romaji: 'Getsuyoubi', meaning: 'Hari Senin', category: 'HARI' },
+    { kana: 'きょう', romaji: 'Kyou', meaning: 'Hari Ini', category: 'HARI' },
+    { kana: 'あした', romaji: 'Ashita', meaning: 'Besok', category: 'HARI' },
+    { kana: 'きのう', romaji: 'Kinou', meaning: 'Kemarin', category: 'HARI' },
+    { kana: 'いま', romaji: 'Ima', meaning: 'Sekarang', category: 'HARI' },
+    // KATA KERJA DASAR
+    { kana: 'たべます', romaji: 'Tabemasu', meaning: 'Makan', category: 'KERJA' },
+    { kana: 'のみます', romaji: 'Nomimasu', meaning: 'Minum', category: 'KERJA' },
+    { kana: 'いきます', romaji: 'Ikimasu', meaning: 'Pergi', category: 'KERJA' },
+    { kana: 'みます', romaji: 'Mimasu', meaning: 'Melihat', category: 'KERJA' },
+    { kana: 'ききます', romaji: 'Kikimasu', meaning: 'Mendengar', category: 'KERJA' },
+    { kana: 'よみます', romaji: 'Yomimasu', meaning: 'Membaca', category: 'KERJA' },
+    { kana: 'かきます', romaji: 'Kakimasu', meaning: 'Menulis', category: 'KERJA' },
+    // BENDA SEHARI-HARI
+    { kana: 'ほん', romaji: 'Hon', meaning: 'Buku', category: 'BENDA' },
+    { kana: 'つくえ', romaji: 'Tsukue', meaning: 'Meja', category: 'BENDA' },
+    { kana: 'いす', romaji: 'Isu', meaning: 'Kursi', category: 'BENDA' },
+    { kana: 'かばん', romaji: 'Kaban', meaning: 'Tas', category: 'BENDA' },
+    { kana: 'でんわ', romaji: 'Denwa', meaning: 'Telepon', category: 'BENDA' },
+    { kana: 'とけい', romaji: 'Tokei', meaning: 'Jam', category: 'BENDA' },
+    // TEMPAT & LOKASI
+    { kana: 'がっこう', romaji: 'Gakkou', meaning: 'Sekolah', category: 'TEMPAT' },
+    { kana: 'いえ', romaji: 'Ie', meaning: 'Rumah', category: 'TEMPAT' },
+    { kana: 'かいしゃ', romaji: 'Kaisha', meaning: 'Perusahaan / Kantor', category: 'TEMPAT' },
+    { kana: 'えき', romaji: 'Eki', meaning: 'Stasiun', category: 'TEMPAT' },
+    { kana: 'びょういん', romaji: 'Byouin', meaning: 'Rumah Sakit', category: 'TEMPAT' },
+    { kana: 'みせ', romaji: 'Mise', meaning: 'Toko', category: 'TEMPAT' },
+    // KATA SIFAT
+    { kana: 'おおきい', romaji: 'Ookii', meaning: 'Besar', category: 'SIFAT' },
+    { kana: 'ちいさい', romaji: 'Chiisai', meaning: 'Kecil', category: 'SIFAT' },
+    { kana: 'あたらしい', romaji: 'Atarashii', meaning: 'Baru', category: 'SIFAT' },
+    { kana: 'ふるい', romaji: 'Furui', meaning: 'Lama / Tua', category: 'SIFAT' },
+    { kana: 'たかい', romaji: 'Takai', meaning: 'Mahal / Tinggi', category: 'SIFAT' }
+];
+
+const categoryLabels = {
+    ORANG: 'Kata Ganti Orang', PRORESI: 'Profesi & Status', NEGARA: 'Negara & Bahasa',
+    ANGKA: 'Angka & Waktu', MAKANAN: 'Makanan & Minuman', KELUARGA: 'Keluarga',
+    HARI: 'Hari & Waktu', KERJA: 'Kata Kerja Dasar', BENDA: 'Benda Sehari-hari',
+    TEMPAT: 'Tempat & Lokasi', SIFAT: 'Kata Sifat'
+};
+
+// =========================================================
+// BANK SOAL KUIS (15 soal, 10 diambil acak tiap sesi)
+// =========================================================
+const quizBank = [
+    { q: "Terjemahkan ke Bahasa Jepang: 'Saya adalah siswa'", options: [
+        { text: "わたし は がくせい です", correct: true },
+        { text: "わたし は せんせい です", correct: false },
+        { text: "あなた は がくせい です か", correct: false }
+    ]},
+    { q: "Apa arti dari salam 'Konnichiwa (こんにちは)'?", options: [
+        { text: "Selamat Pagi", correct: false },
+        { text: "Selamat Siang / Halo", correct: true },
+        { text: "Selamat Malam", correct: false }
+    ]},
+    { q: "Manakah bentuk negatif dari 'Sensei desu' (Adalah guru)?", options: [
+        { text: "Sensei dewa arimasen", correct: true },
+        { text: "Sensei desu ka", correct: false },
+        { text: "Sensei wa watashi desu", correct: false }
+    ]},
+    { q: "Huruf Hiragana 'め' dibaca...", options: [
+        { text: "mo", correct: false }, { text: "me", correct: true }, { text: "mu", correct: false }
+    ]},
+    { q: "Huruf Katakana 'ト' dibaca...", options: [
+        { text: "to", correct: true }, { text: "te", correct: false }, { text: "ta", correct: false }
+    ]},
+    { q: "Apa arti dari 'ありがとうございます'?", options: [
+        { text: "Maaf", correct: false }, { text: "Terima Kasih Banyak", correct: true }, { text: "Selamat Tinggal", correct: false }
+    ]},
+    { q: "Partikel apa yang digunakan untuk membuat kalimat tanya?", options: [
+        { text: "は (wa)", correct: false }, { text: "です (desu)", correct: false }, { text: "か (ka)", correct: true }
+    ]},
+    { q: "'がくせい' artinya adalah...", options: [
+        { text: "Guru", correct: false }, { text: "Siswa / Mahasiswa", correct: true }, { text: "Dokter", correct: false }
+    ]},
+    { q: "Angka 'ご' dalam Bahasa Jepang berarti...", options: [
+        { text: "3", correct: false }, { text: "5", correct: true }, { text: "7", correct: false }
+    ]},
+    { q: "Huruf apa yang muncul jika kita menambahkan dakuten (゛) pada 'か'?", options: [
+        { text: "が (ga)", correct: true }, { text: "ぱ (pa)", correct: false }, { text: "ざ (za)", correct: false }
+    ]},
+    { q: "'たべます' artinya adalah...", options: [
+        { text: "Minum", correct: false }, { text: "Makan", correct: true }, { text: "Pergi", correct: false }
+    ]},
+    { q: "Manakah yang berarti 'Sekolah'?", options: [
+        { text: "がっこう", correct: true }, { text: "びょういん", correct: false }, { text: "かいしゃ", correct: false }
+    ]},
+    { q: "'きょう' artinya adalah...", options: [
+        { text: "Kemarin", correct: false }, { text: "Besok", correct: false }, { text: "Hari Ini", correct: true }
+    ]},
+    { q: "Kombinasi Yōon 'しゃ' dibaca...", options: [
+        { text: "sha", correct: true }, { text: "shu", correct: false }, { text: "sho", correct: false }
+    ]},
+    { q: "Manakah kata sifat yang berarti 'Besar'?", options: [
+        { text: "ちいさい", correct: false }, { text: "おおきい", correct: true }, { text: "たかい", correct: false }
+    ]}
+];
+
+// =========================================================
+// DATA TATA BAHASA N5 (35 Bab, urutan topik ala Minna no Nihongo 1
+// tetapi penjelasan & contoh kalimat ditulis orisinal)
+// =========================================================
+const colorThemes = [
+    { bg: 'bg-orange-50/60', border: 'border-orange-100', text: 'text-orange-600', textDark: 'text-orange-700', badge: 'bg-orange-100 text-orange-700', dot: 'bg-orange-500' },
+    { bg: 'bg-blue-50/60', border: 'border-blue-100', text: 'text-blue-600', textDark: 'text-blue-700', badge: 'bg-blue-100 text-blue-700', dot: 'bg-blue-500' },
+    { bg: 'bg-emerald-50/60', border: 'border-emerald-100', text: 'text-emerald-600', textDark: 'text-emerald-700', badge: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-500' },
+    { bg: 'bg-purple-50/60', border: 'border-purple-100', text: 'text-purple-600', textDark: 'text-purple-700', badge: 'bg-purple-100 text-purple-700', dot: 'bg-purple-500' },
+    { bg: 'bg-rose-50/60', border: 'border-rose-100', text: 'text-rose-600', textDark: 'text-rose-700', badge: 'bg-rose-100 text-rose-700', dot: 'bg-rose-500' },
+    { bg: 'bg-teal-50/60', border: 'border-teal-100', text: 'text-teal-600', textDark: 'text-teal-700', badge: 'bg-teal-100 text-teal-700', dot: 'bg-teal-500' },
+    { bg: 'bg-amber-50/60', border: 'border-amber-100', text: 'text-amber-600', textDark: 'text-amber-700', badge: 'bg-amber-100 text-amber-700', dot: 'bg-amber-500' },
+    { bg: 'bg-indigo-50/60', border: 'border-indigo-100', text: 'text-indigo-600', textDark: 'text-indigo-700', badge: 'bg-indigo-100 text-indigo-700', dot: 'bg-indigo-500' }
+];
+
+const grammarLessons = [
+    { title: "Kalimat Identitas は・です", pattern: "[Subjek] は [Predikat] です", explanation: "Partikel <strong>は (wa)</strong> menandai topik kalimat, sementara <strong>です (desu)</strong> adalah bentuk sopan dari 'adalah'. Untuk negatif, ganti です dengan <strong>ではありません</strong>. Untuk bertanya, cukup tambahkan partikel <strong>か (ka)</strong> di akhir kalimat.",
+        examples: [
+            { jp: "わたしはがくせいです", romaji: "Watashi wa gakusei desu", id: "Saya adalah seorang siswa." },
+            { jp: "わたしはせんせいではありません", romaji: "Watashi wa sensei dewa arimasen", id: "Saya bukan seorang guru." },
+            { jp: "あなたはがくせいですか", romaji: "Anata wa gakusei desu ka", id: "Apakah Anda seorang siswa?" }
+        ]},
+    { title: "Kata Tunjuk Benda これ・それ・あれ", pattern: "これ／それ／あれ ・ この／その／あの + Benda", explanation: "<strong>これ (kore)</strong> menunjuk benda dekat pembicara, <strong>それ (sore)</strong> dekat lawan bicara, <strong>あれ (are)</strong> jauh dari keduanya — ketiganya berdiri sendiri. Bentuk <strong>この／その／あの</strong> mirip tapi wajib diikuti kata benda, seperti 'ini/itu' + kata benda dalam Bahasa Indonesia.",
+        examples: [
+            { jp: "これはほんです", romaji: "Kore wa hon desu", id: "Ini adalah buku." },
+            { jp: "そのかばんはわたしのです", romaji: "Sono kaban wa watashi no desu", id: "Tas itu adalah milik saya." }
+        ]},
+    { title: "Kepemilikan の & Kata Tanya だれの", pattern: "[Pemilik] の [Benda]", explanation: "Partikel <strong>の (no)</strong> menghubungkan dua kata benda untuk menunjukkan kepemilikan atau hubungan, mirip \"'s\" dalam Bahasa Inggris. Untuk bertanya milik siapa, gunakan <strong>だれの (dare no)</strong> di depan kata benda.",
+        examples: [
+            { jp: "これはわたしのほんです", romaji: "Kore wa watashi no hon desu", id: "Ini adalah buku saya." },
+            { jp: "これはだれのかばんですか", romaji: "Kore wa dare no kaban desu ka", id: "Ini tas siapa?" }
+        ]},
+    { title: "Kata Tunjuk Tempat ここ・そこ・あそこ", pattern: "ここ／そこ／あそこ ・ こちら (sopan)", explanation: "Pola yang sama seperti これ/それ/あれ tapi untuk lokasi: <strong>ここ</strong> = di sini, <strong>そこ</strong> = di situ, <strong>あそこ</strong> = di sana. Bentuk sopan <strong>こちら (kochira)</strong> sering dipakai saat mengenalkan arah atau orang secara formal.",
+        examples: [
+            { jp: "がっこうはあそこです", romaji: "Gakkou wa asoko desu", id: "Sekolah ada di sana." },
+            { jp: "ここはとしょかんですか", romaji: "Koko wa toshokan desu ka", id: "Apakah di sini perpustakaan?" }
+        ]},
+    { title: "Angka & Kata Bantu Bilangan", pattern: "[Jumlah] + [Counter: つ／まい／ほん／にん]", explanation: "Angka 1-10 jadi dasar untuk menyebut jumlah, tapi Bahasa Jepang butuh 'kata bantu bilangan' (counter) sesuai jenis bendanya: <strong>つ</strong> untuk benda umum, <strong>まい</strong> untuk benda pipih, <strong>ほん</strong> untuk benda panjang, <strong>にん</strong> untuk orang.",
+        examples: [
+            { jp: "りんごをみっつください", romaji: "Ringo wo mittsu kudasai", id: "Tolong berikan tiga buah apel." },
+            { jp: "きょうだいがふたりいます", romaji: "Kyoudai ga futari imasu", id: "Saya punya dua saudara kandung." }
+        ]},
+    { title: "Menanyakan Waktu & Hari", pattern: "なんじですか？ ・ なんようびですか？", explanation: "<strong>なんじ (nanji)</strong> berarti 'jam berapa', dijawab dengan angka + <strong>じ (ji)</strong>. <strong>なんようび (nan youbi)</strong> menanyakan hari apa, dijawab dengan nama hari + <strong>ようび</strong>.",
+        examples: [
+            { jp: "いまはしちじです", romaji: "Ima wa shichiji desu", id: "Sekarang jam tujuh." },
+            { jp: "きょうはげつようびです", romaji: "Kyou wa getsuyoubi desu", id: "Hari ini hari Senin." }
+        ]},
+    { title: "Kata Kerja Bentuk ~ます", pattern: "[Kata Kerja] + ます／ません", explanation: "Bentuk <strong>~masu</strong> adalah bentuk sopan kata kerja untuk kejadian sekarang/rutin atau rencana masa depan. Untuk negatif, ganti ~ます dengan <strong>~ません</strong>.",
+        examples: [
+            { jp: "まいあさごはんをたべます", romaji: "Maiasa gohan wo tabemasu", id: "Setiap pagi saya makan nasi." },
+            { jp: "きょうはがっこうにいきません", romaji: "Kyou wa gakkou ni ikimasen", id: "Hari ini saya tidak pergi ke sekolah." }
+        ]},
+    { title: "Partikel Kata Kerja を・に・で・へ・と", pattern: "[Objek]を ・ [Waktu/Tujuan]に ・ [Tempat/Alat]で ・ [Arah]へ ・ [Teman]と", explanation: "<strong>を</strong> menandai objek yang dikenai aksi, <strong>に</strong> untuk waktu atau tujuan, <strong>で</strong> untuk tempat terjadinya aksi atau alat, <strong>へ</strong> untuk arah tujuan, dan <strong>と</strong> untuk 'bersama siapa'.",
+        examples: [
+            { jp: "まいにちしんぶんをよみます", romaji: "Mainichi shinbun wo yomimasu", id: "Setiap hari saya membaca koran." },
+            { jp: "ともだちとえいがをみます", romaji: "Tomodachi to eiga wo mimasu", id: "Saya menonton film bersama teman." }
+        ]},
+    { title: "Keberadaan あります・います", pattern: "[Tempat] に [Benda] が あります／います", explanation: "<strong>あります</strong> dipakai untuk benda mati atau tumbuhan, <strong>います</strong> untuk makhluk hidup (orang/hewan). Posisi benda bisa dijelaskan dengan kata seperti うえ (atas), した (bawah), なか (dalam).",
+        examples: [
+            { jp: "つくえのうえにほんがあります", romaji: "Tsukue no ue ni hon ga arimasu", id: "Ada buku di atas meja." },
+            { jp: "へやにねこがいます", romaji: "Heya ni neko ga imasu", id: "Ada kucing di dalam kamar." }
+        ]},
+    { title: "Kata Sifat い / な Adjective", pattern: "[い-adj] + Benda ・ [な-adj] + な + Benda", explanation: "Kata sifat berakhiran い (i-adjective) langsung menempel ke kata benda atau です. Kata sifat lain (na-adjective) butuh <strong>な</strong> sebelum kata benda. Negatif い-adjective: ganti い dengan <strong>くない</strong>; na-adjective: tambahkan <strong>じゃない</strong>.",
+        examples: [
+            { jp: "このほんはおもしろいです", romaji: "Kono hon wa omoshiroi desu", id: "Buku ini menarik." },
+            { jp: "きれいなへやですね", romaji: "Kirei na heya desu ne", id: "Kamar yang bersih ya." }
+        ]},
+    { title: "Suka & Pandai すき・じょうず", pattern: "[Orang] は [Hal] が すきです／じょうずです", explanation: "Partikel <strong>が</strong> dipakai untuk menandai objek perasaan atau kemampuan setelah kata seperti すき (suka), きらい (tidak suka), じょうず (pandai), へた (tidak pandai).",
+        examples: [
+            { jp: "わたしはにほんごがすきです", romaji: "Watashi wa nihongo ga suki desu", id: "Saya suka Bahasa Jepang." },
+            { jp: "かれはりょうりがじょうずです", romaji: "Kare wa ryouri ga jouzu desu", id: "Dia pandai memasak." }
+        ]},
+    { title: "Perbandingan より・いちばん", pattern: "A は B より [sifat] ・ [Kategori]のなかで いちばん [sifat]", explanation: "Untuk membandingkan dua hal, gunakan <strong>より (yori)</strong> setelah hal yang dibandingkan. Untuk superlatif ('paling'), gunakan <strong>のなかでいちばん (no naka de ichiban)</strong>.",
+        examples: [
+            { jp: "ふじさんはあのやまよりたかいです", romaji: "Fujisan wa ano yama yori takai desu", id: "Gunung Fuji lebih tinggi dari gunung itu." },
+            { jp: "くだもののなかでりんごがいちばんすきです", romaji: "Kudamono no naka de ringo ga ichiban suki desu", id: "Dari semua buah, saya paling suka apel." }
+        ]},
+    { title: "Bentuk ~て: Minta Tolong & Izin", pattern: "[Kata Kerja-te] + ください／もいいですか／はいけません", explanation: "Bentuk <strong>~te</strong> dipakai untuk meminta tolong (<strong>~てください</strong>), meminta izin (<strong>~てもいいですか</strong>), dan menyatakan larangan (<strong>~てはいけません</strong>).",
+        examples: [
+            { jp: "まどをあけてください", romaji: "Mado wo akete kudasai", id: "Tolong buka jendelanya." },
+            { jp: "ここでしゃしんをとってもいいですか", romaji: "Koko de shashin wo totte mo ii desu ka", id: "Boleh foto di sini?" },
+            { jp: "たばこをすってはいけません", romaji: "Tabako wo sutte wa ikemasen", id: "Dilarang merokok." }
+        ]},
+    { title: "Sedang Berlangsung ~ています", pattern: "[Kata Kerja-te] + います", explanation: "Bentuk <strong>~te imasu</strong> punya dua fungsi utama: menunjukkan aksi yang sedang berlangsung (progresif), atau kebiasaan/pekerjaan tetap sehari-hari.",
+        examples: [
+            { jp: "いまごはんをたべています", romaji: "Ima gohan wo tabete imasu", id: "Sekarang saya sedang makan." },
+            { jp: "わたしはぎんこうではたらいています", romaji: "Watashi wa ginkou de hataraite imasu", id: "Saya bekerja di bank." }
+        ]},
+    { title: "Keinginan & Rencana ~たい・~つもり", pattern: "[Kata Kerja stem] + たいです ・ [Kata Kerja kamus] + つもりです", explanation: "<strong>~tai desu</strong> menyatakan keinginan diri sendiri untuk melakukan sesuatu. <strong>~tsumori desu</strong> menyatakan rencana atau niat yang sudah dipikirkan sebelumnya.",
+        examples: [
+            { jp: "にほんへいきたいです", romaji: "Nihon e ikitai desu", id: "Saya ingin pergi ke Jepang." },
+            { jp: "らいしゅうともだちにあうつもりです", romaji: "Raishuu tomodachi ni au tsumori desu", id: "Minggu depan saya berencana bertemu teman." }
+        ]},
+    { title: "Bisa Melakukan ~ことができます", pattern: "[Kata Kerja kamus] + ことができます", explanation: "Pola ini menyatakan kemampuan atau kemungkinan melakukan sesuatu, setara 'bisa' dalam Bahasa Indonesia. Kata kerja yang dipakai adalah bentuk kamus (dictionary form).",
+        examples: [
+            { jp: "わたしはおよぐことができます", romaji: "Watashi wa oyogu koto ga dekimasu", id: "Saya bisa berenang." },
+            { jp: "かんじをよむことができません", romaji: "Kanji wo yomu koto ga dekimasen", id: "Saya tidak bisa membaca kanji." }
+        ]},
+    { title: "Pengalaman ~たことがあります", pattern: "[Kata Kerja bentuk た] + ことがあります", explanation: "Pola ini menyatakan pengalaman pernah melakukan sesuatu di masa lalu, setara 'pernah' dalam Bahasa Indonesia.",
+        examples: [
+            { jp: "にほんへいったことがあります", romaji: "Nihon e itta koto ga arimasu", id: "Saya pernah pergi ke Jepang." },
+            { jp: "すしをたべたことがありません", romaji: "Sushi wo tabeta koto ga arimasen", id: "Saya belum pernah makan sushi." }
+        ]},
+    { title: "Mengajak ~ましょう・~ませんか", pattern: "[Kata Kerja stem] + ましょう ・ ませんか", explanation: "<strong>~mashou</strong> dipakai untuk mengajak dengan nada 'ayo kita...'. <strong>~masenka</strong> lebih sopan, bermakna 'maukah kamu...?' — cocok untuk mengajak dengan lebih santun.",
+        examples: [
+            { jp: "いっしょにえいがをみましょう", romaji: "Issho ni eiga wo mimashou", id: "Ayo kita nonton film bersama." },
+            { jp: "にちようびにどこかいきませんか", romaji: "Nichiyoubi ni doko ka ikimasenka", id: "Maukah pergi ke suatu tempat hari Minggu?" }
+        ]},
+    { title: "Urutan Waktu ~まえに・~てから", pattern: "[Kata Kerja kamus] + まえに ・ [Kata Kerja-te] + から", explanation: "<strong>~mae ni</strong> berarti 'sebelum melakukan...', dipakai dengan kata kerja bentuk kamus. <strong>~te kara</strong> berarti 'setelah melakukan...', dipakai dengan kata kerja bentuk te.",
+        examples: [
+            { jp: "ねるまえにはをみがきます", romaji: "Neru mae ni ha wo migakimasu", id: "Sebelum tidur, saya menggosok gigi." },
+            { jp: "しゅくだいをしてからあそびます", romaji: "Shukudai wo shite kara asobimasu", id: "Setelah mengerjakan PR, saya bermain." }
+        ]},
+    { title: "Alasan ~から・~ので", pattern: "[Alasan] から／ので、[Akibat]", explanation: "Baik <strong>~kara</strong> maupun <strong>~node</strong> dipakai untuk menyatakan alasan/sebab, mirip 'karena'. ~node terdengar sedikit lebih formal dan halus dibanding ~kara.",
+        examples: [
+            { jp: "さむいから、まどをしめます", romaji: "Samui kara, mado wo shimemasu", id: "Karena dingin, saya menutup jendela." },
+            { jp: "あしたしけんがあるので、べんきょうします", romaji: "Ashita shiken ga aru node, benkyou shimasu", id: "Karena besok ada ujian, saya belajar." }
+        ]},
+    { title: "Menyebutkan Sebagian や", pattern: "[A] や [B] (や〜など)", explanation: "Partikel <strong>や (ya)</strong> dipakai untuk menyebutkan beberapa contoh benda tanpa menyebutkan semuanya secara lengkap — berbeda dengan <strong>と (to)</strong> yang berarti daftarnya lengkap/selesai.",
+        examples: [
+            { jp: "つくえのうえにほんやペンがあります", romaji: "Tsukue no ue ni hon ya pen ga arimasu", id: "Di atas meja ada buku, pulpen, dan lain-lain." },
+            { jp: "かぎやさいふをもっていますか", romaji: "Kagi ya saifu wo motte imasu ka", id: "Apakah kamu bawa kunci, dompet, dan semacamnya?" }
+        ]},
+    { title: "Rentang Waktu から〜まで", pattern: "[Awal] から [Akhir] まで", explanation: "<strong>から (kara)</strong> menandai titik awal dan <strong>まで (made)</strong> menandai titik akhir suatu rentang waktu atau tempat, setara 'dari...sampai'.",
+        examples: [
+            { jp: "くじからごじまではたらきます", romaji: "Kuji kara goji made hatarakimasu", id: "Saya bekerja dari jam 9 sampai jam 5." },
+            { jp: "みせはあさじゅうじからです", romaji: "Mise wa asa juuji kara desu", id: "Tokonya buka mulai jam 10 pagi." }
+        ]},
+    { title: "Hanya しか + Negatif", pattern: "...しか...ません", explanation: "<strong>しか (shika)</strong> selalu diikuti bentuk negatif di akhir kalimat, dan berarti 'hanya' — memberi kesan jumlahnya sedikit atau terbatas.",
+        examples: [
+            { jp: "せんえんしかありません", romaji: "Sen-en shika arimasen", id: "Saya cuma punya seribu yen (tidak lebih)." },
+            { jp: "にほんごしかはなせません", romaji: "Nihongo shika hanasemasen", id: "Saya hanya bisa berbicara Bahasa Jepang." }
+        ]},
+    { title: "Perkiraan Jumlah ぐらい・くらい", pattern: "[Jumlah] ぐらい／くらい", explanation: "<strong>ぐらい (gurai)</strong> atau <strong>くらい (kurai)</strong> dipakai setelah angka atau jumlah untuk menyatakan perkiraan, setara 'kira-kira' atau 'sekitar'.",
+        examples: [
+            { jp: "えきまでじゅっぷんぐらいです", romaji: "Eki made juppun gurai desu", id: "Sekitar sepuluh menit sampai stasiun." },
+            { jp: "ごにんぐらいきました", romaji: "Gonin gurai kimashita", id: "Datang sekitar lima orang." }
+        ]},
+    { title: "Ketika... ~とき", pattern: "[Klausa] とき、[Kalimat Utama]", explanation: "<strong>とき (toki)</strong> berarti 'ketika/saat'. Jika klausa menggunakan kata kerja bentuk kamus, kejadiannya belum/sedang terjadi; jika bentuk た (lampau), kejadiannya sudah selesai lebih dulu.",
+        examples: [
+            { jp: "あめのとき、かさをさします", romaji: "Ame no toki, kasa wo sashimasu", id: "Saat hujan, saya memakai payung." },
+            { jp: "こどものとき、よくうみへいきました", romaji: "Kodomo no toki, yoku umi e ikimashita", id: "Waktu masih kecil, saya sering pergi ke pantai." }
+        ]},
+    { title: "Sambil Melakukan ~ながら", pattern: "[Kata Kerja stem] + ながら", explanation: "Pola <strong>~nagara</strong> menyatakan dua aktivitas yang dilakukan bersamaan oleh orang yang sama, setara 'sambil' dalam Bahasa Indonesia.",
+        examples: [
+            { jp: "おんがくをききながらべんきょうします", romaji: "Ongaku wo kikinagara benkyou shimasu", id: "Saya belajar sambil mendengarkan musik." },
+            { jp: "あるきながらはなしましょう", romaji: "Arukinagara hanashimashou", id: "Ayo kita bicara sambil jalan." }
+        ]},
+    { title: "Terlalu ~すぎます", pattern: "[Kata Sifat/Kerja stem] + すぎます", explanation: "<strong>~sugimasu</strong> ditempelkan ke kata sifat atau kata kerja (setelah menghilangkan akhiran い/です atau ~masu) untuk menyatakan sesuatu yang berlebihan, setara 'terlalu'.",
+        examples: [
+            { jp: "このかばんはたかすぎます", romaji: "Kono kaban wa takasugimasu", id: "Tas ini terlalu mahal." },
+            { jp: "きのうたべすぎました", romaji: "Kinou tabesugimashita", id: "Kemarin saya makan terlalu banyak." }
+        ]},
+    { title: "Mudah/Susah Dilakukan ~やすい・~にくい", pattern: "[Kata Kerja stem] + やすい／にくい", explanation: "Ditempelkan ke bentuk stem kata kerja (bentuk ~masu tanpa ~masu): <strong>~yasui</strong> berarti 'mudah dilakukan', <strong>~nikui</strong> berarti 'susah dilakukan'.",
+        examples: [
+            { jp: "このペンはかきやすいです", romaji: "Kono pen wa kakiyasui desu", id: "Pulpen ini mudah dipakai menulis." },
+            { jp: "このかんじはおぼえにくいです", romaji: "Kono kanji wa oboenikui desu", id: "Kanji ini susah dihafalkan." }
+        ]},
+    { title: "Perubahan Keadaan ~くなります・~になります", pattern: "[い-adj くなります] ・ [な-adj になります]", explanation: "Pola ini menyatakan perubahan keadaan, setara 'menjadi'. い-adjective: ganti い dengan <strong>くなります</strong>; な-adjective: tambahkan <strong>になります</strong>.",
+        examples: [
+            { jp: "てんきがあつくなりました", romaji: "Tenki ga atsuku narimashita", id: "Cuaca menjadi panas." },
+            { jp: "にほんごがじょうずになりました", romaji: "Nihongo ga jouzu ni narimashita", id: "Bahasa Jepangnya menjadi mahir." }
+        ]},
+    { title: "Perkiraan ~でしょう", pattern: "[Kalimat] + でしょう", explanation: "<strong>~deshou</strong> dipakai untuk menyatakan dugaan atau perkiraan dengan tingkat keyakinan cukup tinggi, setara 'mungkin' atau 'kemungkinan besar'.",
+        examples: [
+            { jp: "あしたはあめでしょう", romaji: "Ashita wa ame deshou", id: "Besok mungkin hujan." },
+            { jp: "かれはもうかえったでしょう", romaji: "Kare wa mou kaetta deshou", id: "Dia mungkin sudah pulang." }
+        ]},
+    { title: "Pendapat ~と思います", pattern: "[Kalimat bentuk biasa] + と思います", explanation: "<strong>~to omoimasu</strong> dipakai untuk menyampaikan pendapat atau pikiran pribadi, setara 'saya pikir' atau 'menurut saya'.",
+        examples: [
+            { jp: "あしたはあめだとおもいます", romaji: "Ashita wa ame da to omoimasu", id: "Menurut saya besok akan hujan." },
+            { jp: "このほんはおもしろいとおもいます", romaji: "Kono hon wa omoshiroi to omoimasu", id: "Saya pikir buku ini menarik." }
+        ]},
+    { title: "Memberi & Menerima あげます・もらいます・くれます", pattern: "[Pemberi]は[Penerima]に...あげます／くれます ・ [Penerima]は...もらいます", explanation: "<strong>あげます</strong> = memberi ke orang lain, <strong>もらいます</strong> = menerima dari orang lain, <strong>くれます</strong> = orang lain memberi ke saya/keluarga saya. Pemilihan kata bergantung arah pemberiannya.",
+        examples: [
+            { jp: "わたしはともだちにプレゼントをあげました", romaji: "Watashi wa tomodachi ni purezento wo agemashita", id: "Saya memberi hadiah ke teman saya." },
+            { jp: "ともだちはわたしにプレゼントをくれました", romaji: "Tomodachi wa watashi ni purezento wo kuremashita", id: "Teman saya memberi saya hadiah." }
+        ]},
+    { title: "Daftar Aktivitas ~たり~たりします", pattern: "[Kata Kerja-た]り[Kata Kerja-た]りします", explanation: "Pola ini menyebutkan beberapa contoh aktivitas yang dilakukan (tidak berurutan/tidak lengkap), setara 'melakukan hal-hal seperti...'.",
+        examples: [
+            { jp: "しゅうまつはほんをよんだりえいがをみたりします", romaji: "Shuumatsu wa hon wo yondari eiga wo mitari shimasu", id: "Akhir pekan saya melakukan hal-hal seperti membaca buku dan menonton film." },
+            { jp: "こうえんであるいたりはなしたりしました", romaji: "Kouen de aruitari hanashitari shimashita", id: "Di taman kami jalan-jalan, mengobrol, dan sebagainya." }
+        ]},
+    { title: "Tidak Ada Apa-apa 疑問詞 + も + Negatif", pattern: "なにも／だれも／どこへも + Negatif", explanation: "Kata tanya (なに, だれ, どこ) yang diikuti <strong>も (mo)</strong> dan bentuk negatif menyatakan 'tidak ada apa-apa/siapa-siapa/ke mana pun', bentuk penyangkalan total.",
+        examples: [
+            { jp: "きょうしつにだれもいません", romaji: "Kyoushitsu ni dare mo imasen", id: "Tidak ada siapa pun di dalam kelas." },
+            { jp: "けさはなにもたべませんでした", romaji: "Kesa wa nani mo tabemasen deshita", id: "Tadi pagi saya tidak makan apa-apa." }
+        ]},
+    { title: "Klausa Penerang Kata Benda", pattern: "[Kalimat Kata Kerja] + Kata Benda", explanation: "Kata kerja (dalam bentuk biasa) bisa langsung menerangkan kata benda di belakangnya untuk membentuk frasa yang lebih detail, mirip klausa relatif 'yang...' dalam Bahasa Indonesia.",
+        examples: [
+            { jp: "これはわたしがかいたてがみです", romaji: "Kore wa watashi ga kaita tegami desu", id: "Ini adalah surat yang saya tulis." },
+            { jp: "あそこでうたっているひとはだれですか", romaji: "Asoko de utatte iru hito wa dare desu ka", id: "Siapa orang yang sedang bernyanyi di sana itu?" }
+        ]}
+];
+
+// =========================================================
+// DATA SIMULASI PERCAKAPAN (6 skenario, dialog orisinal)
+// =========================================================
+const dialogScenarios = {
+    perkenalan: {
+        label: "Perkenalan Diri", icon: "fa-solid fa-user",
+        title: "Perkenalan Diri (自己紹介 - Jikoshoukai)",
+        lines: [
+            { speaker: "A", jp: "はじめまして。わたしはリザです。", romaji: "Hajimemashite. Watashi wa Riza desu.", id: "Salam kenal. Saya adalah Riza." },
+            { speaker: "B", jp: "はじめまして。わたしはケンです。どうぞよろしく。", romaji: "Hajimemashite. Watashi wa Ken desu. Douzo yoroshiku.", id: "Salam kenal. Saya Ken. Senang berkenalan dengan Anda." }
+        ]},
+    restoran: {
+        label: "Di Restoran", icon: "fa-solid fa-utensils",
+        title: "Memesan Makanan di Restoran",
+        lines: [
+            { speaker: "A", jp: "いらっしゃいませ。なんめいさまですか。", romaji: "Irasshaimase. Nanmeisama desu ka.", id: "Selamat datang. Untuk berapa orang?" },
+            { speaker: "B", jp: "ふたりです。", romaji: "Futari desu.", id: "Untuk dua orang." },
+            { speaker: "A", jp: "こちらへどうぞ。ごちゅうもんは？", romaji: "Kochira e douzo. Gochuumon wa?", id: "Silakan lewat sini. Mau pesan apa?" },
+            { speaker: "B", jp: "すみません、ラーメンをふたつください。", romaji: "Sumimasen, raamen wo futatsu kudasai.", id: "Permisi, tolong dua ramen." },
+            { speaker: "A", jp: "かしこまりました。おのみものは？", romaji: "Kashikomarimashita. Onomimono wa?", id: "Baik. Untuk minumannya?" },
+            { speaker: "B", jp: "おちゃをおねがいします。", romaji: "Ocha wo onegaishimasu.", id: "Tolong teh." }
+        ]},
+    toko: {
+        label: "Di Toko", icon: "fa-solid fa-shirt",
+        title: "Berbelanja di Toko Pakaian",
+        lines: [
+            { speaker: "A", jp: "いらっしゃいませ。なにかおさがしですか。", romaji: "Irasshaimase. Nanika osagashi desu ka.", id: "Selamat datang. Sedang mencari sesuatu?" },
+            { speaker: "B", jp: "このTシャツはいくらですか。", romaji: "Kono T-shatsu wa ikura desu ka.", id: "T-shirt ini harganya berapa?" },
+            { speaker: "A", jp: "にせんえんです。", romaji: "Nisen-en desu.", id: "Dua ribu yen." },
+            { speaker: "B", jp: "もうすこしやすいのはありますか。", romaji: "Mou sukoshi yasui no wa arimasu ka.", id: "Apakah ada yang sedikit lebih murah?" },
+            { speaker: "A", jp: "はい、こちらはせんごひゃくえんです。", romaji: "Hai, kochira wa sen-gohyaku-en desu.", id: "Ya, yang ini seribu lima ratus yen." },
+            { speaker: "B", jp: "じゃあ、これをください。", romaji: "Jaa, kore wo kudasai.", id: "Kalau begitu, saya beli yang ini." }
+        ]},
+    arah: {
+        label: "Menanyakan Arah", icon: "fa-solid fa-signs-post",
+        title: "Menanyakan Arah ke Stasiun",
+        lines: [
+            { speaker: "A", jp: "すみません、えきはどこですか。", romaji: "Sumimasen, eki wa doko desu ka.", id: "Permisi, stasiun di mana ya?" },
+            { speaker: "B", jp: "まっすぐいって、みぎにまがってください。", romaji: "Massugu itte, migi ni magatte kudasai.", id: "Jalan lurus, lalu belok kanan." },
+            { speaker: "A", jp: "あるいてなんぷんぐらいですか。", romaji: "Aruite nanpun gurai desu ka.", id: "Kira-kira berapa menit jalan kaki?" },
+            { speaker: "B", jp: "じゅっぷんぐらいです。", romaji: "Juppun gurai desu.", id: "Sekitar sepuluh menit." },
+            { speaker: "A", jp: "どうもありがとうございます。", romaji: "Doumo arigatou gozaimasu.", id: "Terima kasih banyak." }
+        ]},
+    sekolah: {
+        label: "Di Sekolah", icon: "fa-solid fa-graduation-cap",
+        title: "Meminta Izin ke Guru",
+        lines: [
+            { speaker: "A", jp: "せんせい、しつもんがあります。", romaji: "Sensei, shitsumon ga arimasu.", id: "Sensei, saya ada pertanyaan." },
+            { speaker: "B", jp: "はい、なんですか。", romaji: "Hai, nan desu ka.", id: "Ya, apa itu?" },
+            { speaker: "A", jp: "トイレにいってもいいですか。", romaji: "Toire ni itte mo ii desu ka.", id: "Boleh saya ke toilet?" },
+            { speaker: "B", jp: "ええ、どうぞ。", romaji: "Ee, douzo.", id: "Ya, silakan." },
+            { speaker: "A", jp: "しゅくだいはあしたまでにだしてもいいですか。", romaji: "Shukudai wa ashita made ni dashite mo ii desu ka.", id: "Bolehkah tugas dikumpulkan sampai besok?" },
+            { speaker: "B", jp: "はい、いいですよ。", romaji: "Hai, ii desu yo.", id: "Ya, boleh." }
+        ]},
+    hobi: {
+        label: "Hobi & Rencana", icon: "fa-solid fa-umbrella-beach",
+        title: "Membicarakan Hobi & Rencana Akhir Pekan",
+        lines: [
+            { speaker: "A", jp: "しゅうまつ、なにをしますか。", romaji: "Shuumatsu, nani wo shimasu ka.", id: "Akhir pekan mau ngapain?" },
+            { speaker: "B", jp: "ともだちとえいがをみるつもりです。あなたは？", romaji: "Tomodachi to eiga wo miru tsumori desu. Anata wa?", id: "Saya berencana nonton film dengan teman. Kamu?" },
+            { speaker: "A", jp: "わたしはうみへいきたいです。およぐのがすきですから。", romaji: "Watashi wa umi e ikitai desu. Oyogu no ga suki desu kara.", id: "Saya ingin pergi ke pantai, karena saya suka berenang." },
+            { speaker: "B", jp: "いいですね！たのしんできてください。", romaji: "Ii desu ne! Tanoshinde kite kudasai.", id: "Bagus ya! Selamat bersenang-senang." }
+        ]}
+};
+
+// =========================================================
+// GLOBAL STATE
+// =========================================================
+let currentKanaCategory = 'hiragana';
+let currentFlashcardIndex = 0;
+let currentFlashcardDeck = 'hiragana';
+let isFlashcardFlipped = false;
+let matchSelectedCard = null;
+let matchScore = 0;
+let matchMistakes = 0;
+let matchPairsTotal = 0;
+let matchPairsFound = 0;
+let activeQuizQuestions = [];
+let activeKanaForCanvas = null;
+let showGuide = true;
+
+let currentQuizDeck = 'hiragana';
+let fqState = { questions: [], index: 0, score: 0, answered: false };
+
+let userProgress = {
+    xp: 0,
+    streak: 1,
+    lastVisit: null,
+    learned: { hiragana: [], katakana: [], dakuten: [], kosakata: [], grammar: [] },
+    planChecked: []
+};
+
+// =========================================================
+// PENYIMPANAN PROGRES (persisten antar sesi via window.storage)
+// =========================================================
+// Lapisan penyimpanan universal: memakai window.storage (tersedia saat
+// file ini ditampilkan sebagai artifact Claude), dan otomatis fallback
+// ke localStorage saat dibuka sebagai file/website mandiri di browser
+// biasa — supaya XP, streak, dan progres tetap tersimpan di kedua kondisi.
+async function storageGet(key) {
+    if (typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function') {
+        try {
+            const result = await window.storage.get(key, false);
+            return result ? result.value : null;
+        } catch (e) {
+            // lanjut coba localStorage di bawah
+        }
+    }
+    try {
+        return localStorage.getItem(key);
+    } catch (e) {
+        return null;
+    }
+}
+
+async function storageSet(key, value) {
+    if (typeof window.storage !== 'undefined' && window.storage && typeof window.storage.set === 'function') {
+        try {
+            await window.storage.set(key, value, false);
+            return;
+        } catch (e) {
+            // lanjut coba localStorage di bawah
+        }
+    }
+    try {
+        localStorage.setItem(key, value);
+    } catch (e) {
+        // penyimpanan benar-benar tidak tersedia — aplikasi tetap jalan
+        // untuk sesi ini, hanya progresnya tidak akan tersimpan
+    }
+}
+
+async function loadProgress() {
+    try {
+        const value = await storageGet('user-progress');
+        if (value) {
+            const saved = JSON.parse(value);
+            userProgress = Object.assign(userProgress, saved);
+        }
+    } catch (e) {
+        // Belum ada data tersimpan / data rusak, gunakan default
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    if (userProgress.lastVisit) {
+        const last = new Date(userProgress.lastVisit);
+        const diffDays = Math.round((new Date(today) - new Date(last.toISOString().slice(0,10))) / 86400000);
+        if (diffDays === 1) {
+            userProgress.streak += 1;
+        } else if (diffDays > 1) {
+            userProgress.streak = 1;
+        }
+        // diffDays === 0 -> hari yang sama, streak tidak berubah
+    } else {
+        userProgress.streak = 1;
+    }
+    userProgress.lastVisit = today;
+
+    await saveProgress();
+    refreshStatsUI();
+}
+
+async function saveProgress() {
+    await storageSet('user-progress', JSON.stringify(userProgress));
+}
+
+function refreshStatsUI() {
+    document.getElementById('stat-xp').textContent = `${userProgress.xp} XP`;
+    document.getElementById('stat-streak').textContent = `${userProgress.streak} Hari`;
+    updateProgressBars();
+}
+
+function pulseBadge(elementId) {
+    const el = document.getElementById(elementId);
+    const badge = el ? el.closest('div') : null;
+    if (!badge) return;
+    badge.classList.remove('badge-pulse');
+    void badge.offsetWidth;
+    badge.classList.add('badge-pulse');
+}
+
+function addXP(amount) {
+    userProgress.xp += amount;
+    saveProgress();
+    refreshStatsUI();
+    pulseBadge('stat-xp');
+}
+
+function markLearned(type, key) {
+    if (!userProgress.learned[type].includes(key)) {
+        userProgress.learned[type].push(key);
+        saveProgress();
+        updateProgressBars();
+    }
+}
+
+function updateProgressBars() {
+    const sets = [
+        { key: 'hiragana', total: hiraganaData.length, bar: 'progress-hiragana-bar', text: 'progress-hiragana-text' },
+        { key: 'katakana', total: katakanaData.length, bar: 'progress-katakana-bar', text: 'progress-katakana-text' },
+        { key: 'dakuten', total: dakutenData.length, bar: 'progress-dakuten-bar', text: 'progress-dakuten-text' },
+        { key: 'grammar', total: grammarLessons.length, bar: 'progress-grammar-bar', text: 'progress-grammar-text' },
+        { key: 'kosakata', total: dictionaryData.length, bar: 'progress-kosakata-bar', text: 'progress-kosakata-text' }
+    ];
+    sets.forEach(s => {
+        const learnedCount = userProgress.learned[s.key].length;
+        const pct = Math.min(100, Math.round((learnedCount / s.total) * 100));
+        const barEl = document.getElementById(s.bar);
+        const textEl = document.getElementById(s.text);
+        if (barEl) barEl.style.width = pct + '%';
+        if (textEl) textEl.textContent = `${learnedCount}/${s.total}`;
+    });
+}
+
+// =========================================================
+// TOAST NOTIFICATION
+// =========================================================
+let toastTimeout = null;
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-message').textContent = message;
+    toast.classList.remove('hidden');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.add('hidden'), 3500);
+}
+
+// =========================================================
+// TEXT-TO-SPEECH
+// =========================================================
+function speak(text) {
+    if (!('speechSynthesis' in window)) {
+        showToast('Browser ini tidak mendukung audio suara. Coba gunakan Chrome atau Safari terbaru.');
+        return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ja-JP';
+    utterance.rate = 0.85;
+
+    const voices = window.speechSynthesis.getVoices();
+    const jpVoice = voices.find(v => v.lang === 'ja-JP' || v.lang === 'ja_JP' || v.lang.startsWith('ja'));
+    if (!jpVoice && voices.length > 0) {
+        showToast('Suara Bahasa Jepang tidak tersedia di perangkat ini. Pelafalan mungkin tidak akurat.');
+    }
+    if (jpVoice) utterance.voice = jpVoice;
+
+    utterance.onerror = () => showToast('Audio gagal diputar. Coba lagi atau periksa pengaturan suara perangkatmu.');
+    window.speechSynthesis.speak(utterance);
+}
+
+// =========================================================
+// NAVIGASI SECTION
+// =========================================================
+function showSection(sectionId) {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+    document.getElementById('section-' + sectionId).classList.remove('hidden');
+    document.getElementById('mobile-menu').classList.add('hidden');
+
+    if (sectionId === 'kana') renderKanaGrid(currentKanaCategory);
+    if (sectionId === 'kamus') renderDictionary(dictionaryData);
+    if (sectionId === 'game') { initFlashcard(); }
+    if (sectionId === 'latihan') renderQuiz();
+    if (sectionId === 'rpp') initRPPChart();
+    if (sectionId === 'rencana') renderPlan();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+}
+
+// =========================================================
+// KANA GRID
+// =========================================================
+function switchKanaTab(tab) {
+    currentKanaCategory = tab;
+    document.querySelectorAll('.kana-tab').forEach(t => t.classList.remove('tab-active', 'text-slate-500'));
+    document.getElementById('tab-' + tab).classList.add('tab-active');
+    renderKanaGrid(tab);
+}
+
+function renderKanaGrid(type) {
+    const container = document.getElementById('kana-grid-container');
+    container.innerHTML = '';
+
+    let data = hiraganaData;
+    if (type === 'katakana') data = katakanaData;
+    if (type === 'dakuten') data = dakutenData;
+
+    data.forEach(item => {
+        const isLearned = userProgress.learned[type].includes(item.romaji);
+        const card = document.createElement('div');
+        card.className = "relative bg-slate-50 hover:bg-orange-50 border border-slate-200 hover:border-orange-300 rounded-2xl p-3 sm:p-4 text-center cursor-pointer transition group flex flex-col items-center justify-between shadow-2xs";
+        card.onclick = () => { speak(item.kana); markLearned(type, item.romaji); };
+
+        card.innerHTML = `
+            ${isLearned ? '<i class="fa-solid fa-circle-check absolute top-1.5 right-1.5 text-emerald-500 text-xs"></i>' : ''}
+            <span class="text-2xl sm:text-3xl font-bold jp-text text-slate-800 group-hover:scale-110 transition">${item.kana}</span>
+            <span class="text-xs font-semibold text-slate-400 group-hover:text-orange-600 mt-1 uppercase">${item.romaji}</span>
+            <button aria-label="Latih menulis ${item.romaji}" onclick="event.stopPropagation(); openCanvasModal('${item.kana}', '${item.romaji}', '${type}')" class="mt-2 text-slate-300 hover:text-blue-600 text-xs p-1" title="Latih Menulis">
+                <i class="fa-solid fa-pen-line"></i>
+            </button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// =========================================================
+// MATERI SUB TABS
+// =========================================================
+function switchMateriSubTab(tab) {
+    document.querySelectorAll('.materi-subtab').forEach(t => t.classList.remove('tab-active'));
+    document.querySelectorAll('.materi-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('subtab-' + tab).classList.add('tab-active');
+    const contentEl = document.getElementById('materi-' + tab);
+    contentEl.classList.remove('hidden');
+    contentEl.classList.remove('content-animate');
+    void contentEl.offsetWidth;
+    contentEl.classList.add('content-animate');
+
+    if (tab === 'grammar') {
+        if (!document.getElementById('grammar-stepper').dataset.initialized) {
+            renderGrammarStepper();
+            selectGrammarLesson(0);
+            document.getElementById('grammar-stepper').dataset.initialized = '1';
+        }
+    }
+    if (tab === 'dialog') {
+        if (!document.getElementById('dialog-scenario-selector').dataset.initialized) {
+            renderDialogSelector();
+            selectDialogScenario('perkenalan');
+            document.getElementById('dialog-scenario-selector').dataset.initialized = '1';
+        }
+    }
+}
+
+// =========================================================
+// TATA BAHASA N5 — STEPPER & LESSON RENDERER
+// =========================================================
+let currentGrammarLesson = 0;
+
+function renderGrammarStepper() {
+    const stepper = document.getElementById('grammar-stepper');
+    stepper.innerHTML = '';
+    grammarLessons.forEach((lesson, idx) => {
+        const isLearned = userProgress.learned.grammar.includes(idx);
+        const btn = document.createElement('button');
+        btn.setAttribute('aria-label', `Bab ${idx + 1}: ${lesson.title}`);
+        btn.className = `step-circle shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold border-2 ${isLearned ? 'bg-emerald-500 border-emerald-500 text-white' : 'bg-white border-slate-200 text-slate-500'}`;
+        btn.id = 'grammar-step-' + idx;
+        btn.innerHTML = isLearned ? '<i class="fa-solid fa-check"></i>' : (idx + 1);
+        btn.onclick = () => selectGrammarLesson(idx);
+        stepper.appendChild(btn);
+    });
+}
+
+function selectGrammarLesson(idx) {
+    currentGrammarLesson = idx;
+    document.querySelectorAll('.step-circle').forEach(b => b.classList.remove('active'));
+    const activeBtn = document.getElementById('grammar-step-' + idx);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    const total = grammarLessons.length;
+    document.getElementById('grammar-step-label').textContent = `Bab ${idx + 1} dari ${total}`;
+    document.getElementById('grammar-progress-label').textContent = `${userProgress.learned.grammar.length}/${total} selesai`;
+    document.getElementById('grammar-next-btn').innerHTML = idx < total - 1
+        ? 'Bab Berikutnya <i class="fa-solid fa-chevron-right ml-1"></i>'
+        : 'Selesai! Lanjut ke Kosakata <i class="fa-solid fa-arrow-right ml-1"></i>';
+
+    renderGrammarLesson(idx);
+}
+
+function renderGrammarLesson(idx) {
+    const lesson = grammarLessons[idx];
+    const theme = colorThemes[idx % colorThemes.length];
+    const isLearned = userProgress.learned.grammar.includes(idx);
+    const card = document.getElementById('grammar-lesson-card');
+
+    const examplesHtml = lesson.examples.map(ex => `
+        <div class="p-4 ${theme.bg} rounded-2xl border ${theme.border} space-y-2">
+            <div class="text-lg font-bold jp-text text-slate-800 flex items-center justify-between gap-3">
+                <span>${ex.jp}</span>
+                <button onclick="speak('${ex.jp}')" aria-label="Dengarkan contoh kalimat" class="${theme.text} hover:opacity-70 shrink-0"><i class="fa-solid fa-volume-high"></i></button>
+            </div>
+            <div class="text-xs italic text-slate-500">${ex.romaji}</div>
+            <div class="text-sm font-medium text-slate-700">"${ex.id}"</div>
+        </div>
+    `).join('');
+
+    card.innerHTML = `
+        <div class="flex items-start justify-between gap-3">
+            <span class="px-3 py-1 ${theme.badge} rounded-full text-xs font-bold">Bab ${idx + 1}</span>
+            ${isLearned ? '<span class="text-xs font-bold text-emerald-600 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Sudah Dipelajari</span>' : ''}
+        </div>
+        <h3 class="text-2xl font-black text-slate-800 jp-text">${lesson.title}</h3>
+        <div class="text-sm font-bold ${theme.text} bg-slate-50 inline-block px-3 py-1.5 rounded-lg">${lesson.pattern}</div>
+        <p class="text-slate-600 text-sm leading-relaxed">${lesson.explanation}</p>
+        <div class="space-y-3">
+            <div class="text-xs font-bold ${theme.textDark} uppercase">Contoh Kalimat:</div>
+            ${examplesHtml}
+        </div>
+        <button onclick="markGrammarLearned(${idx})" class="w-full py-3 ${isLearned ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-orange-600 text-white hover:bg-orange-700'} rounded-xl font-bold text-sm transition">
+            ${isLearned ? '<i class="fa-solid fa-check mr-1"></i> Sudah Dipelajari' : 'Tandai Sudah Paham'}
+        </button>
+    `;
+    card.classList.remove('content-animate');
+    void card.offsetWidth;
+    card.classList.add('content-animate');
+}
+
+function markGrammarLearned(idx) {
+    if (!userProgress.learned.grammar.includes(idx)) {
+        userProgress.learned.grammar.push(idx);
+        saveProgress();
+        updateProgressBars();
+        addXP(15);
+        renderGrammarStepper();
+        document.getElementById('grammar-step-' + idx).classList.add('active');
+        renderGrammarLesson(idx);
+        document.getElementById('grammar-progress-label').textContent = `${userProgress.learned.grammar.length}/${grammarLessons.length} selesai`;
+    }
+}
+
+function nextGrammarLesson() {
+    if (currentGrammarLesson < grammarLessons.length - 1) {
+        selectGrammarLesson(currentGrammarLesson + 1);
+    } else {
+        showSection('kamus');
+    }
+}
+
+function prevGrammarLesson() {
+    if (currentGrammarLesson > 0) {
+        selectGrammarLesson(currentGrammarLesson - 1);
+    }
+}
+
+// =========================================================
+// SIMULASI PERCAKAPAN — RENDERER
+// =========================================================
+let currentDialogKey = 'perkenalan';
+
+function renderDialogSelector() {
+    const selector = document.getElementById('dialog-scenario-selector');
+    selector.innerHTML = '';
+    Object.keys(dialogScenarios).forEach(key => {
+        const scenario = dialogScenarios[key];
+        const btn = document.createElement('button');
+        btn.id = 'dialog-btn-' + key;
+        btn.className = 'px-4 py-2 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition flex items-center gap-1.5';
+        btn.innerHTML = `<i class="${scenario.icon}"></i> ${scenario.label}`;
+        btn.onclick = () => selectDialogScenario(key);
+        selector.appendChild(btn);
+    });
+}
+
+function selectDialogScenario(key) {
+    currentDialogKey = key;
+    Object.keys(dialogScenarios).forEach(k => {
+        const btn = document.getElementById('dialog-btn-' + k);
+        btn.className = (k === key)
+            ? 'px-4 py-2 rounded-full text-xs font-bold bg-orange-600 text-white transition flex items-center gap-1.5'
+            : 'px-4 py-2 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition flex items-center gap-1.5';
+    });
+
+    const scenario = dialogScenarios[key];
+    const card = document.getElementById('dialog-content-card');
+    const colorsAB = ['orange', 'blue'];
+
+    const linesHtml = scenario.lines.map(line => {
+        const isA = line.speaker === 'A';
+        const c = isA ? 'orange' : 'blue';
+        return `
+        <div class="flex gap-4 items-start pop-in">
+            <div class="w-10 h-10 rounded-full bg-${c}-100 text-${c}-600 flex items-center justify-center font-bold text-sm shrink-0">${line.speaker}</div>
+            <div class="bg-${isA ? 'slate-50' : 'blue-50/50'} p-4 rounded-2xl border border-${isA ? 'slate-100' : 'blue-100'} flex-grow space-y-1">
+                <div class="font-bold jp-text text-slate-800 flex justify-between items-center gap-3">
+                    <span>${line.jp}</span>
+                    <button onclick="speak('${line.jp}')" aria-label="Dengarkan dialog" class="text-${c}-600 shrink-0"><i class="fa-solid fa-volume-high"></i></button>
+                </div>
+                <div class="text-xs italic text-slate-500">${line.romaji}</div>
+                <div class="text-sm text-slate-700">${line.id}</div>
+            </div>
+        </div>`;
+    }).join('');
+
+    card.innerHTML = `
+        <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="${scenario.icon} text-orange-600"></i> ${scenario.title}</h3>
+        <div class="space-y-4">${linesHtml}</div>
+    `;
+    card.classList.remove('content-animate');
+    void card.offsetWidth;
+    card.classList.add('content-animate');
+}
+
+// =========================================================
+// KAMUS
+// =========================================================
+function renderDictionary(items) {
+    const container = document.getElementById('dict-list-container');
+    container.innerHTML = '';
+    document.getElementById('dict-count').textContent = `Menampilkan ${items.length} dari ${dictionaryData.length} kata`;
+
+    if (items.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-center py-8 text-slate-400 text-sm">Tidak ada kosakata yang cocok.</div>`;
+        return;
+    }
+
+    items.forEach(item => {
+        const isLearned = userProgress.learned.kosakata.includes(item.romaji);
+        const card = document.createElement('div');
+        card.className = "relative bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center card-hover";
+        card.innerHTML = `
+            ${isLearned ? '<i class="fa-solid fa-circle-check absolute top-3 right-3 text-emerald-500 text-sm"></i>' : ''}
+            <div class="space-y-1">
+                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">${categoryLabels[item.category] || item.category}</span>
+                <div class="text-2xl font-bold jp-text text-slate-800">${item.kana}</div>
+                <div class="text-xs font-semibold text-orange-600">${item.romaji}</div>
+                <div class="text-sm text-slate-600 font-medium">${item.meaning}</div>
+            </div>
+            <button aria-label="Dengarkan ${item.romaji}" onclick="speak('${item.kana}'); markLearned('kosakata', '${item.romaji}')" class="w-10 h-10 bg-slate-50 hover:bg-orange-50 text-slate-400 hover:text-orange-600 rounded-full flex items-center justify-center text-base transition">
+                <i class="fa-solid fa-volume-high"></i>
+            </button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function filterDictionary() {
+    const query = document.getElementById('dict-search-input').value.toLowerCase();
+    const cat = document.getElementById('dict-category-select').value;
+
+    const filtered = dictionaryData.filter(item => {
+        const matchQuery = item.kana.includes(query) || item.romaji.toLowerCase().includes(query) || item.meaning.toLowerCase().includes(query);
+        const matchCat = cat === 'ALL' || item.category === cat;
+        return matchQuery && matchCat;
+    });
+
+    renderDictionary(filtered);
+}
+
+// =========================================================
+// GAME: FLASHCARD (dengan pilihan deck)
+// =========================================================
+function switchGameMode(mode) {
+    document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('tab-active'));
+    document.getElementById('gametab-' + mode).classList.add('tab-active');
+
+    document.getElementById('game-flashcard-mode').classList.add('hidden');
+    document.getElementById('game-quiz-mode').classList.add('hidden');
+    document.getElementById('game-speed-mode').classList.add('hidden');
+
+    if (mode === 'flashcard') {
+        document.getElementById('game-flashcard-mode').classList.remove('hidden');
+    } else if (mode === 'quiz') {
+        document.getElementById('game-quiz-mode').classList.remove('hidden');
+        startFlashcardQuiz(currentQuizDeck);
+    } else {
+        document.getElementById('game-speed-mode').classList.remove('hidden');
+        initSpeedMatch();
+    }
+}
+
+function getFlashcardDeckData() {
+    if (currentFlashcardDeck === 'katakana') return katakanaData;
+    if (currentFlashcardDeck === 'kosakata') return dictionaryData;
+    return hiraganaData;
+}
+
+function switchFlashcardDeck(deck) {
+    currentFlashcardDeck = deck;
+    currentFlashcardIndex = 0;
+    ['hiragana', 'katakana', 'kosakata'].forEach(d => {
+        const btn = document.getElementById('deck-' + d);
+        if (d === deck) {
+            btn.className = 'deck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-orange-600 text-white transition';
+        } else {
+            btn.className = 'deck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition';
+        }
+    });
+    updateFlashcardUI();
+}
+
+function initFlashcard() {
+    currentFlashcardIndex = 0;
+    updateFlashcardUI();
+}
+
+function updateFlashcardUI() {
+    const deck = getFlashcardDeckData();
+    const item = deck[currentFlashcardIndex];
+
+    document.getElementById('fc-kana').textContent = item.kana;
+    if (currentFlashcardDeck === 'kosakata') {
+        document.getElementById('fc-romaji').textContent = item.romaji;
+        document.getElementById('fc-meaning').textContent = item.meaning;
+    } else {
+        document.getElementById('fc-romaji').textContent = item.romaji.toUpperCase();
+        document.getElementById('fc-meaning').textContent = `Huruf '${item.romaji.toUpperCase()}' ${currentFlashcardDeck === 'katakana' ? 'Katakana' : 'Hiragana'}`;
+    }
+    document.getElementById('fc-counter').textContent = `${currentFlashcardIndex + 1} / ${deck.length}`;
+
+    isFlashcardFlipped = false;
+    document.getElementById('flashcard-element').classList.remove('flashcard-flipped');
+}
+
+function flipFlashcard() {
+    isFlashcardFlipped = !isFlashcardFlipped;
+    document.getElementById('flashcard-element').classList.toggle('flashcard-flipped', isFlashcardFlipped);
+    if (isFlashcardFlipped) {
+        const deck = getFlashcardDeckData();
+        const item = deck[currentFlashcardIndex];
+        const type = currentFlashcardDeck === 'kosakata' ? 'kosakata' : currentFlashcardDeck;
+        markLearned(type, item.romaji);
+    }
+}
+
+function speakCurrentFlashcard() {
+    const deck = getFlashcardDeckData();
+    speak(deck[currentFlashcardIndex].kana);
+}
+
+function nextFlashcard() {
+    const deck = getFlashcardDeckData();
+    if (currentFlashcardIndex < deck.length - 1) {
+        currentFlashcardIndex++;
+        updateFlashcardUI();
+    }
+}
+
+function prevFlashcard() {
+    if (currentFlashcardIndex > 0) {
+        currentFlashcardIndex--;
+        updateFlashcardUI();
+    }
+}
+
+// =========================================================
+// GAME: KUIS PILIHAN GANDA (Flashcard Quiz)
+// =========================================================
+function getQuizDeckData(deck) {
+    if (deck === 'katakana') return katakanaData;
+    if (deck === 'kosakata') return dictionaryData;
+    return hiraganaData;
+}
+
+function startFlashcardQuiz(deck) {
+    currentQuizDeck = deck;
+    ['hiragana', 'katakana', 'kosakata'].forEach(d => {
+        const btn = document.getElementById('quizdeck-' + d);
+        btn.className = (d === deck)
+            ? 'quizdeck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-orange-600 text-white transition'
+            : 'quizdeck-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 transition';
+    });
+
+    const data = getQuizDeckData(deck);
+    const totalQuestions = Math.min(10, data.length);
+    const chosen = shuffleArray(data).slice(0, totalQuestions);
+
+    fqState.questions = chosen.map(item => {
+        const wrongPool = data.filter(d => d.romaji !== item.romaji);
+        const wrongs = shuffleArray(wrongPool).slice(0, 3);
+        const answerKey = deck === 'kosakata' ? 'meaning' : 'romaji';
+        const options = shuffleArray([item, ...wrongs].map(o => o[answerKey]));
+        return { prompt: item.kana, correctAnswer: item[answerKey], options };
+    });
+    fqState.index = 0;
+    fqState.score = 0;
+    fqState.answered = false;
+
+    document.getElementById('fq-result').classList.add('hidden');
+    document.getElementById('fq-question-panel').classList.remove('hidden');
+    document.getElementById('fq-instruction').textContent = deck === 'kosakata' ? 'Apa arti kata ini?' : 'Apa bacaan huruf ini?';
+    renderFlashcardQuizQuestion();
+}
+
+function renderFlashcardQuizQuestion() {
+    const q = fqState.questions[fqState.index];
+    fqState.answered = false;
+    document.getElementById('fq-counter').textContent = `Soal ${fqState.index + 1} / ${fqState.questions.length}`;
+    document.getElementById('fq-score').textContent = fqState.score;
+    document.getElementById('fq-prompt').textContent = q.prompt;
+
+    const optionsContainer = document.getElementById('fq-options');
+    optionsContainer.innerHTML = '';
+    q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "p-3.5 rounded-xl border border-slate-200 hover:bg-orange-50 text-sm font-bold text-slate-700 transition";
+        btn.textContent = currentQuizDeck === 'kosakata' ? opt : opt.toUpperCase();
+        btn.onclick = () => handleFlashcardQuizAnswer(btn, opt, q);
+        optionsContainer.appendChild(btn);
+    });
+}
+
+function handleFlashcardQuizAnswer(btn, chosenAnswer, question) {
+    if (fqState.answered) return;
+    fqState.answered = true;
+
+    const allBtns = document.querySelectorAll('#fq-options button');
+    allBtns.forEach(b => b.disabled = true);
+
+    const isCorrect = chosenAnswer === question.correctAnswer;
+    if (isCorrect) {
+        btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+        fqState.score++;
+    } else {
+        btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+        allBtns.forEach(b => {
+            const label = currentQuizDeck === 'kosakata' ? question.correctAnswer : question.correctAnswer.toUpperCase();
+            if (b.textContent === label) b.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+        });
+    }
+    document.getElementById('fq-score').textContent = fqState.score;
+
+    setTimeout(() => {
+        if (fqState.index < fqState.questions.length - 1) {
+            fqState.index++;
+            renderFlashcardQuizQuestion();
+        } else {
+            finishFlashcardQuiz();
+        }
+    }, 900);
+}
+
+function finishFlashcardQuiz() {
+    const total = fqState.questions.length;
+    const pct = Math.round((fqState.score / total) * 100);
+    const xpGained = fqState.score * 5;
+
+    document.getElementById('fq-question-panel').classList.add('hidden');
+    document.getElementById('fq-result').classList.remove('hidden');
+    document.getElementById('fq-final-score').textContent = `${fqState.score}/${total}`;
+    document.getElementById('fq-final-percent').textContent = `${pct}%`;
+    document.getElementById('fq-xp-gained').textContent = `+${xpGained} XP`;
+    addXP(xpGained);
+}
+
+// =========================================================
+// GAME: SPEED MATCH (acak dari seluruh kamus)
+// =========================================================
+function shuffleArray(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function initSpeedMatch() {
+    const grid = document.getElementById('match-grid');
+    grid.innerHTML = '';
+    matchSelectedCard = null;
+    matchScore = 0;
+    matchMistakes = 0;
+    matchPairsFound = 0;
+    document.getElementById('match-score').textContent = matchScore;
+    document.getElementById('match-result').classList.add('hidden');
+    grid.classList.remove('hidden');
+
+    const pairCount = 6;
+    const sample = shuffleArray(dictionaryData).slice(0, pairCount);
+    matchPairsTotal = sample.length;
+    let cards = [];
+    sample.forEach(item => {
+        cards.push({ id: item.romaji, text: item.kana, type: 'jp' });
+        cards.push({ id: item.romaji, text: item.meaning, type: 'id' });
+    });
+
+    cards = shuffleArray(cards);
+
+    cards.forEach((c) => {
+        const btn = document.createElement('button');
+        btn.className = "p-4 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold text-slate-800 hover:bg-orange-50 transition h-24 flex items-center justify-center text-sm jp-text";
+        btn.textContent = c.text;
+        btn.onclick = () => handleMatchClick(btn, c);
+        grid.appendChild(btn);
+    });
+}
+
+function handleMatchClick(btn, card) {
+    if (btn.disabled) return;
+
+    if (!matchSelectedCard) {
+        matchSelectedCard = { btn, card };
+        btn.classList.add('border-orange-500', 'bg-orange-100');
+    } else {
+        if (matchSelectedCard.btn === btn) return;
+
+        if (matchSelectedCard.card.id === card.id && matchSelectedCard.card.type !== card.type) {
+            btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+            matchSelectedCard.btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+            btn.disabled = true;
+            matchSelectedCard.btn.disabled = true;
+            matchScore += 10;
+            matchPairsFound++;
+            document.getElementById('match-score').textContent = matchScore;
+            addXP(10);
+            markLearned('kosakata', card.id);
+
+            if (matchPairsFound >= matchPairsTotal) {
+                setTimeout(() => {
+                    const bonusXP = Math.max(0, (matchPairsTotal * 2) - matchMistakes * 2);
+                    document.getElementById('match-mistakes').textContent = matchMistakes;
+                    document.getElementById('match-xp-gained').textContent = `+${bonusXP} XP`;
+                    document.getElementById('match-result').classList.remove('hidden');
+                    if (bonusXP > 0) addXP(bonusXP);
+                }, 400);
+            }
+        } else {
+            matchMistakes++;
+            btn.classList.add('bg-red-100', 'border-red-500');
+            matchSelectedCard.btn.classList.add('bg-red-100', 'border-red-500');
+            setTimeout(() => {
+                btn.classList.remove('bg-red-100', 'border-red-500');
+                matchSelectedCard.btn.classList.remove('bg-red-100', 'border-red-500', 'border-orange-500', 'bg-orange-100');
+            }, 500);
+        }
+        matchSelectedCard = null;
+    }
+}
+
+// =========================================================
+// KUIS (acak 10 soal dari bank 15 soal)
+// =========================================================
+function renderQuiz() {
+    activeQuizQuestions = shuffleArray(quizBank).slice(0, 10);
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+    document.getElementById('quiz-result').classList.add('hidden');
+
+    activeQuizQuestions.forEach((q, qIndex) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = "space-y-3 pb-4 border-b border-slate-100";
+        qDiv.innerHTML = `
+            <p class="font-bold text-slate-800 text-sm sm:text-base">${qIndex + 1}. ${q.q}</p>
+            <div class="grid grid-cols-1 gap-2.5">
+                ${q.options.map(opt => `
+                    <button onclick="checkQuizAnswer(this, ${opt.correct})" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-orange-50 text-sm font-medium text-slate-700 transition">
+                        ${opt.text}
+                    </button>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(qDiv);
+    });
+}
+
+let quizCorrectCount = 0;
+function checkQuizAnswer(btn, isCorrect) {
+    const parent = btn.parentElement;
+    parent.querySelectorAll('button').forEach(b => {
+        b.disabled = true;
+        b.classList.remove('hover:bg-orange-50');
+    });
+
+    if (isCorrect) {
+        btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+        quizCorrectCount++;
+    } else {
+        btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+    }
+
+    const totalBtns = document.querySelectorAll('#quiz-container .space-y-3').length;
+    const answeredBtns = document.querySelectorAll('#quiz-container button[disabled]').length / 3;
+
+    if (answeredBtns >= totalBtns) {
+        document.getElementById('quiz-score-text').textContent = `${quizCorrectCount}/${activeQuizQuestions.length}`;
+        const xpGained = quizCorrectCount * 5;
+        document.getElementById('quiz-xp-gained').textContent = `+${xpGained} XP`;
+        document.getElementById('quiz-result').classList.remove('hidden');
+        addXP(xpGained);
+    }
+}
+
+function resetQuiz() {
+    quizCorrectCount = 0;
+    renderQuiz();
+}
+
+// =========================================================
+// TARGET 30 HARI
+// =========================================================
+const planData = [
+    "Kenalan Hiragana baris あ-こ (a, ka)", "Hiragana baris さ-た (sa, ta)", "Hiragana baris な-は (na, ha)",
+    "Hiragana baris ま-ら (ma, ya, ra)", "Hiragana baris わ + review semua", "Latihan menulis 10 Hiragana di kanvas",
+    "Kuis review Hiragana", "Kenalan Katakana baris ア-コ (a, ka)", "Katakana baris サ-タ (sa, ta)",
+    "Katakana baris ナ-ハ (na, ha)", "Katakana baris マ-ラ (ma, ya, ra)", "Katakana baris ワ + review semua",
+    "Latihan menulis 10 Katakana di kanvas", "Belajar Dakuten (が, ざ, だ, ば, ぱ)", "Belajar Yōon (きゃ, しゃ, ちゃ, dst)",
+    "Kuis review Katakana & Dakuten", "Pelajari Aisatsu (salam sehari-hari)", "Pelajari pola kalimat WA-DESU",
+    "Pelajari kalimat negatif & tanya", "Praktik dialog perkenalan diri", "Hafalkan 10 kosakata Profesi & Orang",
+    "Hafalkan 10 kosakata Angka & Waktu", "Hafalkan 10 kosakata Makanan & Keluarga", "Hafalkan 10 kosakata Tempat & Benda",
+    "Hafalkan 10 kosakata Kata Kerja & Sifat", "Main Speed Match 3x untuk review kosakata", "Main Flashcard semua deck",
+    "Kerjakan Kuis N5 penuh", "Review menyeluruh materi 1-27", "Kuis akhir & evaluasi kesiapan N5"
+];
+
+function renderPlan() {
+    const grid = document.getElementById('plan-grid');
+    grid.innerHTML = '';
+
+    planData.forEach((title, idx) => {
+        const day = idx + 1;
+        const isChecked = userProgress.planChecked.includes(day);
+        const card = document.createElement('div');
+        card.className = `flex items-center gap-4 p-4 rounded-2xl border shadow-sm transition ${isChecked ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-slate-100'}`;
+        card.innerHTML = `
+            <button aria-label="Tandai hari ${day} selesai" onclick="togglePlanDay(${day})" class="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition ${isChecked ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}">
+                ${isChecked ? '<i class="fa-solid fa-check"></i>' : day}
+            </button>
+            <div>
+                <div class="text-xs font-bold text-orange-600 uppercase">Hari ${day}</div>
+                <div class="text-sm font-semibold ${isChecked ? 'text-emerald-800 line-through' : 'text-slate-700'}">${title}</div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    updatePlanProgress();
+}
+
+function togglePlanDay(day) {
+    const idx = userProgress.planChecked.indexOf(day);
+    if (idx === -1) {
+        userProgress.planChecked.push(day);
+        addXP(20);
+    } else {
+        userProgress.planChecked.splice(idx, 1);
+        saveProgress();
+    }
+    renderPlan();
+}
+
+function updatePlanProgress() {
+    const total = planData.length;
+    const done = userProgress.planChecked.length;
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('plan-progress-text').textContent = `${done}/${total} Hari`;
+    document.getElementById('plan-progress-bar').style.width = pct + '%';
+}
+
+// =========================================================
+// CHART RPP
+// =========================================================
+let chartInstance = null;
+function initRPPChart() {
+    const ctx = document.getElementById('rppChart');
+    if (!ctx) return;
+
+    if (typeof Chart === 'undefined') {
+        // CDN Chart.js gagal dimuat (mis. diblokir firewall/ad-blocker/offline)
+        // — tampilkan fallback ringkasan teks alih-alih membuat halaman error.
+        const wrapper = ctx.parentElement;
+        wrapper.innerHTML = `
+            <div class="text-center text-slate-400 space-y-3 px-4">
+                <i class="fa-solid fa-chart-pie text-4xl"></i>
+                <p class="text-sm font-semibold">Grafik tidak dapat dimuat</p>
+                <p class="text-xs">Koneksi ke CDN Chart.js terblokir. Rincian alokasi waktu: Warming Up 10' · Micro-Lecture 15' · Pair-Work 20' · Evaluation 15'.</p>
+            </div>`;
+        return;
+    }
+
+    if (chartInstance) chartInstance.destroy();
+
+    chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Warming Up (10m)', 'Micro-Lecture (15m)', 'Pair-Work (20m)', 'Evaluation (15m)'],
+            datasets: [{
+                data: [10, 15, 20, 15],
+                backgroundColor: ['#fbbf24', '#60a5fa', '#34d399', '#c084fc'],
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            cutout: '72%'
+        }
+    });
+}
+
+// =========================================================
+// KANVAS LATIHAN MENULIS (dengan panduan huruf transparan)
+// =========================================================
+let canvas, ctxCanvas, isDrawing = false;
+let guideCanvas, ctxGuide;
+
+function openCanvasModal(kana, romaji, type) {
+    activeKanaForCanvas = { kana, romaji, type: type || 'hiragana' };
+    document.getElementById('modal-kana-char').textContent = kana;
+    document.getElementById('modal-kana-romaji').textContent = `Romaji: ${romaji.toUpperCase()}`;
+    document.getElementById('canvas-modal').classList.remove('hidden');
+
+    canvas = document.getElementById('writing-canvas');
+    ctxCanvas = canvas.getContext('2d');
+    guideCanvas = document.getElementById('guide-canvas');
+    ctxGuide = guideCanvas.getContext('2d');
+
+    clearCanvas();
+    drawGuide(kana);
+
+    canvas.onmousedown = startDrawing;
+    canvas.onmousemove = draw;
+    canvas.onmouseup = stopDrawing;
+    canvas.onmouseleave = stopDrawing;
+
+    canvas.ontouchstart = (e) => { e.preventDefault(); startDrawing(e.touches[0]); };
+    canvas.ontouchmove = (e) => { e.preventDefault(); draw(e.touches[0]); };
+    canvas.ontouchend = stopDrawing;
+}
+
+function drawGuide(kana) {
+    ctxGuide.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+    if (!showGuide) return;
+    ctxGuide.font = "180px 'Noto Sans JP', sans-serif";
+    ctxGuide.fillStyle = 'rgba(148, 163, 184, 0.25)';
+    ctxGuide.textAlign = 'center';
+    ctxGuide.textBaseline = 'middle';
+    ctxGuide.fillText(kana, guideCanvas.width / 2, guideCanvas.height / 2 + 10);
+}
+
+function toggleGuide() {
+    showGuide = document.getElementById('guide-toggle').checked;
+    if (activeKanaForCanvas) drawGuide(activeKanaForCanvas.kana);
+}
+
+function markCurrentKanaLearned() {
+    if (activeKanaForCanvas) {
+        markLearned(activeKanaForCanvas.type, activeKanaForCanvas.romaji);
+        if (document.getElementById('section-kana').classList.contains('hidden') === false) {
+            renderKanaGrid(currentKanaCategory);
+        }
+    }
+}
+
+function closeCanvasModal() {
+    document.getElementById('canvas-modal').classList.add('hidden');
+}
+
+function clearCanvas() {
+    if (!ctxCanvas) return;
+    ctxCanvas.clearRect(0, 0, canvas.width, canvas.height);
+    ctxCanvas.lineWidth = 6;
+    ctxCanvas.lineCap = 'round';
+    ctxCanvas.strokeStyle = '#ea580c';
+}
+
+function startDrawing(e) {
+    isDrawing = true;
+    const rect = canvas.getBoundingClientRect();
+    ctxCanvas.beginPath();
+    ctxCanvas.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    ctxCanvas.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctxCanvas.stroke();
+}
+
+function stopDrawing() {
+    isDrawing = false;
+}
+
+// =========================================================
+// INISIALISASI
+// =========================================================
+window.onload = async () => {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => {};
+    }
+    await loadProgress();
+    showSection('beranda');
+};
+
+    </script>
+</body>
+</html>
